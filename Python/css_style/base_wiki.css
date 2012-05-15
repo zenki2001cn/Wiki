@@ -1,0 +1,957 @@
+/* General */
+
+.selected {
+	font-weight: bold;
+}
+.new {
+}
+
+/* Special Slidebar Stuff */
+
+#sidebarslidebox {
+	position: absolute;
+	width: 210px;
+}
+.sidebarslidecontrol {
+	text-align: right;
+	color: #BBB;
+	font-size: 0.8em;
+	width: 202px;
+	cursor: hand;
+	cursor: pointer;
+}
+#sidebar {
+	top: 8.63em; 
+}
+
+/* 1) Article ******************************************************************* */
+
+.article {
+	background: url(images/page-background.gif) repeat-x top left;
+	margin: 0;
+	padding: 2em 0 2em;
+	font-size: 0.95em;
+}
+.article p {
+	margin: 10px 0 10px 0; padding: 0;
+}
+.article div.editsection {
+	margin: 20px 0 0 0;
+}
+.article h1, h2, h3, h4, h5, h6 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #036;
+	margin: 30px 0 10px 0;
+	padding: 3px; 
+}
+.article h1 {
+	font-size: 1.7em;
+	border-bottom: solid #CCC 1px;
+}
+.article h1.firstHeading {
+	border-bottom: none;
+	margin-top: 0;
+	font-size: 1.7em;
+}
+.article h2 {
+	font-size: 1.6em;
+	border-bottom: solid #CCC 1px;
+}
+.article h3 {
+	font-size: 1.5em;
+}
+.article h4 {
+	font-size: 1.4em;
+}
+.article h5 {
+	font-size: 1.3em;
+}
+.article h6 {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+.article h1 a {
+	text-decoration: none;
+}
+.article h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #036;
+}
+.article h2 a {
+	text-decoration: none;
+}
+.article h3 a {
+	text-decoration: none;
+}
+.article h4 a {
+	text-decoration: none;
+}
+.article h5 a {
+	text-decoration: none;
+}
+.article h6 a {
+	text-decoration: none;
+}
+.article .introduction {
+	float: right;
+	width: 210px;
+	background: #369 url(images/box-blue-bottom.gif) no-repeat bottom left;
+	margin: 16px 0 16px 16px;
+	color: #fff;
+}
+.article .introduction h3 {
+	background: url(images/box-blue-top.gif) no-repeat top left;
+	padding: 8px 12px 0 12px;
+	margin: 0;
+	font-size: 0.8em;
+}
+.article .introduction p {
+	padding: 0 12px 8px 12px;
+	margin: 0;
+	font-size: 0.8em;
+	line-height: 130%;
+}
+.article .selected {
+	font-weight: normal;
+}
+.article img {
+	border: none;
+}
+
+/* List Styles ****************************************************************** */
+.article ul li {
+	list-style: square;
+}
+.article ol li {
+	list-style: decimal;
+}
+
+/* Definition List Styles ******************************************************* */
+.article dl {
+}
+.article dl dt {
+	font-weight: bold;
+}
+.article dl dd {
+	margin-left: 1em;
+}
+
+/* contentsub */
+#contentSub {
+	font-size: 0.8em;
+	font-style: italic;
+	color: #999;
+	margin: 10px 10px 10px 25px; padding: 0;
+}
+
+/* TOC Styles ******************************************************************* */
+
+#toc {
+    /*border:1px solid #2f6fab;*/
+    /* clear: both; */
+    border:1px solid #aaaaaa;
+    background-color:#f9f9f9;
+    padding:5px;
+	margin: 0 20px 10px 0; 
+	/* float: left; */
+    font-size: 0.90em;
+}
+#toc h2 {
+	margin: 0; padding: 0 0 2px 0;
+	font-size: 1.4em;
+}
+#toc .tocindent { margin-left: 1em; }
+#toc .tocline { margin-bottom: 0px; }
+#toc p { margin: 0; }
+#toc .toctoggle { font-size: 90%; }
+#toc .editsection {
+    margin-top: 0.7em;
+    font-size: 94%;
+	display: none;
+}
+#toc ul {
+	margin: 0; padding: 0;
+}
+#toc li {
+	list-style: none;
+	margin-left: 1.2em;
+}
+
+
+
+/* Images and Thumbnails ******************************************************** */
+
+div.floatright, table.floatright {
+    clear: right;
+    float: right;
+    position: relative;
+    margin: 0 0 0.5em 0.5em;
+    border: 0
+/*
+    border: 0.5em solid White;
+    border-width: 0.5em 0 0.8em 1.4em;
+*/
+}
+div.floatright p { font-style: italic; }
+div.floatleft, table.floatleft {
+    float: left;
+    position: relative;
+    margin: 0 0.5em 0.5em 0;
+    border: 0
+/*
+    margin: 0.3em 0.5em 0.5em 0;
+    border: 0.5em solid White;
+    border-width: 0.5em 1.4em 0.8em 0;
+*/
+}
+div.floatleft p { font-style: italic; }
+
+div.thumb {
+    margin-bottom: 0.5em;
+    border-style: solid; border-color: White;
+    width: auto;
+}
+div.thumb div {
+    border:1px solid #cccccc;
+    padding: 3px !important;
+    background-color:#f9f9f9;
+    font-size: 94%;
+    text-align: center;
+    overflow: hidden;
+}
+div.thumb div a img {
+    border:1px solid #cccccc;
+}
+div.thumb div div.thumbcaption {
+    border: none;
+    text-align: left;
+    line-height: 1.4em;
+    padding: 0.3em 0 0.1em 0;
+}
+div.magnify {
+    float: right;
+    border: none !important;
+    background: none !important;
+}
+div.magnify a, div.magnify img {
+    display: block;
+    border: none !important;
+    background: none !important;
+}
+div.tright {
+    clear: right;
+    float: right;
+    border-width: 0.5em 0 0.8em 1.4em;
+}
+div.tleft {
+    float: left;
+    margin-right:0.5em;
+    border-width: 0.5em 1.4em 0.8em 0;
+}
+
+/* External Link Styles ********************************************************* */
+
+/*
+** keep the whitespace in front of the ^=, hides rule from konqueror
+** this is css3, the validator doesn't like it when validating as css2
+*/
+.article .exlink {
+	background: url("images/external.png") center right no-repeat;
+	padding-right: 13px;
+}
+.article a[href ^="http://"],
+.article a[href ^="gopher://"] {
+    background: url("images/external.png") center right no-repeat;
+    padding-right: 13px;
+}
+.article a[href ^="https://"],
+.link-https {
+    background: url("images/lock_icon.gif") center right no-repeat;
+    padding-right: 16px;
+}
+.article a[href ^="mailto:"],
+.link-mailto {
+    background: url("images/mail_icon.gif") center right no-repeat;
+    padding-right: 18px;
+}
+.article a[href ^="news://"] {
+    background: url("images/news_icon.png") center right no-repeat;
+    padding-right: 18px;
+}
+.article a[href ^="ftp://"],
+.link-ftp {
+    background: url("images/file_icon.gif") center right no-repeat;
+    padding-right: 18px;
+}
+.article a[href ^="irc://"],
+.link-irc {
+    background: url("images/discussionitem_icon.gif")  center right no-repeat;
+    padding-right: 18px;
+}
+.article .urlexpansion {
+	display: none;
+}
+
+.article a.imagelink {
+	background: none;
+	padding-right: 0;
+}
+
+/* Edit Form ******************************************************************** */
+#editform input {
+	border: solid #666 1px;
+}
+#editform form {
+	border: none;
+	margin: 0;
+}
+#editform textarea {
+	border: solid #666 1px;
+	background: #EEE;
+	width: 100%; 
+}
+#editform .iebugfix {
+	width: 100%;
+}
+#editform #wpSave {
+	width: 125px;
+	background: #DDD;
+	border: solid #666 1px;
+}
+#editform #wpPreview {
+	width: 125px;
+	background: #DDD;
+	border: solid #666 1px;
+}
+
+/* Category Links *************************************************************** */
+
+div#catlinks {
+	clear: both;
+	font-size: 0.9em;
+	border: solid #bbb 1px;
+	background: #eee;
+	padding: 0;
+	margin: 40px 0 0 0;
+}
+div#catlinks p {
+	padding: 0 5px 2px 5px; margin: 0;
+}
+.catlink-table {
+	width: 100%;
+}
+.catlink-table td {
+	padding: 5px;
+}
+.catlink-table td h4 {
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0; padding: 0;
+	border-bottom: solid #BBB 1px;
+}
+.catlink-table ul {
+	margin: 5px 0 5px 0; padding: 0;
+}
+.catlink-table li {
+	margin: 0 0 0 2em;
+	line-height: 1.45em;
+}
+
+/* General Stuff */
+
+#n-portal { display: none; }
+#n-currentevents { display: none; }
+#n-randompage { display: none; }
+#n-sitesupport { display: none; }
+#ca-addsection { display: none; }
+#t-print { display: none; }
+
+.printfooter {
+	display: none;
+}
+
+#siteSub {
+	display: none;
+}
+
+a.new {
+	color: #ba0000;
+}
+
+/* Custom classes from cavendish.css ******************************** */
+
+.standard-table {
+	border: solid black 1px;
+	border-collapse: collapse;
+}
+
+.standard-table td {
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+	border: solid #BBB 1px;
+}
+
+.standard-table td.header, .standard-table th {
+	font-weight: bold;
+	background: #DDD;
+	border: solid #BBB 1px;
+	text-align: left;
+	padding: 0px 5px 0px 5px;
+}
+
+.fullwidth-table {
+	border: solid #666 1px;
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 10px;
+	background: #FFF;
+}
+
+.fullwidth-table td {
+	text-align: left;
+	vertical-align: top;
+	padding: 5px 15px 5px 15px;
+	border: solid #BBB 1px;
+}
+
+.fullwidth-table td.header, .fullwidth-table th {
+	background: #DDD;
+	border: solid #BBB 1px;
+	font-weight: bold;
+	font-size: 1.05em;
+	text-align: left;
+	padding: 0px 5px 0px 5px;
+}
+
+div.breadcrumbs {
+	border: solid #BBB 1px;
+	padding: 0px 5px 0px 5px;
+	background: #EEE;
+	margin: 10px 0px 10px 0px;
+	font-size: 0.9em;
+}
+
+div.breadcrumbs a.breadcrumbs {
+	text-decoration: none;
+}
+
+div.breadcrumbs span.breadcrumbs {
+	font-weight: bold;
+}
+
+pre {
+	background: #EEE;
+	font-size: 1.1em;
+	line-height: 1.1em;
+	border: dashed #666 1px;
+	padding: 15px 20px 15px 20px;
+	overflow: auto;
+}
+
+.prewrong {
+	padding: 0; margin: 0;
+}
+
+.prewrong pre {
+	background: #FDD;
+	border: dashed #644 1px;
+}
+
+.wrong {
+	background: #FDD;
+	border: solid #644 1px;
+	padding: 5px; 
+	margin: 5px 0 5px 0;
+}
+.wrong-inline {
+	background: #FDD;
+	border: solid #644 1px;
+	padding: 0 3px 0 3px; 
+}
+
+div.tip {
+	border: solid green 2px;
+	padding: 0px 10px 0px 10px;
+	margin: 10px 0px 10px 0px;
+	background: #DFD;
+}
+
+div.bug, div.warning {
+	border: solid red 2px;
+	padding: 0px 10px 0px 10px;
+	margin: 10px 0px 10px 0px;
+	background: #FDD;
+}
+
+div.note {
+	border: solid goldenrod 2px;
+	padding: 0px 10px 0px 10px;
+	margin: 10px 0px 10px 0px;
+	background: #FFD;
+	color: #000;
+}
+
+div.note:before {
+	content: "";
+}
+
+.float-left {
+	float: left;
+	padding: 5px;
+}
+
+.float-right {
+	float: right;
+	padding: 5px;
+}
+
+.figure {
+	/* for future use */
+}
+
+.originaldocinfo {
+	font-size: 0.8em;
+	background: #FFD;
+	border: solid #CCE 1px;
+	width: auto;
+	padding: 0px 10px 0px 10px;
+	margin: 15px 0px 15px 0px;
+}
+
+.originaldocinfo p {
+	line-height: 0.8em;
+}
+
+.originaldocinfo h2 {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.licenseblock {
+	border: dashed #888 1px;
+	background: #DDD;
+	font-size: 0.8em;
+	padding: 0px 10px 0px 10px;
+}
+
+code {
+	font-size: 1.2em;
+}
+tt {
+	font-size: 1.2em;
+}
+.wrong-source-code {
+	color: #D00;
+}
+
+
+.right-source-code {
+	color: #0A0;
+}
+
+.template-toc {
+	background: #DDD;
+	font-size: 0.9em;
+	border: solid black 1px;
+	padding: 0px 10px 0px 10px;
+	margin: 15px 0px 15px 0px;
+	width: auto;
+}
+
+.prevnext {
+	font-size: 0.9em;
+	margin: 10px 0px 20px 0px;
+}
+
+div.highlight {
+	border-left: solid blue 3px;
+	padding-left: 15px;
+}
+
+span.highlightblue {
+	color: blue;
+}
+
+span.highlightred {
+	color: red;
+}
+
+span.highlightgreen {
+	color: green;
+}
+
+.side-note {
+	width: auto;
+	padding: 0px 20px 0px 20px;
+	margin: 10px 0px 10px 0px;
+	border: solid #666 1px;
+	background: #EEE;
+}
+
+.side-note-left {
+	float:left;
+	width: 40%;
+	padding: 0px 20px 0px 20px;
+	margin: 10px 10px 10px 0px;
+	border: solid #666 1px;
+	background: #EEE;
+}
+
+.side-note-right {
+	float:right;
+	width: 40%;
+	padding: 0px 20px 0px 20px;
+	margin: 10px 0px 10px 10px;
+	border: solid #666 1px;
+	background: #EEE;
+}
+
+/* new for devmo topic pages */
+
+.callout-box {
+	float:right;
+	border: solid black 1px;
+	text-align: center;
+	width: 200px;
+	margin: 0px 0px 15px 15px;
+	padding: 10px;
+	background: #EEE;
+}
+
+.mainpage h2 {
+	margin-top: 0px;
+}
+
+.features-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+.features-table td {
+	vertical-align: top;
+	padding: 20px 0 0 0;
+}
+.features-table td img {
+	float: left;
+	margin: -20px 15px 5px 0px;
+}
+.features-table td p {
+	margin: 0; padding: 0 3px 0 3px;
+	line-height: 1.6em;
+	font-size: 0.95em;
+}
+.features-table td h3 {
+	margin: 0;
+	font-size: 1.5em;
+}
+.features-table td h4 {
+	margin: 0;
+	font-size: 1.2em;
+}
+.mainpage-table {
+	width: 100%;
+	margin: 0 0 10px 0;
+	border-collapse: collapse;
+}
+.mainpage-table td {
+	vertical-align: top;
+	padding: 0 10px 10px 10px;
+}
+.mainpage-table td ul {
+	margin: 0 0 10px 0; padding: 0 25px 0 25px; 
+}
+.mainpage-table td ul li {
+	margin: 0; padding: 0;
+}
+.mainpage-table td h3 {
+	margin: 0; 
+	font-size: 1.4em;
+}
+.topicpage-table {
+	clear: both;
+	width: auto;
+	margin: -30px 0 0 0;
+}
+
+.topicpage-table td  {
+	width: 50%;
+	vertical-align: top;
+	padding: 10px;
+}
+
+.topicpage-table h3 {
+	border-bottom: solid #BBB 1px;
+}
+
+.topicpage-table h3 a {
+	color: #036;
+	text-decoration: none;
+}
+
+.topicpage-table h3 a:hover {
+	text-decoration: underline;
+	color: #000;
+}
+.alllinks {
+	font-size: 10px;
+	float:right;
+}
+
+.date {
+	color: #668;
+	font-style: italic;
+}
+
+.disambig {
+	font-size: 0.9em;
+	border-top: solid #AAA 1px;
+	border-bottom: solid #AAA 1px;
+}
+
+.notice {
+	font-size: 0.9em;
+	border: solid #AAA 1px;
+	padding: 5px;
+	margin: 5px 0px 5px 0px;
+}
+
+/* Extra Styles brought in from cavendish/main.css for unhandled wiki stuff */
+
+span.subpages { display: block; }
+
+/* user notification thing */
+.usermessage {
+    background-color: #ffce7b;
+    border: 1px solid #ffa500;
+    color: Black;
+    font-weight: bold;
+    margin: 2em 0em 1em 0em;
+    padding: 0.5em 1em;
+    vertical-align: middle;
+}
+.error {
+    color: red;
+    font-size: larger;
+}
+
+.hiddenStructure {
+    display: none;
+}
+
+img.tex { vertical-align: middle; }
+span.texhtml { font-family: serif; }
+
+.special li {
+    line-height: 1.4em;
+    margin: 0;
+    padding: 0;
+}
+
+/* Page history styling */
+/* the auto-generated edit comments */
+.autocomment { color: gray; }
+#pagehistory span.user {
+    margin-left: 1.4em;
+    margin-right: 0.4em;
+}
+#pagehistory span.minor { font-weight: bold; }
+#pagehistory li { border: 1px solid White; }
+#pagehistory li.selected {
+    background-color:#f9f9f9;
+    border:1px dashed #aaaaaa;
+}
+/*
+** Diff rendering
+*/
+table.diff { background:white;
+	width: 100%;
+}
+td.diff-otitle { background:#ffffff; }
+td.diff-ntitle { background:#ffffff; }
+td.diff-addedline {
+    background:#ccffcc;
+    font-size: smaller;
+}
+td.diff-deletedline {
+    background:#ffffaa;
+    font-size: smaller;
+}
+td.diff-context {
+    background:#eeeeee;
+    font-size: smaller;
+}
+span.diffchange { color: red; font-weight: bold; }
+
+/* js pref toc */
+#preftoc {
+    float: left;
+    margin: 1em 1em 1em 1em;
+    width: 13em;
+}
+#preftoc li { border: 1px solid White; }
+#preftoc li.selected {
+    background-color:#f9f9f9;
+    border:1px dashed #aaaaaa;
+}
+#preftoc a,
+#preftoc a:active {
+    display: block;
+    color: #0014a6;
+}
+#prefcontrol {
+    clear: both;
+    float: left;
+    margin-top: 1em;
+}
+div.prefsectiontip {
+    font-size: 95%;
+    margin-top: 1em;
+}
+fieldset.operaprefsection { margin-left: 15em }
+
+.redirectText {
+	font-size:150%;
+	margin:5px;
+}
+
+.printfooter {
+        display: none;
+}
+
+.not_patrolled {
+	background-color: #ffa;
+}
+div.patrollink {
+	font-size: 75%;
+	text-align: right;
+}
+span.newpage, span.minor, span.searchmatch {
+	font-weight: bold;
+}
+span.unpatrolled {
+	font-weight:bold;
+	color:red;
+}
+
+span.searchmatch {
+	color: red;
+}
+.sharedUploadNotice {
+        font-style: italic;
+}
+
+span.updatedmarker {
+	color:black;
+	background-color:#00FF00;
+}
+span.newpageletter {
+	font-weight:bold;
+	color:black;
+	background-color:yellow;
+}
+span.minoreditletter {
+	color:black;
+	background-color:#C5FFE6;
+}
+
+table.gallery {
+	border:  1px solid #cccccc;
+	margin:  2px;
+	padding: 2px;
+	background-color:#ffffff;
+}
+
+table.gallery tr {
+	vertical-align:top;
+}
+
+table.gallery td {
+	vertical-align:top;
+	background-color:#f9f9f9;
+	border: solid 2px white;
+}
+
+div.gallerybox {
+	margin: 2px;
+	width:  150px;
+}
+
+div.gallerybox div.thumb {
+	text-align: center;
+	border: 1px solid #cccccc;
+	margin: 2px;
+}
+
+div.gallerytext {
+	font-size: 94%;
+	padding: 2px 4px;
+}
+
+div.expert {
+	margin: 0 15px 0 0;
+	padding: 0 20px 0 47px;
+	background: #EFF url("images/wizardhat-small.gif") top left no-repeat;
+	border: solid #ABC 2px;
+	width: 35%;
+	float: left;
+}
+
+/* added for beltzner/release status chart */
+
+table.release {
+    font-family: gill sans mt, gill sans, helvetica, tahoma;
+    font-size: smaller;
+    border: black 1px;
+    width: 100%;
+}
+
+table.release td {
+    border: 1px #CCC solid;
+    padding: 0 0 15px 25px;
+}    
+
+tr.releaseHeader td     {font-size: 125%;}
+tr.releaseHeader td.OK  {background-color: green;}
+tr.releaseHeader td.ERR {background-color: red;}
+tr.releaseHeader td.IP  {background-color: yellow;}
+tr.releaseHeader td.TBD {background-color: grey;}
+
+tr.release td.OK  {width: 22%; background: #CFC url("images/ok.png") top left no-repeat;}
+tr.release td.ERR {width: 22%; background: #FCC url("images/err.png") top left no-repeat;}
+tr.release td.IP  {width: 22%; background: #FFC url("images/ip.png") top left no-repeat;}
+tr.release td.TBD {width: 22%; background: #EEE url("images/tbd.png") top left no-repeat;}
+tr.release td.stepLabel {
+    width: 12%;
+    text-align: right;
+    padding: 0 5px 15px 25px;
+}
+
+/* additions for hwaara and accessibility docs */
+.OK {
+	background-color: rgb(153,255,153);
+}
+
+.irrelevant {
+	color: rgb(153,153,153);
+}
+
+.maybe {
+	background-color: rgb(255,255,204);
+}
+
+/* edit section link formatting */
+
+.editsection {
+	font-weight: normal;
+	float: right;
+	margin-left: 5px;
+}
+h1 .editsection { font-size: 50% }
+h2 .editsection { font-size: 66.7% }
+h3 .editsection { font-size: 85.5% }
+h5 .editsection { font-size: 120% }
+h6 .editsection { font-size: 133% }
+
