@@ -1,6 +1,0 @@
-= 内存管理 =
-
-%toc
-
-== Linux内存管理布局 ==
-[[pic/memory_manager.png]]

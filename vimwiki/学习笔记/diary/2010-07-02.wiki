@@ -1,2 +1,0 @@
-=== eclips+java5+android ===
-差不多搞定了Android的配置环境，下面将着重学习Java，Onging
