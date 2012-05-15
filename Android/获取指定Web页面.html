@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>获取指定Web页面</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">获取指定页面</h1>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.content.Intent;
+</pre>
+
+<ul>
+<li>
+实例化Intent的时候使用的构建器。
+</li>
+</ul>
+ 
+<p>
+public Intent (String action, Uri uri) 
+</p>
+<ol>
+<li>
+第1个参数action设置为Intent类的常数Intent.ACTION_VIEW、
+</li>
+<li>
+第2个参数uri设置为Uri类的实例。
+</li>
+<li>
+调用Uri.parse()方法生成Uri的实例。
+</li>
+</ol>
+
+<p>
+作成Intent实例后，调用startActivity()方法来启动Activity。
+</p>
+
+<p>
+例程源码(Java) 
+</p>
+<pre class="brush:java">
+Intent intent = new Intent(
+    Intent.ACTION_VIEW,
+    Uri.parse("&lt;a href="http://www.adakoda.com/adakoda/"&gt;http://www.adakoda.com/adakoda/&lt;/a&gt;"));
+ 
+startActivity(intent);
+
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

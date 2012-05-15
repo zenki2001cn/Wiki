@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>语法概要</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">语法概要</h1>
+
+<h2 id="toc_1.1">变量声明</h2>
+<p>
+变量声明格式: <strong>var</strong> var_name var_type
+</p>
+<pre class="brush: text">
+var s string = "hello"
+
+const (
+    name = "zenki"
+    work = "programmer"
+)
+
+a := 1
+</pre>
+
+<p>
+类型定义: <strong>type</strong> new_type var_type
+</p>
+<pre class="brush: text">
+type T struct {a, b int}
+type I interface {}
+</pre>
+
+<p>
+Boolean类型: <strong>var</strong> var_name <strong>bool</strong>
+</p>
+<pre class="brush: text">
+表示true或false的数据类型
+</pre>
+
+<p>
+数字类型: <strong>var</strong> var_name var_type
+</p>
+<pre class="brush: text">
+uint8       the set of all unsigned  8-bit integers (0 to 255)
+uint16      the set of all unsigned 16-bit integers (0 to 65535)
+uint32      the set of all unsigned 32-bit integers (0 to 4294967295)
+uint64      the set of all unsigned 64-bit integers (0 to 18446744073709551615)
+
+int8        the set of all signed  8-bit integers (-128 to 127)
+int16       the set of all signed 16-bit integers (-32768 to 32767)
+int32       the set of all signed 32-bit integers (-2147483648 to 2147483647)
+int64       the set of all signed 64-bit integers (-9223372036854775808 to 9223372036854775807)
+
+float32     the set of all IEEE-754 32-bit floating-point numbers
+float64     the set of all IEEE-754 64-bit floating-point numbers
+
+complex64   the set of all complex numbers with float32 real and imaginary parts
+complex128  the set of all complex numbers with float64 real and imaginary parts
+
+byte        familiar alias for uint8
+</pre>
+
+<p>
+字符串类型: <strong>var</strong> var_name <strong>string</strong>
+</p>
+<pre class="brush: text">
+var strName string
+</pre>
+
+<p>
+数组声明: <strong>var</strong> var_name <strong>[num]</strong> var_type
+</p>
+<pre class="brush: text">
+var arrayInt [10]int    #声明10个元素的整形数组
+
+arrayInt[ low:high ]    #对数组进行切片操作
+
+sum( &amp;[3]int{1, 2, 3} ) #初始化一个整形数组并传递给函数
+</pre>
+
+<p>
+切片类型声明: <strong>var</strong> var_name = <strong>make</strong>([]T, lenth, capacity)
+</p>
+<pre class="brush: text">
+make([]T, length)
+make([]T, length, capacity)
+
+make([]int, 50, 100)
+new([100]int)[0:50]
+</pre>
+
+<p>
+结构类型声明: <strong>struct</strong> {}
+</p>
+<pre class="brush: text">
+struct {}
+
+struct {
+	x, y int
+	u float
+	_ float  // padding
+	A *[]int
+	F func()
+}
+</pre>
+<p>
+<strong>结构体中的域名不能重复</strong>
+</p>
+
+<p>
+指针类型声明: <strong>var</strong> var_name = * <strong>BaseType</strong>
+</p>
+<pre class="brush: text">
+*int
+*map[string] *chan int
+</pre>
+
+<p>
+函数类型声明: <strong>func</strong> [pack (arg, ...)] <strong>func_name</strong> (ret_type, ...)
+</p>
+<pre class="brush: text">
+func()
+func(x int)
+func() int
+func(string, float, ...)
+func(prefix string, values ... int)
+func(a, b int, z float) bool
+func(a, b int, z float) (bool)
+func(a, b int, z float, opt ...) (success bool)
+func(int, int, float) (float, *[]int)
+func(n int) func(p *T)
+</pre>
+
+<p>
+接口类型声明: <strong>type</strong> var_name <strong>interface</strong> {}
+</p>
+<pre class="brush: text">
+interface{}
+
+interface {
+	Read(b Buffer) bool
+	Write(b Buffer) bool
+	Close()
+}
+
+type Lock interface {
+	Lock()
+	Unlock()
+}
+
+type ReadWrite interface {
+	Read(b Buffer) bool
+	Write(b Buffer) bool
+}
+
+type File interface {
+	ReadWrite  // same as enumerating the methods in ReadWrite
+	Lock       // same as enumerating the methods in Lock
+	Close()
+}
+</pre>
+<p>
+<strong>定义一个具有某个功能的接口，就可以与同样具有该功能的一个包相融合，可以看作是对这个包的继承和扩展。</strong>
+<strong>通常可以定义一个结构，通过提供这个结构的一组同名函数来实现接口的继承和重载，接口可以看作是对struct的扩展。</strong>
+</p>
+
+<p>
+字典类型声明: <strong>map</strong> <strong>[key_type]</strong> <strong>val_type</strong> {}
+</p>
+<pre class="brush: text">
+map [string] int
+map [*T] struct { x, y float }
+map [string] interface {}
+
+make(map[string] int)
+make(map[string] int, 100)
+</pre>
+<p>
+<strong>通常使用make来创建一个map类型: vm := make(map[string]int)</strong>
+</p>
+
+<p>
+通道类型声明: ChannelType = <strong>chan</strong> <strong>&lt;-</strong> | <strong>&lt;</strong> <strong>chan</strong> ElementType .
+</p>
+<pre class="brush: text">
+chan T         // can be used to send and receive values of type T
+chan&lt;- float   // can only be used to send floats
+&lt;-chan int     // can only be used to receive ints
+
+chan&lt;- chan int     // same as chan&lt;- (chan int)
+chan&lt;- &lt;-chan int   // same as chan&lt;- (&lt;-chan int)
+&lt;-chan &lt;-chan int   // same as &lt;-chan (&lt;-chan int)
+chan (&lt;-chan int)
+
+make(chan int, 100)
+</pre>
+<p>
+<em>一个channel可以使用close或closed关闭。</em>
+</p>
+
+<h2 id="toc_1.2">流程控制</h2>
+
+<p>
+<strong>labele</strong> 标签:用于 <strong>goto</strong>, <strong>break</strong>, <strong>continue</strong> 的跳转
+</p>
+<pre class="brush: text">
+Error: _do something_
+</pre>
+
+<p>
+<strong>if</strong> 语句:
+</p>
+<pre class="brush: text">
+if x &gt; 0 {
+    return true;
+}
+
+if x := f(); x &lt; y {
+	return x
+} else if x &gt; z {
+	return z
+} else {
+	return y
+}
+</pre>
+
+<p>
+<strong>switch</strong> 语句:
+</p>
+<pre class="brush: text">
+switch tag {
+default: s3()
+case 0, 1, 2, 3: s1()
+case 4, 5, 6, 7: s2()
+}
+
+switch x := f(); {  // missing switch expression means "true"
+case x &lt; 0: return -x
+default: return x
+}
+
+switch {
+case x &lt; y: f1()
+case x &lt; z: f2()
+case x == 4: f3()
+}
+</pre>
+
+<p>
+<strong>for</strong> 语句:
+</p>
+<pre class="brush: text">
+for a &lt; b {
+	a *= 2
+}
+
+for i := 0; i &lt; 10; i++ {
+	f(i)
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>设置字体颜色和格式</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">设置字体颜色和格式</h1>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.app.Activity;      
+import android.os.Bundle;      
+import android.graphics.Color;      
+import android.text.Html;      
+import android.text.Spannable;      
+import android.text.style.BackgroundColorSpan;      
+import android.text.style.StyleSpan;      
+import android.widget.EditText;      
+import android.widget.TextView;      
+</pre>
+
+<h2 id="toc_1.2">示例代码</h2>
+<h3 id="toc_1.2.1">通过HTML格式化字符</h3>
+<pre class="brush:java">
+public class AndroidFronColorTest extends Activity {      
+
+    @Override     
+    public void onCreate(Bundle savedInstanceState) {      
+        super.onCreate(savedInstanceState);      
+        setContentView(R.layout.main);      
+        
+        TextView htmlFormateTextView = (TextView)findViewById(R.id.testTextView);      
+        String source = "这只是一个测试，测试&lt;u&gt;下划线&lt;/u&gt;、&lt;i&gt;斜体字&lt;/i&gt;、&lt;font color='red'&gt;红色字&lt;/font&gt;的格式";      
+        htmlFormateTextView.setText(Html.fromHtml(source));      
+    }      
+}
+</pre>
+
+<h3 id="toc_1.2.2">使用Spannable</h3>
+<pre class="brush:java">
+public class AndroidFronColorTest extends Activity {      
+    @Override     
+    public void onCreate(Bundle savedInstanceState) {      
+        super.onCreate(savedInstanceState);      
+        setContentView(R.layout.main);      
+         
+        TextView htmlFormateTextView = (TextView)findViewById(R.id.testTextView);      
+         
+        String source = "这只是一个测试，测试&lt;u&gt;下划线&lt;/u&gt;、&lt;i&gt;斜体字&lt;/i&gt;、&lt;font color='red'&gt;红色字&lt;/font&gt;的格式";      
+        htmlFormateTextView.setText(Html.fromHtml(source));      
+         
+        EditText et = (EditText) findViewById(R.id.textView);      
+        Spannable sp = (Spannable) et.getText();      
+        sp.setSpan(new BackgroundColorSpan(Color.RED), 0, 5,      
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);      
+        sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD_ITALIC), 6, 11,      
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);      
+    }      
+}   
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

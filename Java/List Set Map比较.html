@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>List Set Map比较</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">List Set Map比较</h1>
+
+<h2 id="toc_1.1">List</h2>
+<ul>
+<li>
+次序是List最重要的特点：它保证维护元素特定的顺序。一个List可以生成ListIterator,使用它可以从两个方向遍历List,也可以从List中间插入和移除元素。
+</li>
+</ul>
+
+<table>
+<tr>
+<th>类</th>
+<th>接口</th>
+<th>功能</th>
+</tr>
+<tr>
+<td>ArrayList</td>
+<td>List</td>
+<td>由数组实现的List。允许对元素进行快速随机访问，但是向List中间插入与移除元素的速度很慢。</td>
+</tr>
+<tr>
+<td>LinkedList</td>
+<td>List</td>
+<td>对顺序访问进行了优化，向List中间插入与删除的开销并不大。随机访问则相对较慢。</td>
+</tr>
+</table>
+
+<h2 id="toc_1.2">Set</h2>
+<ul>
+<li>
+存入Set的每个元素都必须是唯一的，因为Set不保存重复元素。加入Set的元素必须定义equals()方法以确保对象的唯一性。Set与Collection有完全一样的接口。Set接口不保证维护元素的次序。
+</li>
+</ul>
+
+<table>
+<tr>
+<th>类</th>
+<th>接口</th>
+<th>功能</th>
+</tr>
+<tr>
+<td>HashSet</td>
+<td>Set</td>
+<td>为快速查找设计的Set。存入HashSet的对象必须定义hashCode()。</td>
+</tr>
+<tr>
+<td>TreeSet</td>
+<td>Set</td>
+<td>保存次序的Set, 底层为树结构。使用它可以从Set中提取有序的序列。</td>
+</tr>
+<tr>
+<td>LinkedHashSet</td>
+<td>Set</td>
+<td>具有HashSet的查询速度，且内部使用链表维护元素的顺序(插入的次序)。于是在使用迭代器遍历Set时，结果会按元素插入的次序显示。</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">Map</h2>
+<ul>
+<li>
+维护“键值对”的关联性，使你可以通过“键”查找“值”。
+</li>
+</ul>
+<table>
+<tr>
+<th>类</th>
+<th>接口</th>
+<th>功能</th>
+</tr>
+<tr>
+<td>HashMap</td>
+<td>Map</td>
+<td>Map基于散列表的实现。插入和查询“键值对”的开销是固定的。可以通过构造器设置容量capacity和负载因子load factor，以调整容器的性能。</td>
+</tr>
+<tr>
+<td>LinkedHashMap</td>
+<td>Map</td>
+<td>类似于HashMap，但是迭代遍历它时，取得“键值对”的顺序是其插入次序，或者是最近最少使用(LRU)的次序。只比HashMap慢一点。而在迭代访问时发而更快，因为它使用链表维护内部次序。</td>
+</tr>
+<tr>
+<td>TreeMap</td>
+<td>Map</td>
+<td>基于红黑树数据结构的实现。查看“键”或“键值对”时，它们会被排序(次序由Comparabel或Comparator决定)。TreeMap的特点在于，你得到的结果是经过排序的。TreeMap是唯一的带有subMap()方法的Map，它可以返回一个子树。</td>
+</tr>
+<tr>
+<td>WeakHashMap</td>
+<td>Map</td>
+<td>弱键(weak key)Map，Map中使用的对象也被允许释放: 这是为解决特殊问题设计的。如果没有map之外的引用指向某个“键”，则此“键”可以被垃圾收集器回收。</td>
+</tr>
+<tr>
+<td>IdentifyHashMap</td>
+<td>Map</td>
+<td>使用==代替equals()对“键”作比较的hash map。专为解决特殊问题而设计。</td>
+</tr>
+</table>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

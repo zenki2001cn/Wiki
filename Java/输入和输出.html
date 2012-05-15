@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>输入和输出</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">输入和输出</h1>
+
+<ul>
+<li>
+IO库通常使用stream这个抽闲概念，它代表了所有有能力产生数据和接受数据的源。
+</li>
+<li>
+所有与输入有关的类都从InputStream继承，所有与输出有关的类都从OutputStream继承。
+</li>
+</ul>
+
+<h2 id="toc_1.1">InputStream类型</h2>
+<p>
+InputStream类作用是从不同的数据源产生输入的类，其中数据源包括：
+</p>
+<ol>
+<li>
+字节数组
+</li>
+<li>
+String 对象
+</li>
+<li>
+文件
+</li>
+<li>
+管道方式
+</li>
+<li>
+其他种类的流组成序列，以便我们将他们合并到单一流中
+</li>
+<li>
+其他数据源，如Internet连接
+</li>
+</ol>
+
+<table>
+<tr>
+<th>类</th>
+<th>功能</th>
+</tr>
+<tr>
+<td>ByteArrayInputStream</td>
+<td>允许将内存缓冲区当做InputStream</td>
+</tr>
+<tr>
+<td>StringBufferInputStream</td>
+<td>将String转换成InputStream</td>
+</tr>
+<tr>
+<td>FileInputStream</td>
+<td>用于从文件读取信息</td>
+</tr>
+<tr>
+<td>PipedInputStream</td>
+<td>实现管道化</td>
+</tr>
+<tr>
+<td>SequenceInputStream</td>
+<td>将两个和多个InputStream转换成一个InputStream</td>
+</tr>
+<tr>
+<td>FilterInputStream</td>
+<td>抽象类，为其他InputStream提供有用功能</td>
+</tr>
+</table>
+
+<h2 id="toc_1.2">OutputStream类型</h2>
+<p>
+OutputStream类作用是将数据输出到某个地方：字节数组，文件或管道
+</p>
+
+
+<table>
+<tr>
+<th>类</th>
+<th>功能</th>
+</tr>
+<tr>
+<td>ByteArrayOutputStream</td>
+<td>在内存中创建缓冲区，所有数据都输出在此缓冲区</td>
+</tr>
+<tr>
+<td>FileOutputStream</td>
+<td>将数据写入文件</td>
+</tr>
+<tr>
+<td>PipedOutputStream</td>
+<td>实现管道化</td>
+</tr>
+<tr>
+<td>FilterOutputStream</td>
+<td>抽象类，为其他OutputStream提供有用功能</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">Reader与Writer</h2>
+<ul>
+<li>
+Reader和Writer提供了兼容Unicode和面向字符的I/O功能
+</li>
+<li>
+面向字节的Stream类和面向字符Reader/Writer类继承关系
+</li>
+</ul>
+
+<table>
+<tr>
+<th>原始IO</th>
+<th>Reader和Writer</th>
+</tr>
+<tr>
+<td>InputStream</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td>OutputStream</td>
+<td>Writer</td>
+</tr>
+<tr>
+<td>FileInputStream</td>
+<td>FileReader</td>
+</tr>
+<tr>
+<td>FileOutputStream</td>
+<td>FileWriter</td>
+</tr>
+<tr>
+<td>StringBufferInputStream</td>
+<td>StringReader</td>
+</tr>
+<tr>
+<td>(no corresponding class)</td>
+<td>StringWriter</td>
+</tr>
+<tr>
+<td>ByteArrayInputStream</td>
+<td>CharArrayReader</td>
+</tr>
+<tr>
+<td>ByteArrayOutputStream</td>
+<td>CharArrayWriter</td>
+</tr>
+<tr>
+<td>PipedInputStream</td>
+<td>PipedReader</td>
+</tr>
+<tr>
+<td>PipedOutputStream</td>
+<td>PipedWriter</td>
+</tr>
+</table>
+
+<h2 id="toc_1.4">典型的I/O使用</h2>
+<p>
+<strong>1.读取行</strong>
+</p>
+
+<pre class="brush:java">
+BufferedReader in = new BufferedReader(new FileReader("IOStreamDemo.java"));
+String s, s2 = new String();
+
+while((s = in.readLine())!= null)
+s2 += s + "\n";
+
+in.close();
+</pre>
+<p>
+<em>注释：用FileReader打开文件，使用BufferedReader进行缓冲，使用readLine()方法读取行</em>
+</p>
+
+<p>
+<strong>2.从标准输入读取</strong>
+</p>
+<pre class="brush:java">
+BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+System.out.print("Enter a line:");
+System.out.println(stdin.readLine());
+</pre>
+<p>
+<em>注释：System.in是InputStream类型，需要InputStreamReader转换成Reader，并通过BufferedReader来读取</em>
+</p>
+
+<p>
+<strong>3.从内存读取</strong>
+</p>
+<pre class="brush:java">
+StringReader in2 = new StringReader(s2);
+int c;
+
+while((c = in2.read()) != -1) {
+    System.out.print((char)c);
+}
+</pre>
+
+<p>
+<strong>4.格式化内存输入</strong>
+</p>
+<pre class="brush:java">
+try {
+    DataInputStream in3 = new DataInputStream(new ByteArrayInputStream(s2.getBytes()));
+    
+    while(true) {
+        System.out.print((char)in3.readByte());
+    }
+} catch(EOFException e) {
+    System.err.println("End of stream");
+}
+</pre>
+<p>
+<em>注释：读取格式化数据，需要DataInputStream类</em>
+</p>
+
+<p>
+<strong>5.文件输出</strong>
+</p>
+<pre class="brush:java">
+try {
+    BufferedReader in4 = new BufferedReader(new StringReader(s2));
+    PrintWriter out1 = new PrintWriter(
+                       new BufferedWriter(
+                       new FileWriter("IODemo.out")));
+    int lineCount = 1;
+    
+    while((s = in4.readLine()) != null ) {
+        out1.println(lineCount++ + ": " + s);
+    }
+    out1.close();
+} catch(EOFException e) {
+    System.err.println("End of stream");
+}
+</pre>
+<p>
+<em>注释：通过FileWriter打开文件，并用BufferedWriter进行缓冲，PrintWriter用来格式化输出</em>
+</p>
+
+<p>
+<strong>6.存储和恢复数据</strong>
+</p>
+<pre class="brush:java">
+try {
+    DataOutputStream out2 = new DataOutputStream(
+                            new BufferedOutputStream(
+                            new FileOutputStream("Data.txt")));
+    
+    out2.writeDouble(3.14159);
+    out2.writeUTF("That was pi");
+    out2.writeDouble(1.41413);
+    out2.writeUTF("Square root of 2");
+    out2.close();
+    
+    DataInputStream in5 = new DataInputStream(
+                          new BufferedInputStream(
+                          new FileInputStream("Data.txt")));
+                          
+    // Must use DataInputStream for data:
+    System.out.println(in5.readDouble());
+    // Only readUTF() will recover the
+    // Java-UTF String properly:
+    System.out.println(in5.readUTF());
+    // Read the following double and String:
+    System.out.println(in5.readDouble());
+    System.out.println(in5.readUTF());
+} catch(EOFException e) {
+    throw new RuntimeException(e);
+}
+</pre>
+
+<p>
+<strong>7.读写随机访问文件</strong>
+</p>
+<pre class="brush:java">
+RandomAccessFile rf = new RandomAccessFile("rtest.dat", "rw");
+
+for(int i = 0; i &lt; 10; i++)
+    rf.writeDouble(i*1.414);
+rf.close();
+
+rf = new RandomAccessFile("rtest.dat", "rw");
+
+rf.seek(5*8);
+rf.writeDouble(47.0001);
+rf.close();
+
+rf = new RandomAccessFile("rtest.dat", "r");
+for(int i = 0; i &lt; 10; i++)
+    System.out.println("Value " + i + ": " + rf.readDouble());
+rf.close();
+</pre>
+
+<p>
+<strong>8.文件映射</strong>
+</p>
+<pre class="brush:java">
+MappedByteBuffer out = new RandomAccessFile("test.dat", "rw").getChannel()
+                       .map(FileChannel.MapMode.READ_WRITE, 0, length);
+
+for(int i = 0; i &lt; length; i++)
+    out.put((byte)'x');
+
+for(int i = length/2; i &lt; length/2 + 6; i++)
+    System.out.print((char)out.get(i));
+
+</pre>
+
+<h2 id="toc_1.5">标准I/O重定向</h2>
+<p>
+System类提供了静态方法，可以对标准输入、输出和错误IO进行重定向
+</p>
+<pre class="brush:java">
+System.setIn(InputStream);
+System.setOut(PrintStream);
+System.setErr(PrintStream);
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

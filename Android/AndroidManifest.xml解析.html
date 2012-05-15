@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>AndroidManifest.xml解析</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">AndroidManifest.xml解析</h1>
+
+<h2 id="toc_1.1">各节点描述</h2>
+<table>
+<tr>
+<th>节点标识</th>
+<th>数量</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>manifest</td>
+<td>一个</td>
+<td>根节点，描述了package中所有的内容</td>
+</tr>
+<tr>
+<td>uses-permission</td>
+<td>0或多个</td>
+<td>请求你的package正常运作所需赋予的安全许可。参考<a href=".html"></a></td>
+</tr>
+<tr>
+<td>uses-library</td>
+<td>0或多个</td>
+<td>需要使用的自定义java库</td>
+</tr>
+<tr>
+<td>permission</td>
+<td>0或多个</td>
+<td>声明了安全许可来限制哪些程序能用你package中的组件和功能</td>
+</tr>
+<tr>
+<td>instrumentation</td>
+<td>0或多个</td>
+<td>声明了用来测试此package或其他package指令组件的代码</td>
+</tr>
+<tr>
+<td>application</td>
+<td>0或一个</td>
+<td>包含package中application级别组件声明的根节点</td>
+</tr>
+<tr>
+<td>activity</td>
+<td>0或多个</td>
+<td>Activity是用来与用户交互的主要工具</td>
+</tr>
+<tr>
+<td>intent-filter</td>
+<td>0或多个</td>
+<td>声明了指定的一组组件支持的Intent值，从而形成了IntentFilter</td>
+</tr>
+<tr>
+<td>action</td>
+<td>0或多个</td>
+<td>组件支持的Intent action</td>
+</tr>
+<tr>
+<td>category</td>
+<td>0或多个</td>
+<td>组件支持的Intent Category</td>
+</tr>
+<tr>
+<td>type</td>
+<td>0或多个</td>
+<td>组件支持的Intent data MIME type</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>0或多个</td>
+<td>组件支持的Intent data URI scheme</td>
+</tr>
+<tr>
+<td>authority</td>
+<td>0或多个</td>
+<td>组件支持的Intent data URI authority</td>
+</tr>
+<tr>
+<td>path</td>
+<td>0或多个</td>
+<td>组件支持的Intent data URI path</td>
+</tr>
+<tr>
+<td>receiver</td>
+<td>0或多个</td>
+<td>IntentReceiver能使的application获得数据的改变或者发生的操作，即使它当前不在运行</td>
+</tr>
+<tr>
+<td>service</td>
+<td>0或多个</td>
+<td>Service是能在后台运行任意时间的组件</td>
+</tr>
+<tr>
+<td>provider</td>
+<td>0或多个</td>
+<td>ContentProvider是用来管理持久化数据并发布给其他应用程序使用的组件</td>
+</tr>
+</table>
+
+<h2 id="toc_1.2">示例代码</h2>
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;  
+
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"  
+    package="com.my_domain.app.helloactivity"
+    android:versionCode="1
+    android:versionName="1.0" &gt;  
+   
+    &lt;!!-- 应用程序节点 --&gt;
+    &lt;application 
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/Em1.Base.Theme"&gt;  
+        
+        &lt;!!-- Activity节点 --&gt;
+        &lt;activity class=".HelloActivity"&gt;  
+            &lt;!!-- Intent过滤器 --&gt;
+            &lt;intent-filter&gt;  
+                &lt;!!-- Intent动作 --&gt;
+                &lt;action android:value="android.intent.action.MAIN"/&gt;  
+                &lt;!!-- Intent属性 --&gt;
+                &lt;category android:value="android.intent.category.LAUNCHER"/&gt;  
+                &lt;category android:name="android.intent.category.HOME"/&gt;
+                &lt;category android:name="android.intent.category.DEFAULT" /&gt;
+            &lt;/intent-filter&gt;  
+        &lt;/activity&gt;
+
+        &lt;!!-- provider节点 --&gt;
+        &lt;provider android:name=".MyProvider"
+            android:authorities="com.zenki.myprovider" /&gt;
+
+        &lt;!!-- receiver节点 --&gt;
+        &lt;receiver android:name=".ConnectionStatus" /&gt;
+        
+        &lt;!!-- 本地service节点 --&gt;
+        &lt;service android:name=".LocalService" /&gt;
+
+        &lt;!!-- 远程service节点 --&gt;
+        &lt;service android:name=".app.RemoteService" android:process=":remote"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="com.example.android.apis.app.IRemoteService" /&gt;
+                &lt;action android:name="com.example.android.apis.app.ISecondary" /&gt;
+                &lt;action android:name="com.example.android.apis.app.REMOTE_SERVICE" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/service&gt;
+
+    &lt;/application&gt;  
+    
+    &lt;!!-- 用户权限设置 --&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_SETTINGS" /&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" /&gt;
+    
+    &lt;!!-- 用户权限设置 --&gt;
+    &lt;uses-library android:name="com.mokoid.led"/&gt;
+    
+    &lt;!!-- SDK版本 --&gt;
+    &lt;uses-sdk android:minSdkVersion="5" android:targetSdkVersion="5"/&gt;
+    
+&lt;/manifest&gt;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

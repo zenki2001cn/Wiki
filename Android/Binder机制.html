@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Binder机制</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">Binder实现机制详解</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Binder实现机制详解</a></li>
+<ul>
+<li><a href="#toc_1.1">Binder框架</a></li>
+<li><a href="#toc_1.2">Binder设计</a></li>
+<li><a href="#toc_1.3">各层实现</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">Binder框架</h2>
+<p>
+<img src="pic/Binder_framework.png" />
+</p>
+
+<ul>
+<li>
+驱动层
+</li>
+</ul>
+
+<pre class="brush:text">
+    组织Binder服务节点，调度Binder相关处理线程，完成实际的Binder传输。
+</pre>
+
+<ul>
+<li>
+服务端守护进程
+</li>
+</ul>
+
+<pre class="brush:text">
+    该服务启动为守护进程，并且监听/dev/binder设备，Server端在该进程中注册Binder，Client端从该进程获取相应的
+Binder引用。
+</pre>
+
+<ul>
+<li>
+驱动适配层
+</li>
+</ul>
+
+<pre class="brush:text">
+    主要功能是IPCThreadState.cpp与ProcessState.cpp完成，还包括Parcel.cpp中的一些函数。该层是连接用户进程和
+Binder驱动的通道。
+</pre>
+
+<ul>
+<li>
+Binder核心框架层
+</li>
+</ul>
+
+<pre class="brush:text">
+    Binder核心框架主要是IBinder及它的两个子类，即BBinder和BpBinder，分别代表了最基本的服务器端及客户端。
+</pre>
+
+<ul>
+<li>
+守护进程的驱动者
+</li>
+</ul>
+
+<pre class="brush:text">
+    IServiceManager是与守护进程ServiceManager相关联的类。Binder的注册和申请的任务由IServiceManager来实现。
+</pre>
+
+<ul>
+<li>
+Binder服务和客户端实现层
+</li>
+</ul>
+
+<pre class="brush:text">
+    Binder服务器端一般继承BnInterface或Native，实现具体的IInterface内定义的函数，并将自身注册到
+ServiceManager.addService()。客户端一般通过ServiceManager.getService()获取服务句柄，再构造BpInterface或Proxy
+以进行远程调用。
+</pre>
+
+<h2 id="toc_1.2">Binder设计</h2>
+<ul>
+<li>
+<a href="Binder的设计思想.html">Binder的设计思想</a>
+</li>
+</ul>
+
+<h2 id="toc_1.3">各层实现</h2>
+<ul>
+<li>
+<a href="Binder驱动层.html">Binder驱动层</a>
+</li>
+<li>
+<a href="服务端守护进程.html">服务端守护进程</a>
+</li>
+<li>
+<a href="驱动适配层.html">驱动适配层</a>
+</li>
+<li>
+<a href="Binder核心框架层_C.html">Binder核心框架层_C</a>
+</li>
+<li>
+<a href="Binder核心框架层_Java.html">Binder核心框架层_Java</a>
+</li>
+<li>
+<a href="守护进程的驱动者.html">守护进程的驱动者</a>
+</li>
+<li>
+<a href="Binder服务和客户端实现层.html">Binder服务和客户端实现层</a>
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

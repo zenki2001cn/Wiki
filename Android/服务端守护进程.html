@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>服务端守护进程</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">服务端守护进程</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">服务端守护进程</a></li>
+<ul>
+<li><a href="#toc_1.1">相关类</a></li>
+<li><a href="#toc_1.2">要点说明</a></li>
+<ul>
+<li><a href="#toc_1.2.1">工作流程</a></li>
+</ul>
+<li><a href="#toc_1.3">service_manager.c</a></li>
+<ul>
+<li><a href="#toc_1.3.1">main</a></li>
+<li><a href="#toc_1.3.2">svcmgr_handler</a></li>
+</ul>
+<li><a href="#toc_1.4">binder.c</a></li>
+<ul>
+<li><a href="#toc_1.4.1">struct binder_state</a></li>
+<li><a href="#toc_1.4.2">宏BINDER_SERVICE_MANAGER</a></li>
+<li><a href="#toc_1.4.3">binder_become_context_manager</a></li>
+<li><a href="#toc_1.4.4">binder_loop</a></li>
+<li><a href="#toc_1.4.5">binder_parse</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:text">
+frameworks/base/cmds/servicemanager/binder.h
+frameworks/base/cmds/servicemanager/binder.c
+frameworks/base/cmds/servicemanager/service_manager.c
+</pre>
+
+<h2 id="toc_1.2">要点说明</h2>
+<p>
+<img src="pic/Binder_servicemanager.png" />
+</p>
+
+<p>
+<strong>servicemanager：是一个守护进程，它用来管理系统级的各种服务。该进程在init.rc中设置，并保证在系统中永远存在。所有其他的，想做为Service运行着的Binder服务，必须在该进程注册。其他的客户端也必须通过该进程查询所需的服务。这是Android中Binder实现的一个十分重要的部分。</strong>
+</p>
+
+<p>
+<strong>可执行程序的路径：/system/bin/servicemanager。</strong>
+</p>
+
+<h3 id="toc_1.2.1">工作流程</h3>
+<ul>
+<li>
+open()：打开binder驱动。
+</li>
+<li>
+mmap()：映射一个128*1024字节的内存。
+</li>
+<li>
+ioctl(BINDER_SET_CONTEXT_MGR)：设置上下文为mgr。
+</li>
+<li>
+binder_loop(struct binder_state, binder_handler): 接收消息循环。
+</li>
+<li>
+binder_parse(struct binder_state, struct binder_io, uint32_t, uint32_t, binder_handler): 消息解析方法。
+</li>
+</ul>
+
+<h2 id="toc_1.3">service_manager.c</h2>
+<h3 id="toc_1.3.1">main</h3>
+<pre class="brush:c++">
+int main(int argc, char **argv)
+{
+    struct binder_state *bs;
+    void *svcmgr = BINDER_SERVICE_MANAGER;
+
+    // 打开Binder
+    bs = binder_open(128*1024);
+
+    // 通知Binder自己是管理者
+    if (binder_become_context_manager(bs)) {
+        LOGE("cannot become context manager (%s)\n", strerror(errno));
+        return -1;
+    }
+
+    svcmgr_handle = svcmgr;
+    // 循环处理Client端的请求
+    binder_loop(bs, svcmgr_handler);
+    
+    return 0;
+}
+</pre>
+
+<h3 id="toc_1.3.2">svcmgr_handler</h3>
+<pre class="brush:c++">
+int svcmgr_handler(struct binder_state *bs,
+                   struct binder_txn *txn,
+                   struct binder_io *msg,
+                   struct binder_io *reply)
+{
+    struct svcinfo *si;
+    uint16_t *s;
+    unsigned len;
+    void *ptr;
+
+    if (txn-&gt;target != svcmgr_handle)
+        return -1;
+
+    s = bio_get_string16(msg, &amp;len);
+
+    if ((len != (sizeof(svcmgr_id) / 2)) ||
+        memcmp(svcmgr_id, s, sizeof(svcmgr_id))) {
+        fprintf(stderr,"invalid id %s\n", str8(s));
+        return -1;
+    }
+
+    switch(txn-&gt;code) {
+    case SVC_MGR_GET_SERVICE:
+    case SVC_MGR_CHECK_SERVICE:
+        s = bio_get_string16(msg, &amp;len);
+        // 查找对应的service
+        ptr = do_find_service(bs, s, len);
+        if (!ptr)
+            break;
+        // 将相应的Binder引用写入reply
+        bio_put_ref(reply, ptr);
+        return 0;
+
+    case SVC_MGR_ADD_SERVICE:
+        s = bio_get_string16(msg, &amp;len);
+        ptr = bio_get_ref(msg);
+        // 加入相应的service
+        if (do_add_service(bs, s, len, ptr, txn-&gt;sender_euid))
+            return -1;
+        break;
+
+    case SVC_MGR_LIST_SERVICES: {
+        unsigned n = bio_get_uint32(msg);
+
+        si = svclist;
+        while ((n-- &gt; 0) &amp;&amp; si)
+            si = si-&gt;next;
+        if (si) {
+            bio_put_string16(reply, si-&gt;name);
+            return 0;
+        }
+        return -1;
+    }
+    default:
+        LOGE("unknown code %d\n", txn-&gt;code);
+        return -1;
+    }
+
+    bio_put_uint32(reply, 0);
+    return 0;
+}
+</pre>
+
+<h2 id="toc_1.4">binder.c</h2>
+<h3 id="toc_1.4.1">struct binder_state</h3>
+<pre class="brush:c++">
+struct binder_state
+{
+    int fd;                 // 文件描述符
+    void *mapped;           // /dev/binder映射的进程空间地址
+    unsigned mapsize;       // 内存映射的空间大小
+};
+</pre>
+
+<h3 id="toc_1.4.2">宏BINDER_SERVICE_MANAGER</h3>
+<pre class="brush:c++">
+// ServiceManager作为Server的角色时，使用0作为远程接口句柄
+#define BINDER_SERVICE_MANAGER ((void*) 0)
+</pre>
+
+<h3 id="toc_1.4.3">binder_become_context_manager</h3>
+<ul>
+<li>
+BINDER_SET_CONTEXT_MGR的作用需要查看驱动层的实现(参见<a href="Binder内核驱动源码分析.html">Binder内核驱动源码分析</a>)。
+</li>
+</ul>
+
+<pre class="brush:c++">
+int binder_become_context_manager(struct binder_state *bs)
+{
+    return ioctl(bs-&gt;fd, BINDER_SET_CONTEXT_MGR, 0);
+}
+</pre>
+
+<h3 id="toc_1.4.4">binder_loop</h3>
+<pre class="brush:c++">
+// 消息处理循环
+void binder_loop(struct binder_state *bs, binder_handler func)
+{
+    int res;
+    struct binder_write_read bwr;
+    unsigned readbuf[32];
+
+    bwr.write_size = 0;
+    bwr.write_consumed = 0;
+    bwr.write_buffer = 0;
+    
+    readbuf[0] = BC_ENTER_LOOPER;
+    binder_write(bs, readbuf, sizeof(unsigned));
+
+    for (;;) {
+        bwr.read_size = sizeof(readbuf);
+        bwr.read_consumed = 0;
+        bwr.read_buffer = (unsigned) readbuf;
+
+        // 通过ioctl控制读取
+        res = ioctl(bs-&gt;fd, BINDER_WRITE_READ, &amp;bwr);
+
+        if (res &lt; 0) {
+            LOGE("binder_loop: ioctl failed (%s)\n", strerror(errno));
+            break;
+        }
+
+        // 消息解析
+        res = binder_parse(bs, 0, readbuf, bwr.read_consumed, func);
+        if (res == 0) {
+            LOGE("binder_loop: unexpected reply?!\n");
+            break;
+        }
+        if (res &lt; 0) {
+            LOGE("binder_loop: io error %d %s\n", res, strerror(errno));
+            break;
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.4.5">binder_parse</h3>
+<ul>
+<li>
+当处理BR_TRANSACTION的时候，调用svcmgr_handler()处理增加服务、检查服务等工作。
+</li>
+<li>
+各种服务存放在一个链表(svclist)中。其中调用binder_*等开头的函数，又会调用ioctl的各种命令。
+</li>
+<li>
+处理BR_REPLY的时候，填充binder_io类型的数据结点。
+</li>
+</ul>
+
+<pre class="brush:c++">
+int binder_parse(struct binder_state *bs, struct binder_io *bio,
+                 uint32_t *ptr, uint32_t size, binder_handler func) 
+{
+    int r = 1;
+    uint32_t *end = ptr + (size / 4);
+
+    while (ptr &lt; end) {
+        uint32_t cmd = *ptr++;
+#if TRACE
+        fprintf(stderr,"%s:\n", cmd_name(cmd));
+#endif
+        switch(cmd) {
+        case BR_NOOP:
+            break;
+        case BR_TRANSACTION_COMPLETE:
+            break;
+        case BR_INCREFS:
+        case BR_ACQUIRE:
+        case BR_RELEASE:
+        case BR_DECREFS:
+#if TRACE
+            fprintf(stderr,"  %08x %08x\n", ptr[0], ptr[1]);
+#endif
+            ptr += 2;
+            break;
+        case BR_TRANSACTION: {
+            struct binder_txn *txn = (void *) ptr;
+            if ((end - ptr) * sizeof(uint32_t) &lt; sizeof(struct binder_txn)) {
+                LOGE("parse: txn too small!\n");
+                return -1;
+            }
+            binder_dump_txn(txn);
+            if (func) {
+                unsigned rdata[256/4];
+                struct binder_io msg;
+                struct binder_io reply;
+                int res;
+
+                bio_init(&amp;reply, rdata, sizeof(rdata), 4);
+                bio_init_from_txn(&amp;msg, txn);
+                
+                // 调用Binder处理对应code的方法，如addService、getService等
+                res = func(bs, txn, &amp;msg, &amp;reply);
+                binder_send_reply(bs, &amp;reply, txn-&gt;data, res);
+            }
+            ptr += sizeof(*txn) / sizeof(uint32_t);
+            break;
+        }
+        case BR_REPLY: {
+            struct binder_txn *txn = (void*) ptr;
+            if ((end - ptr) * sizeof(uint32_t) &lt; sizeof(struct binder_txn)) {
+                LOGE("parse: reply too small!\n");
+                return -1;
+            }
+            binder_dump_txn(txn);
+            if (bio) {
+                bio_init_from_txn(bio, txn);
+                bio = 0;
+            } else {
+                    /* todo FREE BUFFER */
+            }
+            ptr += (sizeof(*txn) / sizeof(uint32_t));
+            r = 0;
+            break;
+        }
+        case BR_DEAD_BINDER: {
+            struct binder_death *death = (void*) *ptr++;
+            death-&gt;func(bs, death-&gt;ptr);
+            break;
+        }
+        case BR_FAILED_REPLY:
+            r = -1;
+            break;
+        case BR_DEAD_REPLY:
+            r = -1;
+            break;
+        default:
+            LOGE("parse: OOPS %d\n", cmd);
+            return -1;
+        }
+    }
+
+    return r;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

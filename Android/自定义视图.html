@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>自定义视图</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">自定义视图</h1>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.app.Service;
+
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
+
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+</pre>
+
+<h2 id="toc_1.2">处理流程</h2>
+<ul>
+<li>
+通过继承<code>LinearLayout</code>或<code>RelativeLayout</code>类生成自定义视图的类对象。
+</li>
+<li>
+通过<code>LayoutInflator</code>膨胀视图获取LinearLayout或RelativeLayout类对象，并使用<code>addView()</code>方法加入该对象。
+</li>
+<li>
+通过<code>WindowManager</code>的<code>addView()</code>方法显示自定义视图类。
+</li>
+<li>
+为自定义视图类添加事件响应，通常通过传入回调对象的方法得到客户端的处理。
+</li>
+</ul>
+
+<h2 id="toc_1.3">示例代码</h2>
+<h3 id="toc_1.3.1">生成自定义视图类</h3>
+<pre class="brush:java">
+// 继承了LinearLayout类
+public class NetworkWifiDetailDialog extends LinearLayout implements OnClickListener {
+
+    // 通过构造方法传入事件响应回调
+    public NetworkWifiDetailDialog(Context context, NetworkBasicDialogCaller caller, String title, Bundle content) {
+		super(context);
+		mCaller = caller;
+		initDialog(title, content);
+	}
+}
+</pre>
+
+<h3 id="toc_1.3.2">膨胀视图包含的控件</h3>
+<pre class="brush:java">
+// 初始化对话框
+private void initDialog(String title, Bundle content) {
+    LayoutInflater mInflator = (LayoutInflater) this.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+    LinearLayout dlg = (LinearLayout) mInflator.inflate(R.layout.network_dialog_wifi_detail, this, false);
+    
+    mTxtTitle = (TextView) dlg.findViewById(R.id.network_wifi_dialog_title);
+    
+    mTxtConnected = (TextView) dlg.findViewById(R.id.network_wifi_dialog_content_connected);
+    mTxtSecurity = (TextView) dlg.findViewById(R.id.network_wifi_dialog_content_security);
+       
+    mButtonOFF = (Button) dlg.findViewById(R.id.network_wifi_dialog_off);
+    mButtonOFF.setOnClickListener(this);
+    
+    // 完成初始化
+    addView(dlg);
+}
+</pre>
+
+<h3 id="toc_1.3.3">显示自定义视图</h3>
+<pre class="brush:java">
+// 获取WindowManager管理对象
+private WindowManager mWindowManager = (WindowManager) this.getContext().getSystemService(Service.WINDOW_SERVICE);
+
+public void show() {
+    // 设置窗口属性
+    WindowManager.LayoutParams wlp = new WindowManager.LayoutParams(
+            450, 300, WindowManager.LayoutParams.TYPE_APPLICATION,
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            PixelFormat.TRANSLUCENT);
+    wlp.gravity = Gravity.CENTER;
+    // 完成显示
+    mWindowManager.addView(this, wlp);
+}
+</pre>
+
+<h3 id="toc_1.3.4">添加事件响应</h3>
+<pre class="brush:java">
+public void onClick(View v) {
+    switch (v.getId()) {
+    case R.id.network_wifi_dialog_off:
+        // 通过回调对象处理事件响应
+        mCaller.onConfirm();
+        // 取消对话框显示
+        mWindowManager.removeView(this);
+        break;
+    }
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

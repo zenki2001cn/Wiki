@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>特殊变量</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">特殊变量</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">特殊变量</a></li>
+<ul>
+<li><a href="#toc_1.1">特殊变量的含义</a></li>
+<ul>
+<li><a href="#toc_1.1.1">MAKE</a></li>
+<li><a href="#toc_1.1.2">VPATH</a></li>
+<li><a href="#toc_1.1.3">$@</a></li>
+<li><a href="#toc_1.1.4">$%</a></li>
+<li><a href="#toc_1.1.5">$^</a></li>
+<li><a href="#toc_1.1.6">$&lt;</a></li>
+<li><a href="#toc_1.1.7">$?</a></li>
+<li><a href="#toc_1.1.8">$+</a></li>
+<li><a href="#toc_1.1.9">$*</a></li>
+<li><a href="#toc_1.1.10">$(@D)</a></li>
+<li><a href="#toc_1.1.11">$(@F)</a></li>
+<li><a href="#toc_1.1.12">$(*D)</a></li>
+<li><a href="#toc_1.1.13">$(*F)</a></li>
+<li><a href="#toc_1.1.14">$(%D)</a></li>
+<li><a href="#toc_1.1.15">$(%F)</a></li>
+<li><a href="#toc_1.1.16">$(&lt;D)</a></li>
+<li><a href="#toc_1.1.17">$(&lt;F)</a></li>
+<li><a href="#toc_1.1.18">$(^D)</a></li>
+<li><a href="#toc_1.1.19">$(^F)</a></li>
+<li><a href="#toc_1.1.20">$(+D)</a></li>
+<li><a href="#toc_1.1.21">$(+F)</a></li>
+<li><a href="#toc_1.1.22">$(?D)</a></li>
+<li><a href="#toc_1.1.23">$(?F)</a></li>
+<li><a href="#toc_1.1.24">.PHONY</a></li>
+<li><a href="#toc_1.1.25">FORCE</a></li>
+<li><a href="#toc_1.1.26">.SUFFIXES</a></li>
+<li><a href="#toc_1.1.27">.DEFAULT</a></li>
+<li><a href="#toc_1.1.28">.PRECIOUS</a></li>
+<li><a href="#toc_1.1.29">.INTERMEDIATE</a></li>
+<li><a href="#toc_1.1.30">.SECONDARY</a></li>
+<li><a href="#toc_1.1.31">.DELETE_ON_ERROR</a></li>
+<li><a href="#toc_1.1.32">.IGNORE</a></li>
+<li><a href="#toc_1.1.33">.LOW_RESOLUTION_TIME</a></li>
+<li><a href="#toc_1.1.34">.SILENT</a></li>
+<li><a href="#toc_1.1.35">.EXPORT_ALL_VARIABLES</a></li>
+<li><a href="#toc_1.1.36">.EXPORT_ALL_VARIABLES</a></li>
+<li><a href="#toc_1.1.37">.NOTPARALLEL</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">特殊变量的含义</h2>
+<h3 id="toc_1.1.1">MAKE</h3>
+<ul>
+<li>
+MAKE”的值是“make”。例如“/bin/make”。
+</li>
+</ul>
+
+<h3 id="toc_1.1.2">VPATH</h3>
+<ul>
+<li>
+VPATH”变量所指定的是Makefile中所有文件的搜索路径,包括了规则的依赖文件和目标文件。
+</li>
+</ul>
+
+<pre class="brush:bash">
+VPATH = src:../headers
+</pre>
+
+<h3 id="toc_1.1.3">$@</h3>
+<ul>
+<li>
+表示所有规则的目标。
+</li>
+</ul>
+
+<h3 id="toc_1.1.4">$%</h3>
+<ul>
+<li>
+当规则的目标文件是一个静态库文件时,代表静态库的一个成员名。如果目标不是静态库文件,其值为空。
+</li>
+</ul>
+
+<pre class="brush:bash">
+# $%代表bar.o
+foo.a:bar.o
+    ar r $% $@
+</pre>
+
+<h3 id="toc_1.1.5">$^</h3>
+<ul>
+<li>
+表示所有通过目录搜索得到的依赖文件的完整路径名(目录+一般文件名)列表。变量“$^”会去掉重复的依赖文件。
+</li>
+</ul>
+
+<h3 id="toc_1.1.6">$&lt;</h3>
+<ul>
+<li>
+表示规则中通过目录搜索得到的依赖文件列表的第一个依赖文件。
+</li>
+</ul>
+
+<h3 id="toc_1.1.7">$?</h3>
+<ul>
+<li>
+表示比目标还要新的依赖文件列表。
+</li>
+</ul>
+
+<h3 id="toc_1.1.8">$+</h3>
+<ul>
+<li>
+类似“$^”,但是它保留了依赖文件中重复出现的文件。主要用在程序链接时库的交叉引用场合。
+</li>
+</ul>
+
+<h3 id="toc_1.1.9">$*</h3>
+<ul>
+<li>
+在静态模式中匹配TARGET-PATTERN的模式匹配部分。
+</li>
+</ul>
+
+<pre class="brush:bash">
+# $*匹配big和little
+bigoutput littleoutput : %output : text.g
+    generate text.g -$* &gt; $@
+</pre>
+
+<h3 id="toc_1.1.10">$(@D)</h3>
+<ul>
+<li>
+表示目标文件的目录部分(不包括斜杠) 如果。 “$@” “dir/foo.o” 那么是, “$(@D)”的值为“dir”。如果“$@”不存在斜杠,其值就是“.”(当前目录)。
+</li>
+</ul>
+
+<h3 id="toc_1.1.11">$(@F)</h3>
+<ul>
+<li>
+目标文件的完整文件名中除目录以外的部分(实际文件名)。如果“$@”为“dir/foo.o”,那么“$(@F)”只就是“foo.o”。“$(@F)”等价于函数“$(notdir$@)”。
+</li>
+</ul>
+
+<h3 id="toc_1.1.12">$(*D)</h3>
+<ul>
+<li>
+代表目标“茎”中的目录部分
+</li>
+</ul>
+
+<h3 id="toc_1.1.13">$(*F)</h3>
+<p>
+代表目标“茎”中的文件名部分
+</p>
+
+<h3 id="toc_1.1.14">$(%D)</h3>
+<ul>
+<li>
+表示库文件成员“member”名中的目录部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.15">$(%F)</h3>
+<ul>
+<li>
+表示库文件成员“member”名中的文件名部分
+</li>
+</ul>
+
+<h3 id="toc_1.1.16">$(&lt;D)</h3>
+<ul>
+<li>
+表示规则中第一个依赖文件的目录部分
+</li>
+</ul>
+
+<h3 id="toc_1.1.17">$(&lt;F)</h3>
+<ul>
+<li>
+表示规则中第一个依赖文件的文件名部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.18">$(^D)</h3>
+<ul>
+<li>
+表示所有依赖文件的目录部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.19">$(^F)</h3>
+<ul>
+<li>
+表示所有依赖文件的文件部分(不存在同一文件)。
+</li>
+</ul>
+
+<h3 id="toc_1.1.20">$(+D)</h3>
+<ul>
+<li>
+表示所有依赖文件的目录部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.21">$(+F)</h3>
+<ul>
+<li>
+表示所有依赖文件的文件部分(可存在重复文件)。
+</li>
+</ul>
+
+<h3 id="toc_1.1.22">$(?D)</h3>
+<ul>
+<li>
+表示被更新的依赖文件的目录部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.23">$(?F)</h3>
+<ul>
+<li>
+表示被更新的依赖文件的文件名部分。
+</li>
+</ul>
+
+<h3 id="toc_1.1.24">.PHONY</h3>
+<ul>
+<li>
+“.PHONY”的所有的依赖被作为伪目标。伪目标是这样一个目标:当使用make命令行指定此目标时,这个目标所在规则定义的命令，无论目标文件是否存在都会被无条件执行。
+</li>
+</ul>
+
+<h3 id="toc_1.1.25">FORCE</h3>
+<ul>
+<li>
+表示该目标总是被执行，而不论其有没有命令或是依赖。
+</li>
+</ul>
+
+<pre class="brush:bash">
+clean: FORCE
+    rm $(objects)
+FORCE:
+</pre>
+
+<h3 id="toc_1.1.26">.SUFFIXES</h3>
+<ul>
+<li>
+特殊目标“SUFFIXES”的所有依赖指出了一系列在后缀规则中需要检查的后缀名(就是当前make需要处理的后缀)
+</li>
+</ul>
+
+<h3 id="toc_1.1.27">.DEFAULT</h3>
+<ul>
+<li>
+目标“.DEFAULT”所在规则定义的命令,被用在重建那些没有具体规则的目标(明确规则和隐含规则)。就是说一个文件作为某个规则的依赖,但却不是另外一个规则的目标时。Make 程序无法找到重建此文件的规则,此种情况时就执行“.DEFAULT”所指定的命令。
+</li>
+</ul>
+
+<h3 id="toc_1.1.28">.PRECIOUS</h3>
+<ul>
+<li>
+目标“.PRECIOUS”的所有依赖文件在make过程中会被特殊处理:当命令在执行过程中被中断时,make不会删除它们。而且如果目标的依赖文件是中间过程文件,同样这些文件不会被删除。这一点目标“.PRECIOUS”和目标“.SECONDAY”实现的功能相同。
+</li>
+</ul>
+
+<h3 id="toc_1.1.29">.INTERMEDIATE</h3>
+<ul>
+<li>
+目标“.INTERMEDIATE”的依赖文件在make时被作为中间过程文件对待。没有任何依赖文件的目标“.INTERMEDIATE”没有意义。
+</li>
+</ul>
+
+<h3 id="toc_1.1.30">.SECONDARY</h3>
+<ul>
+<li>
+目标“.SECONDARY”的依赖文件被作为中间过程文件对待。但这些文件不会被自动删除。
+</li>
+</ul>
+
+<h3 id="toc_1.1.31">.DELETE_ON_ERROR</h3>
+<ul>
+<li>
+如果在Makefile中存在特殊目标“.DELETE_ON_ERROR”,make在执行过程中,如果规则的命令执行错误,将删除已经被修改的目标文件。
+</li>
+</ul>
+
+<h3 id="toc_1.1.32">.IGNORE</h3>
+<ul>
+<li>
+如果给目标“.IGNORE”指定依赖文件,则忽略创建这个文件所执行命令的错误。给此目标指定命令是没有意义的。当此目标没有依赖文件时,将忽略所有命令执行的错误。
+</li>
+</ul>
+
+<h3 id="toc_1.1.33">.LOW_RESOLUTION_TIME</h3>
+<ul>
+<li>
+目标“.LOW_RESOLUTION_TIME”的依赖文件被 make 认为是低分辨率时间戳文件。
+</li>
+</ul>
+
+<h3 id="toc_1.1.34">.SILENT</h3>
+<ul>
+<li>
+目标“.SILENT”的依赖列表中的文件,make 在创建这些文件时,不打印出重建此文件所执行的命令。
+</li>
+</ul>
+
+<h3 id="toc_1.1.35">.EXPORT_ALL_VARIABLES</h3>
+<ul>
+<li>
+此目标应该作为一个简单的没有依赖的目标,它的功能含义是将之后所有的变量传递给子make进程。
+</li>
+</ul>
+
+<h3 id="toc_1.1.36">.EXPORT_ALL_VARIABLES</h3>
+<ul>
+<li>
+此目标应该作为一个简单的没有依赖的目标,它的功能含义是将之后所有的变量传递给子make进程。
+</li>
+</ul>
+
+<h3 id="toc_1.1.37">.NOTPARALLEL</h3>
+<ul>
+<li>
+Makefile 中,如果出现目标“.NOPARALLEL”,则所有命令按照串行方式执行,即使存在make的命令行参数“-j”。
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

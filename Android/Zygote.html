@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Zygote</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">Zygote</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Zygote</a></li>
+<ul>
+<li><a href="#toc_1.1">相关文件</a></li>
+<li><a href="#toc_1.2">ZygoteInit类</a></li>
+<ul>
+<li><a href="#toc_1.2.1">方法：main</a></li>
+</ul>
+<li><a href="#toc_1.3">SystemServer类</a></li>
+<ul>
+<li><a href="#toc_1.3.1">类：SystemServer</a></li>
+<li><a href="#toc_1.3.2">方法：main</a></li>
+<li><a href="#toc_1.3.3">方法：init2</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:text">
+// 实现init1()方法
+frameworks/base/services/jni/com_android_server_SystemServer.cpp                     
+// zygote fork 的第一个程序，用来加载各种服务
+frameworks/base/services/java/com/android/server/SystemServer.java
+//
+frameworks/base/cmds/system_server/system_main.cpp
+// 实现system_init()方法
+frameworks/base/cmds/system_server/library/system_init.cpp 
+// Zygote启动类
+frameworks/base/core/java/com/android/internal/os/ZygoteInit.java
+</pre>
+
+<h2 id="toc_1.2">ZygoteInit类</h2>
+<p>
+<a href="pic/zygote_systemserver.png"><img src="pic/zygote_systemserver.png" /></a>
+</p>
+
+<h3 id="toc_1.2.1">方法：main</h3>
+<pre class="brush:java">
+public static void main(String argv[]) {
+    try {
+        // Start profiling the zygote initialization.
+        SamplingProfilerIntegration.start();
+
+        // 通过哦socket监听其他应用的启动
+        registerZygoteSocket();
+        // 加载所有的class类
+        preloadClasses();
+        // 加载所有资源
+        preloadResources();
+
+        if (SamplingProfilerIntegration.isEnabled()) {
+            SamplingProfiler sp = SamplingProfiler.getInstance();
+            sp.pause();
+            SamplingProfilerIntegration.writeZygoteSnapshot();
+            sp.shutDown();
+        }
+
+        // Do an initial gc to clean up after startup
+        gc();
+
+        // 开启SystemServer
+        if (argv[1].equals("true")) {
+            startSystemServer();
+        } else if (!argv[1].equals("false")) {
+            throw new RuntimeException(argv[0] + USAGE_STRING);
+        }
+
+        Log.i(TAG, "Accepting command socket connections");
+
+        if (ZYGOTE_FORK_MODE) {
+            // 所有android应用都是从fork mode启动
+            runForkMode();
+        } else {
+            runSelectLoopMode();
+        }
+
+        // 关闭监听端口
+        closeServerSocket();
+    }
+    ......
+}
+</pre>
+
+<h2 id="toc_1.3">SystemServer类</h2>
+<ul>
+<li>
+SystemServer.java类为Zygote启动的第一个程序，它用来启动<code>native services</code>和<code>android services</code>
+</li>
+<li>
+SystemServer.java类的main方法中会调用native层的init1()方法、init1调用system_init.cpp中的<code>system_init()</code>方法
+</li>
+<li>
+<code>system_init()</code>会启动四个<code>native services</code>: <code>AudioFlinger</code>、<code>MediaPlayerService</code>、<code>CameraService</code>、<code>AudioPolicyService</code>。之后回调SystemServer.java中的<code>init2()</code>方法
+</li>
+<li>
+<code>init2()</code>方法调用<code>ServerThread</code>线程类，通过<code>ServicesManager</code>加入大约30多个services
+</li>
+</ul>
+
+<p>
+<a href="pic/zygote_fork.png"><img src="pic/zygote_fork.png" /></a>
+</p>
+
+<h3 id="toc_1.3.1">类：SystemServer</h3>
+<pre class="brush:java">
+public class SystemServer
+{
+    private static final String TAG = "SystemServer";
+
+    ......
+    
+    /**
+     * This method is called from Zygote to initialize the system. This will cause the native
+     * services (SurfaceFlinger, AudioFlinger, etc..) to be started. After that it will call back
+     * up into init2() to start the Android services.
+     */
+    native public static void init1(String[] args);
+}
+</pre>
+
+<h3 id="toc_1.3.2">方法：main</h3>
+<pre class="brush:java">
+// 应用的主入口方法
+public static void main(String[] args) {
+    ...... 
+
+    // The system server has to run all of the time, so it needs to be
+    // as efficient as possible with its memory usage.
+    VMRuntime.getRuntime().setTargetHeapUtilization(0.8f);
+    
+    System.loadLibrary("android_servers");
+    // init1为JNI的映射表名称
+    init1(args);
+}
+</pre>
+
+<h3 id="toc_1.3.3">方法：init2</h3>
+<pre class="brush:java">
+// 加入java层的services服务
+public static final void init2() {
+    Slog.i(TAG, "Entered the Android system server!");
+    Thread thr = new ServerThread();
+    thr.setName("android.server.ServerThread");
+    thr.start();
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

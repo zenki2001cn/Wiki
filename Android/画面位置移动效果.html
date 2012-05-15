@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>画面位置移动效果</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">画面位置移动效果</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">画面位置移动效果</a></li>
+<ul>
+<li><a href="#toc_1.1">相关类</a></li>
+<li><a href="#toc_1.2">基本处理流程</a></li>
+<li><a href="#toc_1.3">示例代码</a></li>
+<ul>
+<li><a href="#toc_1.3.1">anim/translate.xml</a></li>
+<li><a href="#toc_1.3.2">在JAVA代码中定义</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.view.animation.TranslateAnimation;
+
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+</pre>
+
+<h2 id="toc_1.2">基本处理流程</h2>
+<ul>
+<li>
+定义动画资源的XML
+</li>
+<li>
+通过AnimationUtils.loadAnimation()方法生成Animation对象
+</li>
+<li>
+使用一个ViewGroup类对象作为动画的目标容器，并使用startAnimation()方法应用动画效果
+</li>
+</ul>
+
+<h2 id="toc_1.3">示例代码</h2>
+<h3 id="toc_1.3.1">anim/translate.xml</h3>
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;set xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+    &lt;translate
+        android:fromXDelta="30" &lt;!!--动画开始时，X坐标的位置--&gt;
+        android:toXDelta="-80"  &lt;!!--动画结束时，X坐标的位置--&gt;
+        android:fromYDelta="30" &lt;!!--动画开始时，Y坐标的位置--&gt;
+        android:toYDelta="300"  &lt;!!--动画结束时，Y坐标的位置--&gt;
+        android:duration="2000" &lt;!!--动画持续时间--&gt;
+    /&gt;
+&lt;/set&gt;
+</pre>
+
+<h3 id="toc_1.3.2">在JAVA代码中定义</h3>
+<pre class="brush:java">
+//第一个参数fromXDelta为动画起始时 X坐标上的移动位置   
+//第二个参数toXDelta为动画结束时 X坐标上的移动位置      
+//第三个参数fromYDelta为动画起始时Y坐标上的移动位置     
+//第四个参数toYDelta为动画结束时Y坐标上的移动位置 
+TranslateAnimation myAnimation_Translate = new TranslateAnimation(10, 100, 10, 100);
+
+//设置时间持续时间为 2000毫秒
+myAnimation_Translate.setDuration(2000);
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

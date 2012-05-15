@@ -1,0 +1,550 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>SQLiteDatabase</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">SQLiteDatabase</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">SQLiteDatabase</a></li>
+<ul>
+<li><a href="#toc_1.1">相关类</a></li>
+<li><a href="#toc_1.2">SQLiteOpenHelper</a></li>
+<li><a href="#toc_1.3">SQLiteDatabase</a></li>
+<li><a href="#toc_1.4">Cursor</a></li>
+<ul>
+<li><a href="#toc_1.4.1">主要方法说明</a></li>
+</ul>
+<li><a href="#toc_1.5">SQLiteQueryBuilder</a></li>
+<ul>
+<li><a href="#toc_1.5.1">主要方法说明</a></li>
+</ul>
+<li><a href="#toc_1.6">SQLiteStatement</a></li>
+<li><a href="#toc_1.7">常用SQL操作方法</a></li>
+<ul>
+<li><a href="#toc_1.7.1">获取数据库句柄</a></li>
+<li><a href="#toc_1.7.2">创建数据库</a></li>
+<li><a href="#toc_1.7.3">删除数据库</a></li>
+<li><a href="#toc_1.7.4">插入数据，使用SQL语句</a></li>
+<li><a href="#toc_1.7.5">插入数据，使用ContentValues辅助类</a></li>
+<li><a href="#toc_1.7.6">查询数据</a></li>
+<ul>
+<li><a href="#toc_1.7.6.1">查询参数说明</a></li>
+</ul>
+<li><a href="#toc_1.7.7">更新数据</a></li>
+<li><a href="#toc_1.7.8">删除数据</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.content.Context;
+import android.content.ContentValues;
+
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.database.sqlite.SQLiteException;
+import android.database.Cursor;
+</pre>
+
+<h2 id="toc_1.2">SQLiteOpenHelper</h2>
+<ul>
+<li>
+通过派生SQLiteOpenHelper子类，并实现其<code>onCreate()</code>和<code>onUpgrade()</code>方法进行数据库的管理。
+</li>
+<li>
+通过<code>getReadableDatabase()</code>打开只读数据库SQLiteDatabase。
+</li>
+<li>
+通过<code>getWritableDatabase()</code>打开可写数据库SQLiteDatabase。
+</li>
+</ul>
+
+<p>
+示例代码
+</p>
+<pre class="brush:java">
+private class DatabaseHelper extends SQLiteOpenHelper {
+    public DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    // 创建数据库
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        try {
+            createCommentsTables(db);
+        } catch (SQLException e) {
+        }
+    }
+    
+    // 创建表
+    private void createCommentsTables(SQLiteDatabase db) {
+        String createString;
+        String commentsColumns = BookCommentsColumns.BOOK_ID
+                + " INTEGER NOT NULL, " + BookCommentsColumns.PAGE_NUMBER
+                + " INTEGER, " + BookCommentsColumns.XPOINT
+                + " INTEGER, " + BookCommentsColumns.YPOINT
+                + " INTEGER, " + BookCommentsColumns.LOCATION
+                + " TEXT, " + BookCommentsColumns.COMMENT_PATH
+                + " TEXT NOT NULL";
+
+        // 创建表
+        createString = " (" 
+                        + BookCommentsColumns._ID 
+                        + " integer primary key autoincrement, " 
+                        + commentsColumns 
+                        + ");";
+                
+        // 执行SQL语句
+        db.execSQL("create table " + BOOK_COMMENTS_TABLE_NAME + createString);
+        
+        // 设置需要添加索引的列
+        String indexColumns[] = { BookmarkColumns.LOCATION };
+        
+        // 添加索引
+        for (String columnName : indexColumns) {
+            db.execSQL(createIndex(BOOKMARK_TABLE_NAME, columnName));
+        }
+    }
+    
+    // 创建索引
+    private String createIndex(String tableName, String columnName) {
+        return "create index " 
+                + tableName.toLowerCase() 
+                + '_' + columnName
+                + " on " 
+                + tableName 
+                + " (" + columnName + ");";
+    }
+    
+    // 数据库升级
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try {
+            db.execSQL(DROP_DATABASE);
+        } catch (SQLException) {
+        }
+        onCreate(db);
+    }
+}
+</pre>
+
+<h2 id="toc_1.3">SQLiteDatabase</h2>
+<ul>
+<li>
+该类进行数据库的创建、销毁、插入、删除、查询和更新等操作。 
+</li>
+<li>
+可以使用<code>insert()</code>、<code>update()</code>、<code>delete()</code>方法可以进行数据库操作。
+</li>
+<li>
+也可以用<code>execSQL()</code>，该方法以字符串为参数，执行SQL语句。
+</li>
+</ul>
+
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>void</td>
+<td>beginTransaction()</td>
+<td>开始一个事务处理</td>
+</tr>
+<tr>
+<td>void</td>
+<td>endTransaction()</td>
+<td>停止一个事务处理</td>
+</tr>
+<tr>
+<td>void</td>
+<td>setTransactionSuccessful()</td>
+<td>设置事务处理成功</td>
+</tr>
+<tr>
+<td>void</td>
+<td>execSQL(String sql)</td>
+<td>执行SQL语句</td>
+</tr>
+<tr>
+<td>long</td>
+<td>insertiOrThrow(String table, String nullColumnHack, ContentValues values)</td>
+<td>插入数据到数据库中，返回行标号</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)</td>
+<td>数据查询，返回数据库光标</td>
+</tr>
+<tr>
+<td>int</td>
+<td>update(String table, ContentValues values, String whereClause, String[] whereArgs)</td>
+<td>更新数据，返回生效的行号</td>
+</tr>
+</table>
+
+<h2 id="toc_1.4">Cursor</h2>
+<ul>
+<li>
+数据库光标，用于操纵查询数据库。
+</li>
+<li>
+通常使用<code>getColumnIndexOrThrow</code>方法定位数据项。
+</li>
+<li>
+通常使用<code>get*</code>方法进行数据查询。
+</li>
+</ul>
+
+<h3 id="toc_1.4.1">主要方法说明</h3>
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>int</td>
+<td>getColumnCount()</td>
+<td>返回数据库表的总列数</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getColumnIndexOrThrow(String columnName)</td>
+<td>获取对应列名的序号，如果错误就抛出异常IllegalArgumentException</td>
+</tr>
+<tr>
+<td>string[]</td>
+<td>getColumnNames()</td>
+<td>返回列名的数组</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getCount()</td>
+<td>返回数据库表的总行数</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>moveToFirst()</td>
+<td>光标移动到第一行</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>moveToLast()</td>
+<td>光标移动到最后一行</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>moveToNext()</td>
+<td>光标移动到下一行</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>moveToPrevious()</td>
+<td>光标移动到前一行</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getPosition()</td>
+<td>返回光标位置</td>
+</tr>
+<tr>
+<td>String</td>
+<td>getString(int columnIndex)</td>
+<td>返回查询的字符串值</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getInt(int columnIndex)</td>
+<td>返回查询的int值</td>
+</tr>
+<tr>
+<td>long</td>
+<td>getLong(int columnIndex)</td>
+<td>返回查询的long值</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isAfterLast()</td>
+<td>是否光标在最后一行后面</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isBeforeFirst()</td>
+<td>是否光标在第一行前面</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isNull(int columnIndex)</td>
+<td>返回指定列是否为空</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>move(int offset)</td>
+<td>以偏移量移动光标</td>
+</tr>
+</table>
+
+<h2 id="toc_1.5">SQLiteQueryBuilder</h2>
+<ul>
+<li>
+数据库查询辅助类。
+</li>
+<li>
+通常使用<code>setTables</code>设置数据库表。
+</li>
+<li>
+通常使用<code>appendWhere</code>添加查询条件。
+</li>
+<li>
+通常使用<code>buildQuery</code>生成SQL查询语句。
+</li>
+</ul>
+
+<h3 id="toc_1.5.1">主要方法说明</h3>
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>void</td>
+<td>setTables(String inTables)</td>
+<td>设置查询表名</td>
+</tr>
+<tr>
+<td>void</td>
+<td>appendWhere(CharSequence inWhere)</td>
+<td>添加查询条件</td>
+</tr>
+<tr>
+<td>String</td>
+<td>buildQuery(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit)</td>
+<td>生成SQL语句</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>query(SQLiteDatabase db, String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder)</td>
+<td>查询数据库</td>
+</tr>
+</table>
+
+<h2 id="toc_1.6">SQLiteStatement</h2>
+<ul>
+<li>
+数据库执行辅助类
+</li>
+<li>
+通过调用<code>SQLiteDatabase.compileStatement</code>方法返回该对象，并使用该对象的<code>execute()</code>方法执行语句。
+</li>
+</ul>
+
+<h2 id="toc_1.7">常用SQL操作方法</h2>
+<h3 id="toc_1.7.1">获取数据库句柄</h3>
+<pre class="brush:java">
+SQLiteDataBase db = SQLiteOpenHelper.getWriteableDatabase();
+</pre>
+
+<h3 id="toc_1.7.2">创建数据库</h3>
+<pre class="brush:java">
+String sql = "create table Student(" + " stud_no text not null, " + " stud_name text);";
+
+db.execSQL(sql);
+</pre>
+
+<h3 id="toc_1.7.3">删除数据库</h3>
+<pre class="brush:java">
+String sql = "drop table Student";
+
+db.execSQL(sql);
+</pre>
+
+<h3 id="toc_1.7.4">插入数据，使用SQL语句</h3>
+<pre class="brush:java">
+String sql_1 = "insert into Student (stud_no, stud_name) values('S108', 'Lily Chen');";
+String sql_2 = "insert into Student (stud_no, stud_name) values('S201', 'Tom Kao');";
+String sql_3 = "insert into Student (stud_no, stud_name) values('S333', 'Peter Rabbit');";
+
+db.execSQL(sql_1);
+db.execSQL(sql_2);
+db.execSQL(sql_3);
+</pre>
+
+<h3 id="toc_1.7.5">插入数据，使用ContentValues辅助类</h3>
+<pre class="brush:java">
+ContentValues cv = new ContentValues();
+cv.put("stud_no", "S108");
+cv.put("stud_name", "Lily Chen");
+db.insert("Student", null, cv);
+
+cv = new ContentValues();
+cv.put("stud_no", "S201");
+cv.put("stud_name", "Tom Kao");
+db.insert("Student", null, cv);
+
+cv = new ContentValues();
+cv.put("stud_no", "S333");
+cv.put("stud_name", "eter Rabbit");
+
+try {
+    db.beginTransaction();
+    db.insert("Student", null, cv);
+    db.setTransactionSuccessful();
+} finally {
+    db.endTransaction();
+}
+</pre>
+
+<h3 id="toc_1.7.6">查询数据</h3>
+<h4 id="toc_1.7.6.1">查询参数说明</h4>
+<ul>
+<li>
+query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
+</li>
+<li>
+table: 表名
+</li>
+<li>
+columns: 需要查询的列,如果是null，则返回所有列
+</li>
+<li>
+selection: 与SQL的关键字WHERE关联，但排除WHERE。如果是null，则返回所有列
+</li>
+<li>
+selectionArgs: 
+</li>
+<li>
+groupBy: 与SQL的关键字GROUP BY 关联，但排除GROUP BY。如果是null， 则不分组。
+</li>
+<li>
+having: 与SQL的关键字HAVING关联，但排除HAVING。如果是null，则包含所有行。
+</li>
+<li>
+orderBy: 与SQL的关键字ORDER BY关联，但排除ORDER BY。如果是null，则不排序。
+</li>
+</ul>
+
+<pre class="brush:java">
+String col[] = { "stud_no", "stud_name" };
+
+// 设置查询条件
+String selection = BookCommentsColumns.BOOK_ID + "=? and "
+				+ BookCommentsColumns.LOCATION + "=?";
+String[] selectionArgs = new String[] {String.valueOf(id), location};
+
+cur = db.query("Student", col, selection, selectionArgs, null, null, null);
+
+// 移动到第一行
+cur.moveToFirst();
+while (!cur.isAfterLast()) {
+    // 手动设置序号
+    cur.getLong(0);
+    cur.getString(1);
+    // 根据列项查询序号
+    cur.getString(cur.getColumnIndexOrThrow(col[1]));
+    // 移动到下一行
+    cur.moveToNext();
+}
+</pre>
+
+<h3 id="toc_1.7.7">更新数据</h3>
+<pre class="brush:java">
+ContentValues cv = new ContentValues();
+cv.put("stud_no", "S288");
+cv.put("stud_name", "Linda Wang");
+
+try {
+    db.beginTransaction();
+    db.update("Student", cv, "stud_no = 'S201'", null);
+    db.setTransactionSuccessful();
+} finally {
+    db.endTransaction();
+}
+</pre>
+
+<h3 id="toc_1.7.8">删除数据</h3>
+<pre class="brush:java">
+try {
+    db.beginTransaction();
+    db.delete("Student", "stud_no = 'S108'", null);
+    db.setTransactionSuccessful();
+} finally {
+    db.endTransaction();
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

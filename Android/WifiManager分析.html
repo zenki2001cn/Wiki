@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>WifiManager分析</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">WifiManager分析</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">WifiManager分析</a></li>
+<ul>
+<li><a href="#toc_1.1">相关文件</a></li>
+<li><a href="#toc_1.2">应用层的接口类</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:text">
+framework/base/wifi/java/android/net/wifi/WifiManager.java
+</pre>
+
+<h2 id="toc_1.2">应用层的接口类</h2>
+<ul>
+<li>
+WifiManager向应用层提供Wifi操作的接口，包括开启Wifi、关闭Wifi、连接AP、扫描AP等功能。可以将其看作Wifi功能的控制中心。该类主要是通过调用WifiService的接口来实现这些功能。
+</li>
+<li>
+同时在WifiManager中定义了一些命令标识，用来对应状态机的功能。参见<a href="WIFI状态机.html">WIFI状态机</a>
+</li>
+<li>
+以下表列出了部分功能方法：
+</li>
+</ul>
+
+<table>
+<tr>
+<th>方法名</th>
+<th>功能描述</th>
+<th>状态机的命令标识</th>
+</tr>
+<tr>
+<td>startScan</td>
+<td>扫描Wifi热点</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>setWifiEnabled</td>
+<td>开启Wifi</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>startWifi</td>
+<td>保持driver与网络的连接</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>connectNetwork</td>
+<td>连接指定的一个网络节点</td>
+<td>CMD_CONNECT_NETWORK</td>
+</tr>
+<tr>
+<td>initializeMulticastFiltering</td>
+<td>开启多播支持</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>addToBlacklist</td>
+<td>加入黑名单</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>getDhcpInfo</td>
+<td>获取dhcp信息</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>pingSupplicant</td>
+<td>检查wpa_supplicant是否存在</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>forgetNetwork</td>
+<td>忘记一个网络连接信息</td>
+<td>CMD_FORGET_NETWORK</td>
+</tr>
+<tr>
+<td>saveNetwork</td>
+<td>保存一个网络连接信息</td>
+<td>CMD_SAVE_NETWORK</td>
+</tr>
+<tr>
+<td>startWps</td>
+<td>开启安全连接</td>
+<td>CMD_START_WPS</td>
+</tr>
+<tr>
+<td>disableNetwork</td>
+<td>禁用一个网络节点的连接</td>
+<td>CMD_DISABLE_NETWORK</td>
+</tr>
+<tr>
+<td>无</td>
+<td>WifiService的事件</td>
+<td>CMD_WPS_COMPLETED</td>
+</tr>
+<tr>
+<td>无</td>
+<td>系统专用</td>
+<td>CMD_ENABLE_TRAFFIC_STATS_POLL</td>
+</tr>
+<tr>
+<td>无</td>
+<td>系统专用</td>
+<td>CMD_TRAFFIC_STATS_POLL</td>
+</tr>
+</table>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

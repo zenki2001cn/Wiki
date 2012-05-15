@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>数据压缩和对象序列化</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">数据压缩和对象序列化</h1>
+
+<h2 id="toc_1.1">数据压缩</h2>
+<ul>
+<li>
+从InputStream和OutputStream衍生来的压缩类
+</li>
+</ul>
+
+<pre class="brush:java">
+// 压缩输出类
+BufferedOutputStream out = new BufferedOutputStream(
+                           new GZIPOutputStream(
+                           new FileOutputStream("test.gz")));
+
+// 压缩输入类
+BufferedReader in = new BufferedReader(
+                    new InputStreamReader(new GZIPInputStream(
+                    new FileInputStream("test.gz"))));
+</pre>
+
+<h2 id="toc_1.2">JAR文件</h2>
+<ul>
+<li>
+典型用法
+</li>
+</ul>
+
+<pre class="brush:shell">
+// 创建jar文件
+jar cvf myJarFile.jar *.class
+// 包含所有目录及文件清单
+jar cmf myJarFile.jar myManifestFile.mf *.class
+// 显示详细信息
+jar tvf myJarFile.jar
+// 解压文件
+jar xvf myJarFile.jar
+// 环境变量
+CLASSPATH="lib1.jar;lib2.jar;"
+</pre>
+
+<h2 id="toc_1.3">对象序列化</h2>
+<ul>
+<li>
+对象需要实现java.io.Serializable接口
+</li>
+<li>
+调用ObjectOutputStream.writeObject()方法序列化对象
+</li>
+<li>
+调用ObjectInputStream.readObject()方法反序列化对象
+</li>
+<li>
+对象序列化是面向字节的
+</li>
+</ul>
+
+<pre class="brush:java">
+ObjectOutput out = new ObjectOutputStream(
+                   new FileOutputStream("X.file"));
+Alien zorcon = new Alien();
+out.writeObject(zorcon);
+
+ObjectInputStream in = new ObjectInputStream(
+                       new FileInputStream(new File("..", "X.file")));
+Object mystery = in.readObject();
+</pre>
+
+<h3 id="toc_1.3.1">序列化的控制</h3>
+<ul>
+<li>
+通过readExternal()和writeExternal()方法显示的序列化需要的部分。
+</li>
+</ul>
+
+<pre class="brush:java">
+public void writeExternal(ObjectOutput out)
+throws IOException {
+    // You must do this:
+    out.writeObject(s);
+    out.writeInt(i);
+}
+public void readExternal(ObjectInput in)
+throws IOException, ClassNotFoundException {
+    // You must do this:
+    s = (String)in.readObject();
+    i = in.readInt();
+}
+</pre>
+
+<h3 id="toc_1.3.2">transient关键字</h3>
+<ul>
+<li>
+该关键字可以用来变量声明，指定该变量关闭序列化功能
+</li>
+</ul>
+
+<pre class="brush:java">
+private transient String password;
+</pre>
+
+<h3 id="toc_1.3.3">readObject和writeObject</h3>
+<ul>
+<li>
+声明和实现私有方法readObject和writeObject，来实现Serializable接口
+</li>
+</ul>
+
+<h3 id="toc_1.3.4">Preferences</h3>
+<ul>
+<li>
+使用java.util.prefs.Preferences类进行首选项设置
+</li>
+<li>
+静态方法userNodeForPackage()用来保存用户首选项，systemNodeForPackage()用来保存系统首选项
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

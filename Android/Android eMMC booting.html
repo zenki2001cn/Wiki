@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Android eMMC booting</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">Android eMMC booting</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Android eMMC booting</a></li>
+<ul>
+<li><a href="#toc_1.1">eMMC binaries</a></li>
+<li><a href="#toc_1.2">Creating the GPT table</a></li>
+<ul>
+<li><a href="#toc_1.2.1">On Target</a></li>
+<li><a href="#toc_1.2.2">On Host Machine</a></li>
+<li><a href="#toc_1.2.3">Search for fastboot devices</a></li>
+<li><a href="#toc_1.2.4">Create GPT table on eMMC/SD card</a></li>
+</ul>
+<li><a href="#toc_1.3">File locations:</a></li>
+<ul>
+<li><a href="#toc_1.3.1">flash partitions</a></li>
+</ul>
+<li><a href="#toc_1.4">Modifying .IMG Files</a></li>
+<ul>
+<li><a href="#toc_1.4.1">BOOT.IMG</a></li>
+<li><a href="#toc_1.4.2">RAMDISK.IMG</a></li>
+<li><a href="#toc_1.4.3">RECOVERY.IMG</a></li>
+<li><a href="#toc_1.4.4">SYSTEM.IMG</a></li>
+<li><a href="#toc_1.4.5">USERDATA.IMG</a></li>
+<li><a href="#toc_1.4.6">CACHE.IMG</a></li>
+</ul>
+<li><a href="#toc_1.5">TI Android build setup</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">eMMC binaries</h2>
+<ul>
+<li>
+This is the efi partition table as exists on the emmc
+</li>
+</ul>
+
+<pre class="brush:text">
+ Sector#    Size Name
+     256     128K xloader
+     512     256K bootloader
+    2048       8M recovery                                                      
+   18432       8M boot                                                          
+   34816     512M system                                                        
+ 1083392     256M cache                                                         
+ 1607680     512M userdata                                                      
+ 2656256    2183M media
+</pre>
+
+<h2 id="toc_1.2">Creating the GPT table</h2>
+<h3 id="toc_1.2.1">On Target</h3>
+<pre class="brush:bash">
+# Connect a USB cable to the OTG port on your platform
+# Boot your platform up with a stock u-boot and MLO
+# Once you platform is booted you will see the following:
+$ Fastboot entered...
+</pre>
+
+<h3 id="toc_1.2.2">On Host Machine</h3>
+<pre class="brush:bash">
+# locate fastboot in you android filesystem
+$ cd $mydroid/out/host/linux-x86/bin/fastboot
+</pre>
+
+<h3 id="toc_1.2.3">Search for fastboot devices</h3>
+<pre class="brush:bash">
+$ fastboot devices
+</pre>
+
+<h3 id="toc_1.2.4">Create GPT table on eMMC/SD card</h3>
+<pre class="brush:bash">
+$ fastboot oem format
+</pre>
+
+<pre class="brush:text">
+From the android build these are the binaries that go into each partition:
+
+  Sector#    Size Name            Binary
+     256     128K xloader         MLO
+     512     256K bootloader      u-boot.bin
+    2048       8M recovery        recovery.img                                                    
+   18432       8M boot            boot.img                                  
+   34816     512M system          system.img                                      
+ 1083392     256M cache           cache.img                                    
+ 1607680     512M userdata        userdata.img                                     
+ 2656256    2183M media           none
+</pre>
+
+<h2 id="toc_1.3">File locations:</h2>
+<ul>
+<li>
+MLO           --&gt;     x-loader/MLO
+</li>
+<li>
+u-boot        --&gt;     u-boot/u-boot.bin 
+</li>
+<li>
+boot.img      --&gt;     need to create using zImage + ramdisk.img
+</li>
+<li>
+recovery.img  --&gt;     need to create using zImage + ramdisk-recovery.img
+</li>
+<li>
+system.img    --&gt;     $mydroid/out/target/product/&lt;platform&gt;/system.img
+</li>
+<li>
+cache.img     --&gt; 
+</li>
+<li>
+userdata.img  --&gt;     $mydroid/out/target/product/&lt;platform&gt;/userdata.img
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">flash partitions</h3>
+<pre class="brush:bash">
+# All these partitions can be flashed with the given binary using fastboot.
+$  fastboot flash &lt;name&gt; &lt;binary&gt;
+
+# Example flashing of all partitions
+$ fastboot flash xloader     MLO
+$ fastboot flash bootloader  u-boot.bin
+$ fastboot flash recovery    recovery.img
+$ fastboot flash boot        boot.img
+$ fastboot flash system      system.img
+$ fastboot flash cache       cache.img
+$ fastboot flash userdata    userdata.img
+</pre>
+
+<h2 id="toc_1.4">Modifying .IMG Files</h2>
+<ul>
+<li>
+Typically when you want to modify any of the partitions, you would need to unzip-modify-rezip and then fastboot flash.
+</li>
+<li>
+Following section talks about how to do that for each partition
+</li>
+</ul>
+
+<h3 id="toc_1.4.1">BOOT.IMG</h3>
+<pre class="brush:bash">
+#  boot.img = zImage + ramdisk.img
+#  zImage = kernel image
+#  ramdisk.img = out/target/product/blaze/root/
+$ ./out/host/linux-x86/bin/mkbootimg 
+  --kernel zImage 
+  --ramdisk ramdisk.img 
+  --base 0x80000000 
+  --cmdline "console=ttyO2,115200n8 mem=456M@0x80000000 mem=512M@0xA0000000 \
+            init=/init vram=10M omapfb.vram=0:4M androidboot.console=ttyO2" 
+  --board omap4 
+  -o boot.img.new
+# Output: boot.img.new
+# Note: bootarg is passed to kernel via --cmdline option above
+
+# To "just" boot boot.img (before flashing) you can use:
+$ fastboot boot boot.img
+</pre>
+
+<h3 id="toc_1.4.2">RAMDISK.IMG</h3>
+<pre class="brush:bash">
+$ mkdir root
+$ cd root
+$ gunzip -c ../ramdisk.img | cpio -i
+# &lt;make changes to root/ contents...&gt;
+$ ./out/host/linux-x86/bin/mkbootfs root/ | ./out/host/linux-x86/bin/minigzip &gt;ramdisk.img.new
+# output: ramdisk.img.new
+# Note: any init.rc changes will need to use this method
+</pre>
+
+<h3 id="toc_1.4.3">RECOVERY.IMG</h3>
+<pre class="brush:bash">
+# Is just like boot.img. 
+# recovery.img = zImage + ramdisk-recovery.img
+# Follow the same steps as boot.img for packing/unpacking
+</pre>
+
+<h3 id="toc_1.4.4">SYSTEM.IMG</h3>
+<pre class="brush:bash">
+# uncompress
+$ ./out/host/linux-x86/bin/simg2img system.img system.img.raw
+# mount to directory mnt-point/
+$ mkdir mnt-point
+$ sudo mount -t ext4 -o loop system.img.raw mnt-point/
+#modify any .so or apk in the mnt-point/ directory
+#rezip
+$ sudo out/host/linux-x86/bin/make_ext4fs -s -l 512M -a system system.img.new mnt-point/
+$ sudo umount mnt-point/
+# Output: system.img.new
+# Instead of having to reflash the whole big system.img, one can selective update any binary 
+# in /system folder on running target
+</pre>
+
+<h3 id="toc_1.4.5">USERDATA.IMG</h3>
+<pre class="brush:bash">
+#uncompress
+$ ./out/host/linux-x86/bin/simg2img userdata.img userdata.img.raw
+#mount to directory mnt-point/
+$ mkdir mnt-point
+$ sudo mount -t ext4 -o loop userdata.img.raw mnt-point/
+#modify any .so or apk in the mnt-point/ directory
+#rezip
+$ sudo ./out/host/linux-x86/bin/make_ext4fs -s -l 512M -a userdata userdata.img.new mnt/
+$ sudo umount mnt-point/
+# Output: userdata.img.new
+</pre>
+
+<h3 id="toc_1.4.6">CACHE.IMG</h3>
+<pre class="brush:bash">
+#This is empty ext4 fs image
+$ mkdir mnt-point/
+$ sudo ./make_ext4fs -s -l 256M -a cache cache.img mnt-point/
+# Output: cache.img
+</pre>
+
+<h2 id="toc_1.5">TI Android build setup</h2>
+<ul>
+<li>
+Copy kernel zImage, u-boot.bin and MLO for your board in folder device/ti/blaze/boot/.
+</li>
+</ul>
+
+<pre class="brush:bash">
+# Rename as:
+$ mv MLO MLO_es2.2_emu 
+# or 
+$ mv MLO MLO_es2.2_gp 
+# (based on your board being GP or EMU)
+</pre>
+
+<ul>
+<li>
+Next start standard android build and all img files are generated in: out/target/product/blaze/*.img
+</li>
+</ul>
+
+<pre class="brush:bash">
+# A script is introduced in TI Android release to make this flashing process easier: device/ti/blaze/boot/fastboot.sh
+# Usage:
+$ cd device/ti/blaze/boot/
+$ fastboot.sh --emu
+# or
+$ fastboot.sh --gp
+# Running this script will flash whole android system on your board.
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

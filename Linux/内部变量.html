@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>内部变量</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">内部变量</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">内部变量</a></li>
+<ul>
+<li><a href="#toc_1.1">内部变量</a></li>
+<ul>
+<li><a href="#toc_1.1.1">$BASH</a></li>
+<li><a href="#toc_1.1.2">$BASH_ENV</a></li>
+<li><a href="#toc_1.1.3">$BASH_SUBSHELL</a></li>
+<li><a href="#toc_1.1.4">$BASH_VERSINFO[n]</a></li>
+<li><a href="#toc_1.1.5">$BASH_VERSION</a></li>
+<li><a href="#toc_1.1.6">$DIRSTACK</a></li>
+<li><a href="#toc_1.1.7">$EDITOR</a></li>
+<li><a href="#toc_1.1.8">$EUID</a></li>
+<li><a href="#toc_1.1.9">$FUNCNAME</a></li>
+<li><a href="#toc_1.1.10">$GLOBIGNORE</a></li>
+<li><a href="#toc_1.1.11">$GROUPS</a></li>
+<li><a href="#toc_1.1.12">$HOME</a></li>
+<li><a href="#toc_1.1.13">$HOSTNAME</a></li>
+<li><a href="#toc_1.1.14">$HOSTTYPE</a></li>
+<li><a href="#toc_1.1.15">$IFS</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">内部变量</h2>
+<h3 id="toc_1.1.1">$BASH</h3>
+<dl>
+<dt>描述 </dt>
+<dd>这个变量将指向Bash的二进制执行文件的位置。</dd>
+<dt>示例 </dt>
+</dl>
+<pre class="brush:bash">
+bash$ echo $BASH    #/bin/bash
+</pre>
+
+<h3 id="toc_1.1.2">$BASH_ENV</h3>
+<dl>
+<dt>描述 </dt>
+<dd>这个环境变量将指向一个Bash启动文件，这个启动文件将在调用一个脚本时被读取。</dd>
+</dl>
+
+<h3 id="toc_1.1.3">$BASH_SUBSHELL</h3>
+<dl>
+<dt>描述 </dt>
+<dd>这个变量将提醒subshell的层次，这是一个在version3才被添加到Bash中的新特性。</dd>
+</dl>
+
+<h3 id="toc_1.1.4">$BASH_VERSINFO[n]</h3>
+<dl>
+<dt>描述 </dt>
+<dd>记录Bash安装信息的一个6元素的数组。</dd>
+<dt>示例 </dt>
+</dl>
+<pre class="brush:bash">
+# Bash version info:
+
+for n in 0 1 2 3 4 5
+do
+    echo "BASH_VERSINFO[$n] = ${BASH_VERSINFO[$n]}"
+done
+
+# BASH_VERSINFO[0] = 3          # 主版本号
+# BASH_VERSINFO[1] = 00         # 次版本号
+# BASH_VERSINFO[2] = 14         # Patch次数
+# BASH_VERSINFO[3] = 1          # Build version
+# BASH_VERSINFO[4] = release    # Release status
+# BASH_VERSINFO[5] = i386-redhat-linux-gnu  # Architecture
+</pre>
+
+<h3 id="toc_1.1.5">$BASH_VERSION</h3>
+<dl>
+<dt>描述 </dt>
+<dd>安装在系统上的Bash的版本号。</dd>
+</dl>
+
+<h3 id="toc_1.1.6">$DIRSTACK</h3>
+<dl>
+<dt>描述 </dt>
+<dd>在目录栈中最上边的值。这个内建的变量与dirs命令是保持一致的,但是dirs命令将显示目录栈的整个内容。</dd>
+</dl>
+
+<h3 id="toc_1.1.7">$EDITOR</h3>
+<dl>
+<dt>描述 </dt>
+<dd>脚本调用的默认编辑器,一般是vi或者是emacs。</dd>
+</dl>
+
+<h3 id="toc_1.1.8">$EUID</h3>
+<dl>
+<dt>描述 </dt>
+<dd>当前用户被假定的任何id号。可能在su命令中使用。注意:$EUID并不一定与$UID相同。</dd>
+</dl>
+
+<h3 id="toc_1.1.9">$FUNCNAME</h3>
+<dl>
+<dt>描述 </dt>
+<dd>当前函数的名字。</dd>
+</dl>
+
+<h3 id="toc_1.1.10">$GLOBIGNORE</h3>
+<dl>
+<dt>描述 </dt>
+<dd>一个文件名的模式匹配列表,如果在file globbing中匹配到的文件包含这个列表中的某个文件,那么这个文件将被从匹配到的文件中去掉。</dd>
+</dl>
+
+<h3 id="toc_1.1.11">$GROUPS</h3>
+<dl>
+<dt>描述 </dt>
+<dd>当前用户属于的组。这是一个当前用户的组id列表(数组),就像在/etc/passwd中记录的一样。</dd>
+</dl>
+
+<h3 id="toc_1.1.12">$HOME</h3>
+<dl>
+<dt>描述 </dt>
+<dd>用户的home目录,一般都是/home/username。</dd>
+</dl>
+
+<h3 id="toc_1.1.13">$HOSTNAME</h3>
+<dl>
+<dt>描述 </dt>
+<dd>hostname命令将在一个init脚本中,在启动的时候分配一个系统名字。gethostname()函数将用来设置这个$HOSTNAME内部变量。</dd>
+</dl>
+
+<h3 id="toc_1.1.14">$HOSTTYPE</h3>
+<dl>
+<dt>描述 </dt>
+<dd>主机类型。</dd>
+</dl>
+
+<h3 id="toc_1.1.15">$IFS</h3>
+<dl>
+<dt>描述 </dt>
+<dd>内部域分隔符。这个变量用来决定Bash在解释字符串时如何识别域，或者单词边界。$IFS默认为空白(空格,tab,和新行),但可以修改,比如在分析逗号分隔的数据文件时。</dd>
+</dl>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

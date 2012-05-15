@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>AudioSystem</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">AudioSystem</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">AudioSystem</a></li>
+<ul>
+<li><a href="#toc_1.1">概述</a></li>
+<li><a href="#toc_1.2">static常量定义</a></li>
+<ul>
+<li><a href="#toc_1.2.1">Audio类型</a></li>
+<li><a href="#toc_1.2.2">Audio状态</a></li>
+<li><a href="#toc_1.2.3">错误信息</a></li>
+<li><a href="#toc_1.2.4">输出设备</a></li>
+<li><a href="#toc_1.2.5">输入设备</a></li>
+</ul>
+<li><a href="#toc_1.3">JNI接口</a></li>
+<li><a href="#toc_1.4">AudioSystem(C++层)</a></li>
+<ul>
+<li><a href="#toc_1.4.1">AudioSystem::AudioFlingerClient</a></li>
+<li><a href="#toc_1.4.2">AudioSystem::AudioPolicyServiceClient</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<pre class="brush:text">
+    AudioSystem是声音系统的抽象，它为AudioService提供接口，具体实现透过JNI调用C++层的AudioSystem。
+</pre>
+
+<h2 id="toc_1.2">static常量定义</h2>
+<h3 id="toc_1.2.1">Audio类型</h3>
+<ul>
+<li>
+该组变量对应Settings.System.VOLUME_SETTINGS和attrs.xml
+</li>
+</ul>
+
+<table>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>STREAM_VOICE_CALL</td>
+<td>0</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_SYSTEM</td>
+<td>1</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_RING</td>
+<td>2</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_MUSIC</td>
+<td>3</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_ALARM</td>
+<td>4</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_NOTIFICATION</td>
+<td>5</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_BLUETOOTH_SCO</td>
+<td>6</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_SYSTEM_ENFORCED</td>
+<td>7</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_DTMF</td>
+<td>8</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>STREAM_TTS</td>
+<td>9</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3 id="toc_1.2.2">Audio状态</h3>
+<table>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>MODE_INVALID</td>
+<td>-2</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>MODE_CURRENT</td>
+<td>-1</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>MODE_NORMAL</td>
+<td>0</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>MODE_RINGTONE</td>
+<td>1</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>MODE_IN_CALL</td>
+<td>2</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>MODE_IN_COMMUNICATION</td>
+<td>3</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>NUM_MODES</td>
+<td>4</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3 id="toc_1.2.3">错误信息</h3>
+<ul>
+<li>
+该组变量对应libs/android_runtime/android_media_AudioSystem.cpp的定义
+</li>
+</ul>
+
+<table>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>AUDIO_STATUS_OK</td>
+<td>0</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>AUDIO_STATUS_ERROR</td>
+<td>1</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>AUDIO_STATUS_SERVER_DIED</td>
+<td>100</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<ul>
+<li>
+以下常量对应AudioSystem.cpp中的定义
+</li>
+</ul>
+<h3 id="toc_1.2.4">输出设备</h3>
+<table>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>DEVICE_OUT_EARPIECE</td>
+<td>0x1</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_SPEAKER</td>
+<td>0x2</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_WIRED_HEADSET</td>
+<td>0x4</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_WIRED_HEADPHONE</td>
+<td>0x8</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_SCO</td>
+<td>0x10</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_SCO_HEADSET</td>
+<td>0x20</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_SCO_CARKIT</td>
+<td>0x40</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_A2DP</td>
+<td>0x80</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_A2DP_HEADPHONES</td>
+<td>0x100</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_BLUETOOTH_A2DP_SPEAKER</td>
+<td>0x200</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_AUX_DIGITAL</td>
+<td>0x400</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_FM_TRANSMIT</td>
+<td>0x800</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_LOW_POWER</td>
+<td>0x1000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_OUT_DEFAULT</td>
+<td>0x8000</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3 id="toc_1.2.5">输入设备</h3>
+<table>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>DEVICE_IN_COMMUNICATION</td>
+<td>0x10000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_AMBIENT</td>
+<td>0x20000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_BUILTIN_MIC1</td>
+<td>0x40000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_BUILTIN_MIC2</td>
+<td>0x80000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_MIC_ARRAY</td>
+<td>0x100000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_BLUETOOTH_SCO_HEADSET</td>
+<td>0x200000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_WIRED_HEADSET</td>
+<td>0x400000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_AUX_DIGITAL</td>
+<td>0x800000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_FM_ANALOG</td>
+<td>0x1000000</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEVICE_IN_DEFAULT</td>
+<td>0x8000000</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">JNI接口</h2>
+<ul>
+<li>
+AudioSystem的JNI接口定义在frameworks/base/core/jni/android_media_AudioSystem.cpp中
+</li>
+</ul>
+
+<pre class="brush:c++">
+static JNINativeMethod gMethods[] = {
+    {"setParameters",        "(Ljava/lang/String;)I", (void *)android_media_AudioSystem_setParameters},
+    {"getParameters",        "(Ljava/lang/String;)Ljava/lang/String;", (void *)android_media_AudioSystem_getParameters},
+    {"muteMicrophone",      "(Z)I",     (void *)android_media_AudioSystem_muteMicrophone},
+    {"isMicrophoneMuted",   "()Z",      (void *)android_media_AudioSystem_isMicrophoneMuted},
+    {"isStreamActive",      "(I)Z",     (void *)android_media_AudioSystem_isStreamActive},
+    {"setDeviceConnectionState", "(IILjava/lang/String;)I", (void *)android_media_AudioSystem_setDeviceConnectionState},
+    {"getDeviceConnectionState", "(ILjava/lang/String;)I",  (void *)android_media_AudioSystem_getDeviceConnectionState},
+    {"setPhoneState",       "(I)I",     (void *)android_media_AudioSystem_setPhoneState},
+    {"setRingerMode",       "(II)I",    (void *)android_media_AudioSystem_setRingerMode},
+    {"setForceUse",         "(II)I",    (void *)android_media_AudioSystem_setForceUse},
+    {"getForceUse",         "(I)I",     (void *)android_media_AudioSystem_getForceUse},
+    {"initStreamVolume",    "(III)I",   (void *)android_media_AudioSystem_initStreamVolume},
+    {"setStreamVolumeIndex","(II)I",    (void *)android_media_AudioSystem_setStreamVolumeIndex},
+    {"getStreamVolumeIndex","(I)I",     (void *)android_media_AudioSystem_getStreamVolumeIndex}
+};
+</pre>
+
+<h2 id="toc_1.4">AudioSystem(C++层)</h2>
+<ul>
+<li>
+AudioSystem主要是调用IAudioFlinger接口实现具体的功能，这里主要关注两个Binder的回调：
+</li>
+<ul>
+<li>
+AudioSystem::AudioFlingerClient：连接AudioFlinger服务的回调。
+</li>
+<ul>
+<li>
+当Binder断开时会调用binderDied。
+</li>
+<li>
+当io配置变化时，会调用ioConfigChanged，如AudioFlinger初始化时。
+</li>
+</ul>
+<li>
+AudioSystem::AudioPolicyServiceClient：连接AudioPolicyService服务的回调，当Binder断开时会调用该回调。
+</li>
+</ul>
+</ul>
+
+<h3 id="toc_1.4.1">AudioSystem::AudioFlingerClient</h3>
+<pre class="brush:c++">
+class AudioFlingerClient: public IBinder::DeathRecipient, public BnAudioFlingerClient
+{
+public:
+    AudioFlingerClient() {
+    }
+
+    // Binder通知
+    virtual void binderDied(const wp&lt;IBinder&gt;&amp; who);
+
+    // 输入和输出的配置变更时被调用
+    virtual void ioConfigChanged(int event, int ioHandle, void *param2);
+};
+</pre>
+
+<h3 id="toc_1.4.2">AudioSystem::AudioPolicyServiceClient</h3>
+<pre class="brush:c++">
+class AudioPolicyServiceClient: public IBinder::DeathRecipient
+{
+public:
+    AudioPolicyServiceClient() {
+    }
+
+    // Binder通知
+    virtual void binderDied(const wp&lt;IBinder&gt;&amp; who);
+};
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

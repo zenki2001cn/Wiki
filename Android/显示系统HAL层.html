@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>显示系统HAL层</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">显示系统HAL层</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">显示系统HAL层</a></li>
+<ul>
+<li><a href="#toc_1.1">概述</a></li>
+<li><a href="#toc_1.2">模块定义(gralloc.h)</a></li>
+<ul>
+<li><a href="#toc_1.2.1">gralloc_module_t</a></li>
+<li><a href="#toc_1.2.2">gralloc_open</a></li>
+<li><a href="#toc_1.2.3">gralloc_close</a></li>
+<li><a href="#toc_1.2.4">framebuffer_open</a></li>
+<li><a href="#toc_1.2.5">framebuffer_close</a></li>
+</ul>
+<li><a href="#toc_1.3">模块初始化(gralloc.cpp)</a></li>
+<li><a href="#toc_1.4">设备定义(gralloc.h)</a></li>
+<ul>
+<li><a href="#toc_1.4.1">alloc_device_t</a></li>
+<li><a href="#toc_1.4.2">framebuffer_device_t</a></li>
+</ul>
+<li><a href="#toc_1.5">设备初始化</a></li>
+<li><a href="#toc_1.6">模块的封装</a></li>
+<ul>
+<li><a href="#toc_1.6.1">FramebufferNativeWindow::FramebufferNativeWindow</a></li>
+</ul>
+<li><a href="#toc_1.7">显示设备的抽象</a></li>
+<ul>
+<li><a href="#toc_1.7.1">DisplayHardware::init</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<ul>
+<li>
+显示系统通常使用framebuffer，而使用Overlay时可以使用v4l2驱动。这里我们先讨论framebuffer的驱动。
+</li>
+</ul>
+
+<h2 id="toc_1.2">模块定义(gralloc.h)</h2>
+<h3 id="toc_1.2.1">gralloc_module_t</h3>
+<pre class="brush:c++">
+typedef struct gralloc_module_t {
+    struct hw_module_t common;
+    
+    int (*registerBuffer)(struct gralloc_module_t const* module,
+            buffer_handle_t handle);
+
+    int (*unregisterBuffer)(struct gralloc_module_t const* module,
+            buffer_handle_t handle);
+    
+    int (*lock)(struct gralloc_module_t const* module,
+            buffer_handle_t handle, int usage,
+            int l, int t, int w, int h,
+            void** vaddr);
+
+    int (*unlock)(struct gralloc_module_t const* module,
+            buffer_handle_t handle);
+
+    int (*perform)(struct gralloc_module_t const* module,
+            int operation, ... );
+
+    void* reserved_proc[7];
+} gralloc_module_t;
+</pre>
+
+<h3 id="toc_1.2.2">gralloc_open</h3>
+<pre class="brush:c++">
+static inline int gralloc_open(const struct hw_module_t* module, 
+        struct alloc_device_t** device) {
+    return module-&gt;methods-&gt;open(module, 
+            GRALLOC_HARDWARE_GPU0, (struct hw_device_t**)device);
+}
+</pre>
+
+<h3 id="toc_1.2.3">gralloc_close</h3>
+<pre class="brush:c++">
+static inline int gralloc_close(struct alloc_device_t* device) {
+    return device-&gt;common.close(&amp;device-&gt;common);
+}
+</pre>
+
+<h3 id="toc_1.2.4">framebuffer_open</h3>
+<pre class="brush:c++">
+static inline int framebuffer_open(const struct hw_module_t* module, 
+        struct framebuffer_device_t** device) {
+    return module-&gt;methods-&gt;open(module, 
+            GRALLOC_HARDWARE_FB0, (struct hw_device_t**)device);
+}
+</pre>
+
+<h3 id="toc_1.2.5">framebuffer_close</h3>
+<pre class="brush:c++">
+static inline int framebuffer_close(struct framebuffer_device_t* device) {
+    return device-&gt;common.close(&amp;device-&gt;common);
+}
+</pre>
+
+<h2 id="toc_1.3">模块初始化(gralloc.cpp)</h2>
+<pre class="brush:c++">
+struct private_module_t HAL_MODULE_INFO_SYM = {
+    base: {
+        common: {
+            tag: HARDWARE_MODULE_TAG,
+            version_major: 1,
+            version_minor: 0,
+            id: GRALLOC_HARDWARE_MODULE_ID,
+            name: "Graphics Memory Allocator Module",
+            author: "The Android Open Source Project",
+            methods: &amp;gralloc_module_methods
+        },
+        registerBuffer: gralloc_register_buffer,
+        unregisterBuffer: gralloc_unregister_buffer,
+        lock: gralloc_lock,
+        unlock: gralloc_unlock,
+    },
+    framebuffer: 0,
+    flags: 0,
+    numBuffers: 0,
+    bufferMask: 0,
+    lock: PTHREAD_MUTEX_INITIALIZER,
+    currentBuffer: 0,
+};
+</pre>
+
+<h2 id="toc_1.4">设备定义(gralloc.h)</h2>
+<h3 id="toc_1.4.1">alloc_device_t</h3>
+<pre class="brush:c++">
+typedef struct alloc_device_t {
+    struct hw_device_t common;
+
+    int (*alloc)(struct alloc_device_t* dev,
+            int w, int h, int format, int usage,
+            buffer_handle_t* handle, int* stride);
+
+    int (*free)(struct alloc_device_t* dev,
+            buffer_handle_t handle);
+
+} alloc_device_t;
+</pre>
+
+<h3 id="toc_1.4.2">framebuffer_device_t</h3>
+<pre class="brush:c++">
+typedef struct framebuffer_device_t {
+    struct hw_device_t common;
+
+    const uint32_t  flags;
+    
+    const uint32_t  width;
+    const uint32_t  height;
+
+    const int       stride;
+    const int       format;
+    
+    const float     xdpi;
+    const float     ydpi;
+
+    const float     fps;
+    const int       minSwapInterval;
+    const int       maxSwapInterval;
+
+    int reserved[8];
+    int (*setSwapInterval)(struct framebuffer_device_t* window,
+            int interval);
+    int (*setUpdateRect)(struct framebuffer_device_t* window,
+            int left, int top, int width, int height);
+    
+    int (*post)(struct framebuffer_device_t* dev, buffer_handle_t buffer);
+    int (*compositionComplete)(struct framebuffer_device_t* dev);
+    void* reserved_proc[8];
+} framebuffer_device_t;
+</pre>
+
+<h2 id="toc_1.5">设备初始化</h2>
+<pre class="brush:c++">
+int fb_device_open(hw_module_t const* module, const char* name,
+        hw_device_t** device)
+{
+    int status = -EINVAL;
+    if (!strcmp(name, GRALLOC_HARDWARE_FB0)) {
+        alloc_device_t* gralloc_device;
+        status = gralloc_open(module, &amp;gralloc_device);
+        if (status &lt; 0)
+            return status;
+
+        /* initialize our state here */
+        fb_context_t *dev = (fb_context_t*)malloc(sizeof(*dev));
+        memset(dev, 0, sizeof(*dev));
+
+        /* initialize the procs */
+        dev-&gt;device.common.tag = HARDWARE_DEVICE_TAG;
+        dev-&gt;device.common.version = 0;
+        dev-&gt;device.common.module = const_cast&lt;hw_module_t*&gt;(module);
+        dev-&gt;device.common.close = fb_close;
+        dev-&gt;device.setSwapInterval = fb_setSwapInterval;
+        dev-&gt;device.post            = fb_post;
+        dev-&gt;device.setUpdateRect = 0;
+
+        private_module_t* m = (private_module_t*)module;
+        status = mapFrameBuffer(m);
+        if (status &gt;= 0) {
+            int stride = m-&gt;finfo.line_length / (m-&gt;info.bits_per_pixel &gt;&gt; 3);
+            int format = (m-&gt;info.bits_per_pixel == 32)
+                         ? HAL_PIXEL_FORMAT_RGBX_8888
+                         : HAL_PIXEL_FORMAT_RGB_565;
+#ifdef NO_32BPP
+            format = HAL_PIXEL_FORMAT_RGB_565;
+#endif
+            const_cast&lt;uint32_t&amp;&gt;(dev-&gt;device.flags) = 0;
+            const_cast&lt;uint32_t&amp;&gt;(dev-&gt;device.width) = m-&gt;info.xres;
+            const_cast&lt;uint32_t&amp;&gt;(dev-&gt;device.height) = m-&gt;info.yres;
+            const_cast&lt;int&amp;&gt;(dev-&gt;device.stride) = stride;
+            const_cast&lt;int&amp;&gt;(dev-&gt;device.format) = format;
+            const_cast&lt;float&amp;&gt;(dev-&gt;device.xdpi) = m-&gt;xdpi;
+            const_cast&lt;float&amp;&gt;(dev-&gt;device.ydpi) = m-&gt;ydpi;
+            const_cast&lt;float&amp;&gt;(dev-&gt;device.fps) = m-&gt;fps;
+            const_cast&lt;int&amp;&gt;(dev-&gt;device.minSwapInterval) = 1;
+            const_cast&lt;int&amp;&gt;(dev-&gt;device.maxSwapInterval) = 1;
+            *device = &amp;dev-&gt;device.common;
+        }
+    }
+    return status;
+}
+</pre>
+
+<h2 id="toc_1.6">模块的封装</h2>
+<h3 id="toc_1.6.1">FramebufferNativeWindow::FramebufferNativeWindow</h3>
+<pre class="brush:c++">
+FramebufferNativeWindow::FramebufferNativeWindow()
+    : BASE(), fbDev(0), grDev(0), mUpdateOnDemand(false)
+{
+    hw_module_t const* module;
+    if (hw_get_module(GRALLOC_HARDWARE_MODULE_ID, &amp;module) == 0) {
+        int stride;
+        int err;
+        err = framebuffer_open(module, &amp;fbDev);
+        
+        err = gralloc_open(module, &amp;grDev);
+
+        // bail out if we can't initialize the modules
+        if (!fbDev || !grDev)
+            return;
+        
+        mUpdateOnDemand = (fbDev-&gt;setUpdateRect != 0);
+        
+        // initialize the buffer FIFO
+        mNumBuffers = 2;
+        mNumFreeBuffers = 2;
+        mBufferHead = mNumBuffers-1;
+        
+        buffers[0] = new NativeBuffer(
+                fbDev-&gt;width, fbDev-&gt;height, fbDev-&gt;format, GRALLOC_USAGE_HW_FB);
+        buffers[1] = new NativeBuffer(
+                fbDev-&gt;width, fbDev-&gt;height, fbDev-&gt;format, GRALLOC_USAGE_HW_FB);
+        
+        err = grDev-&gt;alloc(grDev,
+                fbDev-&gt;width, fbDev-&gt;height, fbDev-&gt;format, 
+                GRALLOC_USAGE_HW_FB, &amp;buffers[0]-&gt;handle, &amp;buffers[0]-&gt;stride);
+        err = grDev-&gt;alloc(grDev,
+                fbDev-&gt;width, fbDev-&gt;height, fbDev-&gt;format, 
+                GRALLOC_USAGE_HW_FB, &amp;buffers[1]-&gt;handle, &amp;buffers[1]-&gt;stride);
+
+        const_cast&lt;uint32_t&amp;&gt;(ANativeWindow::flags) = fbDev-&gt;flags; 
+        const_cast&lt;float&amp;&gt;(ANativeWindow::xdpi) = fbDev-&gt;xdpi;
+        const_cast&lt;float&amp;&gt;(ANativeWindow::ydpi) = fbDev-&gt;ydpi;
+        const_cast&lt;int&amp;&gt;(ANativeWindow::minSwapInterval) = 
+            fbDev-&gt;minSwapInterval;
+        const_cast&lt;int&amp;&gt;(ANativeWindow::maxSwapInterval) = 
+            fbDev-&gt;maxSwapInterval;
+    } else {
+    }
+
+    ANativeWindow::setSwapInterval = setSwapInterval;
+    ANativeWindow::dequeueBuffer = dequeueBuffer;
+    ANativeWindow::lockBuffer = lockBuffer;
+    ANativeWindow::queueBuffer = queueBuffer;
+    ANativeWindow::query = query;
+    ANativeWindow::perform = perform;
+}
+</pre>
+
+<h2 id="toc_1.7">显示设备的抽象</h2>
+<h3 id="toc_1.7.1">DisplayHardware::init</h3>
+<pre class="brush:c++">
+void DisplayHardware::init(uint32_t dpy)
+{
+    mNativeWindow = new FramebufferNativeWindow();
+    framebuffer_device_t const * fbDev = mNativeWindow-&gt;getDevice();
+    mDpiX = mNativeWindow-&gt;xdpi;
+    mDpiY = mNativeWindow-&gt;ydpi;
+    mRefreshRate = fbDev-&gt;fps;
+
+    mOverlayEngine = NULL;
+    hw_module_t const* module;
+    if (hw_get_module(OVERLAY_HARDWARE_MODULE_ID, &amp;module) == 0) {
+        overlay_control_open(module, &amp;mOverlayEngine);
+    }
+    
+    ......
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Activity</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">android.app.Activity</h1>
+
+<pre class="brush: text">
+java.lang.Object
+   ↳ android.content.Context
+  	   ↳ android.content.ContextWrapper
+  	  	   ↳ android.view.ContextThemeWrapper
+  	  	  	   ↳ android.app.Activity
+</pre>
+
+<h2 id="toc_1.1">Activity的生命周期</h2>
+
+<p>
+<img src="pic/activity_lifecycle.png" />
+</p>
+
+<h3 id="toc_1.1.1">完全生命周期</h3>
+<pre class="brush:text">
+    完整的Activity生命周期之间从调用的OnCreate开始，到调用onDestroy结束。有可能在某些情况下，
+一个Activity被终止时并不调用onDestroy方法。
+    使用OnCreate方法来初始化你的Activity：初始化的用户界面，分配引用类变量，绑定数据控件，并
+创建服务和线程。在OnCreate方法传递的对象Bundle包含最后一次调用onSaveInstanceState保存的UI状态。
+你可以使用这个Bundle恢复用户界面到以前的状态，无论是在OnCreate方法或通过覆盖onRestoreInstanceStateMethod方法。
+    覆盖onDestroy方法来清理OnCreate中创建的任何资源，并确保所有外部连接被关闭，例如网络或数据库的联系。
+    为了避免创造短期对象和增加垃圾收集的时间，以致对用户体验产生直接影响。如果你的Activity需要创建一些对象的话，
+最好在onCreate方法中创建，因为它仅调用一次在一个Actvity的完整生命周期中。
+</pre>
+
+<h3 id="toc_1.1.2">可见的生命周期</h3>
+<pre class="brush:text">
+    一个Activity可见的生命周期始于OnStart调用，结束于OnStop调用。在这两个方法中间，
+你的Actvity将会对用户是可见的，尽管它可能没有焦点，也可能部分被遮挡着。
+在一个Activity完整的生命周期中可能会经过几个 Activity可见的生命周期，因为你的
+Activity可能会经常在前台和后台之间切换。在极端情况下，OPhone Runtime将杀掉一个
+Activity即使它在可见状态并且并不调用onStop方法。
+    OnStop方法用于暂停或停止动画，线程，定时器，服务或其他专门用于更新用户界面程序。
+当用户界面是再次可见时，使用OnStart（或onRestart）方法来恢复或重新启动这些程序。
+    onRestart方法优先于onStart被调用当一个Activity被重现可见时，使用它你可以实现一些
+Activity重新可见时的特殊的处理。
+    OnStart / OnStop方法也被用来注册和注销专门用于更新用户界面Intent接收者。
+</pre>
+
+<h3 id="toc_1.1.3">活跃的生命周期</h3>
+<pre class="brush:text">
+    一个Activity活跃的生命周期始于OnResume调用，结束于OnPause调用。一个活跃的Actvity
+总是在前台并且接收用户输入事件。当一个新的Actvity启动，或该设备进入休眠状态，或失去焦点，
+Activity活跃的生命周期就结束了。尽量在onPause和onResume方法中执行较量轻的代码以确保您的
+应用程序能够快速响应Acitvity在前台和后台之间切换。
+    在调用onPause之前，onSaveInstanceState会被调用。这个方法提供了一个机会保存当前的UI状
+态到Bundle当中。Bundle信息将会被传递到OnCreate和onRestoreInstanceState方法。使用
+onSaveInstanceState保存UI状态（如检查按钮状态，用户焦点，未提交用户输入）能够确保目前相同
+的用户界面当Activity下次被激活时。在Activity活跃生命周期中，你可以安全地认为onSaveInstanceState
+和onPause将被调到即使当前进程将终止。
+</pre>
+
+<h3 id="toc_1.1.4">后台生命周期</h3>
+<pre class="brush:text">
+从调用onPause()到onResume之间是Activity在后台运行的生命周期。
+</pre>
+
+<h3 id="toc_1.1.5">Activity状态转移的事件处理</h3>
+<pre class="brush: java">
+public class Activity extends ApplicationContext {
+
+    // 在Activity生命周期开始时被调用
+    protected void onCreate(Bundle savedInstanceState);
+    
+    // onCreate完成后被调用，用来回复UI状态
+    public void onRestoreInstanceState(Bundle savedInstanceState);
+
+    // 当activity对用户即将可见的时候调用
+    protected void onStart();
+    
+    // 当activity从停止状态重新启动时调用，通常是从Home返回
+    protected void onRestart();
+
+    // 当activity将要与用户交互时调用此方法，此时activity在activity栈的栈顶，用户输入已经可以传递给它
+    protected void onResume();
+
+    // Activity即将移出栈顶保留UI状态时调用此方法
+    public void onSaveInstanceState(Bundle savedInstanceState);
+    
+    // 当系统要启动一个其他的activity时调用（其他的activity显示之前），
+    // 这个方法被用来提交那些持久数据的改变、停止动画、和其他占用 CPU资源的东西。
+    // 由于下一个activity在这个方法返回之前不会resumed，所以实现这个方法时代码执行要尽可能快
+    protected void onPause();       
+
+    // 当另外一个activity恢复并遮盖住此activity,导致其对用户不再可见时调用。
+    // 一个新activity启动、其它activity被切换至前景、当前activity被销毁时都会发生这种场景
+    protected void onStop();       
+
+    // 在activity被销毁前所调用的最后一个方法，当进程终止时会出现这种情况
+    protected void onDestroy();   
+}
+</pre>
+
+<h3 id="toc_1.1.6">生命周期流程</h3>
+<p>
+<img src="pic/activity_lifecycle2.png" />
+</p>
+
+<h2 id="toc_1.2">进程的生命周期</h2>
+<p>
+进程分为四种,由重要性分别分为以下几种:
+</p>
+
+<dl>
+<dt>foregroud activity </dt>
+<dd>前台活动,与用户进行交互</dd>
+</dl>
+
+<dl>
+<dt>visible activity </dt>
+<dd>可见活动,不在视图的最上端,但对用户可见</dd>
+</dl>
+
+<dl>
+<dt>background activity </dt>
+<dd>后体活动</dd>
+</dl>
+
+<dl>
+<dt>empty process </dt>
+<dd>空进程,这种进程最容易被系统杀掉</dd>
+</dl>
+
+<h2 id="toc_1.3">重载配置文件</h2>
+<p>
+Activity与所有资源配置相关,当资源文件改变后,需要重新载入
+</p>
+<pre class="brush: xml">
+&lt;activity android:name".About"
+    android:label="@string/about_title"
+    android:configChanges="true" &gt;
+&lt;/activity&gt;
+</pre>
+
+<p>
+重写onConfigurationChanged方法
+</p>
+
+<h2 id="toc_1.4">初始化Activity</h2>
+<p>
+Activity类是表示用户界面的基类,通常用户需要创建一个.java文件,声明一个继承自这个基类的自定义类,来创建一个界面
+</p>
+<pre class="brush: java">
+import android.app.Activity;
+import android.os.Bundle;
+
+public class Sudoku extends Activity {
+
+    @override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(saveInstanceState);
+        setContentView(R.layout.main);
+    }
+    
+}
+</pre>
+
+<p>
+<strong>1.需要override方法onCreate</strong>
+</p>
+
+<p>
+<strong>2.需要调用super.onCreate</strong>
+</p>
+
+<p>
+<strong>3.onCreate方法里使用setContentView与布局描述文件相关联</strong>
+</p>
+
+<h2 id="toc_1.5">启动一个Activity</h2>
+<p>
+通过startActivity(Intent)或startActivityForResult(Intent, int)调用Intent来启动Activity
+</p>
+<pre class="brush: java">
+public class MyActivity extends Activity {
+
+    static final int PICK_CONTACT_REQUEST = 0;
+
+    protected boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            // When the user center presses, let them pick a contact.
+            startActivityForResult(
+                new Intent(Intent.ACTION_PICK,
+                new Uri("content://contacts")),
+                PICK_CONTACT_REQUEST);
+           return true;
+        }
+        return false;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                // A contact was picked.  Here we will just display it
+                // to the user.
+                startActivity(new Intent(Intent.ACTION_VIEW, data));
+            }
+        }
+    }
+}
+
+// 在另一个Activity中返回结果
+final void setResult (int resultCode)
+final void setResult (int resultCode, Intent  data)
+
+返回: 
+    RESULT_CANCELED
+    RESULT_OK
+    RESULT_FIRST_USER
+</pre>
+
+<h2 id="toc_1.6">内部的存储器</h2>
+<p>
+Activity可以获取一个SharedPreferences对象,对某些变量进行存储
+</p>
+<pre class="brush: java">
+public class CalendarActivity extends Activity {
+
+    static final int DAY_VIEW_MODE = 0;
+    static final int WEEK_VIEW_MODE = 1;
+
+    private SharedPreferences mPrefs;
+    private int mCurViewMode;
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        SharedPreferences mPrefs = getSharedPreferences();
+        mCurViewMode = mPrefs.getInt("view_mode" DAY_VIEW_MODE);
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putInt("view_mode", mCurViewMode);
+        ed.commit();
+    }
+}
+</pre>
+
+<h2 id="toc_1.7">与Activity类相关的布局文件</h2>
+<p>
+在res/layout资源文件夹内xml文件用来描述一个Activity类的界面布局,也就是该类的内容是通过xml来加载
+</p>
+
+<h3 id="toc_1.7.1">xml文件格式</h3>
+<pre class="brush: xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    &gt;
+&lt;TextView  
+    android:id="@+id/hello_about" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/hello"
+    /&gt;
+&lt;/LinearLayout&gt;
+</pre>
+
+<p>
+<strong>1.xml文件中有@符号开头的字符串表示资源文件中的xml文件名,如上面的"@string/hello",表示res/string.xml中包含name为hello的string项</strong>
+</p>
+
+<p>
+<strong>2.其中"@+id/hello_about"表示为资源创建了一个id名为hello_about,以后可以在Activity中使用findViewById来获取这个资源的View</strong>
+</p>
+
+<h2 id="toc_1.8">在Manifest中激活</h2>
+<p>
+定义了Activity类之后,需要添加该类使之激活,因此修改AndroidManifest.xml
+</p>
+<pre class="brush: xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.example.sudoku"
+      android:versionCode="1"
+      android:versionName="1.0"&gt;
+    &lt;application android:icon="@drawable/icon" android:label="@string/app_name"&gt;
+    
+        &lt;activity android:name=".Sudoku"
+                  android:label="@string/app_name"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+        
+        // 创建本进程的Activity
+        &lt;activity android:name=".About"
+        		  android:label="@string/about_title"&gt;
+        &lt;/activity&gt;
+        
+        // 创建其他进程的Activity
+        &lt;activity android:name=".About" android:process=":remote"
+        		  android:label="@string/about_title"&gt;
+        &lt;/activity&gt;
+
+    &lt;/application&gt;
+&lt;/manifest&gt; 
+</pre>
+
+<h2 id="toc_1.9">Activity与View</h2>
+<p>
+1. 需要在某个初始化过程中通过方法来获得实现一个事件的对象,在例子中是findViewById来查找View对象
+</p>
+
+<p>
+2. 需要实现触发动作的方法入口,在例子中是为View对象设置OnClickListener的接口
+</p>
+
+<p>
+3. 需要提供一个方法来新建一个Intent,因为每个事件对Android来说都是一个Intent对象,在例子中是实现OnClick方法
+</p>
+<pre class="brush: java">
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+        
+    View aboutButton = this.findViewById(R.id.about_button);
+    aboutButton.setOnClickListener(this);
+}
+   
+public void onClick(View v) {
+    switch (v.getId()) {
+    case R.id.about_button:
+        Intent i = new Intent(this, About.class);
+        startActivity(i);
+        break;
+    }
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

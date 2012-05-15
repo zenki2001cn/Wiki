@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>怎样执行我们的onCreate()方法</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">怎样执行我们的onCreate()方法</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">怎样执行我们的onCreate()方法</a></li>
+<ul>
+<li><a href="#toc_1.1">流程分析</a></li>
+<li><a href="#toc_1.2">参考代码</a></li>
+<ul>
+<li><a href="#toc_1.2.1">ActivityThread类</a></li>
+<ul>
+<li><a href="#toc_1.2.1.1">方法：main</a></li>
+<li><a href="#toc_1.2.1.2">方法：attach</a></li>
+<li><a href="#toc_1.2.1.3">方法：bindApplication</a></li>
+<li><a href="#toc_1.2.1.4">方法：scheduleLaunchActivity</a></li>
+<li><a href="#toc_1.2.1.5">方法：handleBindApplication</a></li>
+<li><a href="#toc_1.2.1.6">方法：handleLaunchActivity</a></li>
+<li><a href="#toc_1.2.1.7">方法：performLaunchActivity</a></li>
+<li><a href="#toc_1.2.1.8">类：H</a></li>
+</ul>
+<li><a href="#toc_1.2.2">ActivityManagerService类</a></li>
+<ul>
+<li><a href="#toc_1.2.2.1">方法：attachApplicationLocked</a></li>
+<li><a href="#toc_1.2.2.2">方法：realStartActivityLocked</a></li>
+</ul>
+<li><a href="#toc_1.2.3">IApplicationThread接口</a></li>
+<ul>
+<li><a href="#toc_1.2.3.1">类：ApplicationThreadNative</a></li>
+<li><a href="#toc_1.2.3.2">接口：IApplicationThread</a></li>
+</ul>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">流程分析</h2>
+<ul>
+<li>
+整个流程用到至少4次IPC
+</li>
+<li>
+无论哪种模式，Process.start都会载入<code>android.app.ActivityThread</code>这个类，并执行<code>main()</code>方法作为新Activity的启动入口
+</li>
+<li>
+main()方法调用<code>attach()</code>方法载入相应的Activity
+</li>
+<li>
+ActivityThread.attach()调用时传入一个<code>ApplicationThread</code>类对象作为回调，该对象用来完成实际对Activity的操作，如<code>scheduleExit</code>、<code>bindApplication</code>
+</li>
+<li>
+ ActivityThread.attach()的启动分两种情况：根据参数判断是系统进程还是用户进程。如果是系统进程，则通过<code>Instrumentation</code>直接产生一个app，并运行它的onCreate()方法；如果不是系统进程，则通过<code>IActivityManager</code>再次<code>回到ActivityManagerService</code>中的<code>attachApplicationLocked()</code>方法。(<code>第一次IPC</code>)
+</li>
+</ul>
+
+<dl>
+<dt>关键点一 绑定应用 </dt>
+</dl>
+<ul>
+<li>
+ActivityManagerService.attachApplicationLocked()调用<code>ApplicationThread.bindApplication()</code>，并<code>回到ApplicationThread</code>类。(<code>第二次IPC</code>)
+</li>
+<li>
+ApplicationThread通过消息处理类<code>H</code>，调用<code>handleBindApplication()</code>方法，最终调用Instrumentation.<code>callApplicationOnCreate()</code>方法进入<code>Application.onCreate()</code>
+</li>
+</ul>
+
+<dl>
+<dt>关键点二 启动Activity </dt>
+</dl>
+<ul>
+<li>
+ActivityManagerService.attachApplicationLocked()调用<code>realStartActivityLocked()</code>，继而调用ApplicationThread.<code>scheduleLaunchActivity()</code>方法，并<code>回到ApplicationThread</code>类。(<code>第三次IPC</code>)
+</li>
+<li>
+ApplicationThread通过消息处理类<code>H</code>，调用<code>handleLaunchActivity()</code>方法，继而调用<code>performLaunchActivity()</code>方法，最终通过Instrumentation调用onCreate()、onStart()...
+</li>
+</ul>
+
+<dl>
+<dt>关键点三 启动Service和BroadCast </dt>
+</dl>
+<ul>
+<li>
+ActivityManagerService.attachApplicationLocked()在启动Activity后还要查看是否有Service和BroadCast需要处理，并分别调用<code>realStartServiceLocked()</code>和<code>scheduleBroadcastsLocked()</code>，调用Service和BroadCast的过程和调用Activity的过程大同小异，都是使用同一个消息处理。(<code>第四次IPC</code>)
+</li>
+</ul>
+
+<h2 id="toc_1.2">参考代码</h2>
+<h3 id="toc_1.2.1">ActivityThread类</h3>
+<pre class="brush:java">
+private final class ApplicationThread extends ApplicationThreadNative
+</pre>
+
+<h4 id="toc_1.2.1.1">方法：main</h4>
+<pre class="brush:java">
+// 入口方法
+public static final void main(String[] args) {
+    SamplingProfilerIntegration.start();
+
+    Process.setArgV0("&lt;pre-initialized&gt;");
+
+    Looper.prepareMainLooper();
+
+    ActivityThread thread = new ActivityThread();
+    thread.attach(false);
+
+    Looper.loop();
+}
+</pre>
+
+<h4 id="toc_1.2.1.2">方法：attach</h4>
+<pre class="brush:java">
+// 参数true代表是系统进程，否则为用户进程
+private final void attach(boolean system) {
+    sThreadLocal.set(this);
+    mSystemThread = system;
+    AndroidHttpClient.setThreadBlocked(true);
+    if (!system) {
+        android.ddm.DdmHandleAppName.setAppName("&lt;pre-initialized&gt;");
+        RuntimeInit.setApplicationObject(mAppThread.asBinder());
+        IActivityManager mgr = ActivityManagerNative.getDefault();
+        try {
+            // 调用ActivityManagerService方法
+            mgr.attachApplication(mAppThread);
+        } catch (RemoteException ex) {
+        }
+    } else {
+        // Don't set application object here -- if the system crashes,
+        // we can't display an alert, we just want to die die die.
+        android.ddm.DdmHandleAppName.setAppName("system_process");
+        try {
+            mInstrumentation = new Instrumentation();
+            ApplicationContext context = new ApplicationContext();
+            context.init(getSystemContext().mPackageInfo, null, this);
+            Application app = Instrumentation.newApplication(Application.class, context);
+            mAllApplications.add(app);
+            mInitialApplication = app;
+            app.onCreate();
+        } catch (Exception e) {
+            ......
+        }
+    }
+}
+</pre>
+    
+<h4 id="toc_1.2.1.3">方法：bindApplication</h4>
+<pre class="brush:java">
+// 外部调用的绑定应用的方法
+public final void bindApplication(String processName,
+                                    ApplicationInfo appInfo, List&lt;ProviderInfo&gt; providers,
+                                    ComponentName instrumentationName, String profileFile,
+                                    Bundle instrumentationArgs, IInstrumentationWatcher instrumentationWatcher,
+                                    int debugMode, boolean isRestrictedBackupMode, Configuration config,
+                                    Map&lt;String, IBinder&gt; services) {
+
+    if (services != null) {
+        // Setup the service cache in the ServiceManager
+        ServiceManager.initServiceCache(services);
+    }
+
+    AppBindData data = new AppBindData();
+    data.processName = processName;
+    data.appInfo = appInfo;
+    data.providers = providers;
+    data.instrumentationName = instrumentationName;
+    data.profileFile = profileFile;
+    data.instrumentationArgs = instrumentationArgs;
+    data.instrumentationWatcher = instrumentationWatcher;
+    data.debugMode = debugMode;
+    data.restrictedBackupMode = isRestrictedBackupMode;
+    data.config = config;
+    
+    // 发送消息给Handle
+    queueOrSendMessage(H.BIND_APPLICATION, data);
+}
+</pre>
+    
+<h4 id="toc_1.2.1.4">方法：scheduleLaunchActivity</h4>
+<pre class="brush:java">
+// 外部调用的启动Activity的方法
+public final void scheduleLaunchActivity(Intent intent, IBinder token, int ident,
+            ActivityInfo info, Bundle state, List&lt;ResultInfo&gt; pendingResults,
+            List&lt;Intent&gt; pendingNewIntents, boolean notResumed, boolean isForward) {
+    ActivityRecord r = new ActivityRecord();
+
+    r.token = token;
+    r.ident = ident;
+    r.intent = intent;
+    r.activityInfo = info;
+    r.state = state;
+
+    r.pendingResults = pendingResults;
+    r.pendingIntents = pendingNewIntents;
+
+    r.startsNotResumed = notResumed;
+    r.isForward = isForward;
+
+    queueOrSendMessage(H.LAUNCH_ACTIVITY, r);
+}
+</pre>
+    
+<h4 id="toc_1.2.1.5">方法：handleBindApplication</h4>
+<pre class="brush:java">
+// 内部调用的处理BIND_APPLICATION消息的方法
+private final void handleBindApplication(AppBindData data) {
+    ......
+
+    try {
+        // 启动onCreate()方法
+        mInstrumentation.callApplicationOnCreate(app);
+    } catch (Exception e) {
+    }
+    
+    ......
+}
+</pre>
+    
+<h4 id="toc_1.2.1.6">方法：handleLaunchActivity</h4>
+<pre class="brush:java">
+// 内部调用的处理LAUNCH_ACTIVITY消息的方法
+private final void handleLaunchActivity(ActivityRecord r, Intent customIntent) {
+    // 省略......
+     
+    Activity a = performLaunchActivity(r, customIntent);
+    
+    // 省略......
+}
+</pre>
+    
+<h4 id="toc_1.2.1.7">方法：performLaunchActivity</h4>
+<pre class="brush:java">
+// 最终调用的方法
+private final Activity performLaunchActivity(ActivityRecord r, Intent customIntent) {
+    // 省略......
+    
+    // 构造ComponentName
+    ComponentName component = new ComponentName(r.activityInfo.packageName,
+                                                r.activityInfo.targetActivity);
+
+    // 构造Activity
+    Activity activity = null;
+    try {
+        java.lang.ClassLoader cl = r.packageInfo.getClassLoader();
+        activity = mInstrumentation.newActivity(
+                cl, component.getClassName(), r.intent);
+        r.intent.setExtrasClassLoader(cl);
+    } catch (Exception e) {
+    }
+    
+    // 省略......
+
+    try {
+        Application app = r.packageInfo.makeApplication(false, mInstrumentation);
+
+        if (activity != null) {
+            ApplicationContext appContext = new ApplicationContext();
+            appContext.init(r.packageInfo, r.token, this);
+            appContext.setOuterContext(activity);
+            CharSequence title = r.activityInfo.loadLabel(appContext.getPackageManager());
+            Configuration config = new Configuration(mConfiguration);
+            activity.attach(appContext, this, getInstrumentation(), r.token,
+                    r.ident, app, r.intent, r.activityInfo, title, r.parent,
+                    r.embeddedID, r.lastNonConfigurationInstance,
+                    r.lastNonConfigurationChildInstances, config);
+            // 省略......
+            
+            // 设置主题
+            int theme = r.activityInfo.getThemeResource();
+            if (theme != 0) {
+                activity.setTheme(theme);
+            }
+
+            // 调用onCreate()
+            mInstrumentation.callActivityOnCreate(activity, r.state);
+            
+            // 调用onStart()
+            if (!r.activity.mFinished) {
+                activity.performStart();
+                r.stopped = false;
+            }
+            
+            // 调用onSaveInstanceState()
+            if (!r.activity.mFinished) {
+                if (r.state != null) {
+                    mInstrumentation.callActivityOnRestoreInstanceState(activity, r.state);
+                }
+            }
+            
+            // 调用onPostCreate()
+            if (!r.activity.mFinished) {
+                activity.mCalled = false;
+                mInstrumentation.callActivityOnPostCreate(activity, r.state);
+            }
+            
+            // 省略......
+        }
+        r.paused = true;
+    } catch (SuperNotCalledException e) {
+    } catch (Exception e) {
+    }
+}
+</pre>
+
+<h4 id="toc_1.2.1.8">类：H</h4>
+<pre class="brush:java">
+// 用于消息处理的Handle
+private final class H extends Handler {
+    private H() {
+        SamplingProfiler.getInstance().setEventThread(mLooper.getThread());
+    }
+
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            // 该ID标志为绑定应用
+            case BIND_APPLICATION: {
+                AppBindData data = (AppBindData)msg.obj;
+                handleBindApplication(data);
+            } break;
+            // 该ID标志为启动Activity
+            case LAUNCH_ACTIVITY: {
+                ActivityRecord r = (ActivityRecord)msg.obj;
+
+                r.packageInfo = getPackageInfoNoCheck(
+                        r.activityInfo.applicationInfo);
+                handleLaunchActivity(r, null);
+            } break;
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.2.2">ActivityManagerService类</h3>
+<h4 id="toc_1.2.2.1">方法：attachApplicationLocked</h4>
+<pre class="brush:java">
+private final boolean attachApplicationLocked(IApplicationThread thread,
+            int pid) {
+    // 省略......
+
+    // 添加属性
+    app.thread = thread;
+    app.curAdj = app.setAdj = -100;
+    app.curSchedGroup = app.setSchedGroup = Process.THREAD_GROUP_DEFAULT;
+    app.forcingToForeground = null;
+    app.foregroundServices = false;
+    app.debugging = false;
+    
+    mHandler.removeMessages(PROC_START_TIMEOUT_MSG, app);
+    
+    // 省略......
+    
+    // 绑定Application
+    thread.bindApplication(processName, app.instrumentationInfo != null
+        ? app.instrumentationInfo : app.info, providers,
+        app.instrumentationClass, app.instrumentationProfileFile,
+        app.instrumentationArguments, app.instrumentationWatcher, testMode, 
+        isRestrictedBackupMode || !normalMode,
+        mConfiguration, getCommonServicesLocked());
+    // 省略......
+    
+    // 查找是否有需要运行的Activity
+    HistoryRecord hr = topRunningActivityLocked(null);
+    if (hr != null) {
+        if (hr.app == null &amp;&amp; app.info.uid == hr.info.applicationInfo.uid
+                &amp;&amp; processName.equals(hr.processName)) {
+            try {
+                // 启动Activity
+                if (realStartActivityLocked(hr, app, true, true)) {
+                    didSomething = true;
+                }
+            } catch (Exception e) {
+                badApp = true;
+            }
+        } else {
+            ensureActivitiesVisibleLocked(hr, null, processName, 0);
+        }
+    }
+    
+    // 查找是否有需要启动的Service
+    if (!badApp &amp;&amp; mPendingServices.size() &gt; 0) {
+        ServiceRecord sr = null;
+        try {
+            for (int i=0; i&lt;mPendingServices.size(); i++) {
+                sr = mPendingServices.get(i);
+                if (app.info.uid != sr.appInfo.uid
+                        || !processName.equals(sr.processName)) {
+                    continue;
+                }
+
+                mPendingServices.remove(i);
+                i--;
+                // 启动Service
+                realStartServiceLocked(sr, app);
+                didSomething = true;
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    // 查找是否有BroadcastReceiver
+    BroadcastRecord br = mPendingBroadcast;
+    if (!badApp &amp;&amp; br != null &amp;&amp; br.curApp == app) {
+        try {
+            mPendingBroadcast = null;
+            processCurBroadcastLocked(br, app);
+            didSomething = true;
+        } catch (Exception e) {
+            Log.w(TAG, "Exception in new application when starting receiver "
+                  + br.curComponent.flattenToShortString(), e);
+            badApp = true;
+            logBroadcastReceiverDiscard(br);
+            finishReceiverLocked(br.receiver, br.resultCode, br.resultData,
+                    br.resultExtras, br.resultAbort, true);
+            scheduleBroadcastsLocked();
+        }
+    }
+}
+</pre>
+
+<h4 id="toc_1.2.2.2">方法：realStartActivityLocked</h4>
+<pre class="brush:java">
+private final boolean realStartActivityLocked(HistoryRecord r, ProcessRecord app, boolean andResume, boolean checkConfig) {
+    ......
+    // 在这里跳转到ApplicationThread，开始LaunchActivity
+    app.thread.scheduleLaunchActivity(new Intent(r.intent), r, System.identityHashCode(r),
+                                      r.info, r.icicle, results, newIntents, !andResume, 
+                                      isNextTransitionForward());
+    ......
+}
+</pre>
+
+<h3 id="toc_1.2.3">IApplicationThread接口</h3>
+<ul>
+<li>
+ApplicationThread类为ActivityThread的内部类，继承于ApplicationThreadNative并实现IApplicationThread接口
+</li>
+</ul>
+
+<h4 id="toc_1.2.3.1">类：ApplicationThreadNative</h4>
+<pre class="brush:java">
+public abstract class ApplicationThreadNative extends Binder implements IApplicationThread
+</pre>
+
+<h4 id="toc_1.2.3.2">接口：IApplicationThread</h4>
+<pre class="brush:java">
+public interface IApplicationThread extends IInterface {
+    // 处理Activity
+    void schedulePauseActivity(IBinder token, boolean finished, boolean userLeaving,
+                                int configChanges) throws RemoteException;
+    void scheduleStopActivity(IBinder token, boolean showWindow,
+                                int configChanges) throws RemoteException;
+    void scheduleResumeActivity(IBinder token, boolean isForward) throws RemoteException;
+    void scheduleSendResult(IBinder token, List&lt;ResultInfo&gt; results) throws RemoteException;
+    void scheduleLaunchActivity(Intent intent, IBinder token, int ident,
+                                ActivityInfo info, Bundle state, List&lt;ResultInfo&gt; pendingResults,
+                                List&lt;Intent&gt; pendingNewIntents, boolean notResumed, boolean isForward)
+                                throws RemoteException;
+    void scheduleNewIntent(List&lt;Intent&gt; intent, IBinder token) throws RemoteException;
+    void scheduleDestroyActivity(IBinder token, boolean finished,
+                                int configChanges) throws RemoteException;
+            
+    // 处理Receiver
+    void scheduleReceiver(Intent intent, ActivityInfo info, int resultCode,
+                                String data, Bundle extras, boolean sync) throws RemoteException;
+    void scheduleCreateService(IBinder token, ServiceInfo info) throws RemoteException;
+    void scheduleBindService(IBinder token,
+                                Intent intent, boolean rebind) throws RemoteException;
+    void scheduleUnbindService(IBinder token,
+                                Intent intent) throws RemoteException;
+    void scheduleServiceArgs(IBinder token, int startId, int flags, Intent args)
+                                throws RemoteException;
+    void scheduleStopService(IBinder token) throws RemoteException;
+    
+    // 处理Application
+    void bindApplication(String packageName, ApplicationInfo info, List&lt;ProviderInfo&gt; providers,
+                        ComponentName testName, String profileName, Bundle testArguments, 
+                        IInstrumentationWatcher testWatcher, int debugMode, boolean restrictedBackupMode,
+                        Configuration config, Map&lt;String, IBinder&gt; services) throws RemoteException;
+    void scheduleExit() throws RemoteException;
+    void scheduleRegisteredReceiver(IIntentReceiver receiver, Intent intent,
+                        int resultCode, String data, Bundle extras, boolean ordered, boolean sticky)
+                        throws RemoteException;
+    void scheduleLowMemory() throws RemoteException;
+    void scheduleActivityConfigurationChanged(IBinder token) throws RemoteException;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

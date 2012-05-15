@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>使用SAX解析</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">使用SAX解析XML文件</h1>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
+
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+
+import java.util.Stack;
+import java.util.ArrayList;
+</pre>
+
+<h2 id="toc_1.2">基本流程</h2>
+<ul>
+<li>
+从DefaultHandler继承子类，并实现<code>startDocument</code>、<code>startElement</code>、<code>endElement</code>、<code>endDocument</code>、<code>characters</code>等方法，这些方法在读取XML文件的同时进行解析。
+</li>
+<li>
+使用栈来保存每个元素的信息，在startElement方法中压栈，在endElement方法中出栈，在characters方法中获取当前元素信息。
+</li>
+<li>
+SAXParserFactory.newInstance()生成<code>SAXParserFactory</code>对象，并通过SAXParserFactory.newSAXParser()生成<code>SAXParser</code>对象实例进行解析。
+</li>
+</ul>
+
+<h2 id="toc_1.3">示例代码</h2>
+<p>
+DefaultHandler继承类
+</p>
+<pre class="brush:java">
+public class SaxDemo extends DefaultHandler {
+    
+    // 需要获取的信息列表
+    ArrayList&lt;Book&gt; bookList = new ArrayList&lt;Book&gt;();
+    Book book = null;
+    // 声明一个栈保存元素标识
+    Stack tags;
+
+    @Override
+    public void startDocument() 
+                throws SAXException {
+        // 文档开头创建栈
+        tags = new Stack();
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes atts) 
+                throws SAXException {
+        // 元素压栈
+        tags.push(qName);
+
+        // 生成新的信息
+        if ( qName.equals("Book") ) {
+            if ( book == null ) {
+                book = new Book();
+            }
+        }
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) 
+                throws SAXException {
+        // 元素出栈
+        tags.pop();
+
+        // 加入信息列表
+        if ( qName.equals("Book") ) {
+            if ( book != null ) {
+                bookList.add(book);
+            }
+            book = null;
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) 
+                throws SAXException {
+        String str = new String(ch, start, length );
+
+        // 查看当前的标识，根据标识来处理信息
+        String tag = (String)tags.peek();
+        
+        if ( tag.equals("Author") &amp;&amp; (book != null) ) {
+            book.setAuthor(str);
+        }
+        else if ( tag.equals("Title") &amp;&amp; (book != null) ) {
+            book.setTitle(str);
+        }
+        else if ( tag.equals("Line") &amp;&amp; (book != null) ) {
+            book.setLine(str);
+        }
+
+    }
+
+    @Override
+    public void endDocument() 
+                throws SAXException {
+
+        // 文档结束时显示所有信息
+        for (Book bk : bookList) {
+            bk.show();        
+        }
+    }
+}
+</pre>
+
+<p>
+使用SAX
+</p>
+<pre class="brush:java">
+SAXParserFactory spf = SAXParserFactory.newInstance();
+SAXParser saxParser = null;
+
+try {
+    saxParser = spf.newSAXParser();
+}
+catch(Exception e) {
+    System.err.println(e);
+}
+
+try {
+    saxParser.parse(new File("../src/demo.xml"), new SaxDemo());
+}
+catch(Exception e) {
+    System.err.println(e);
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

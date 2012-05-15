@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>列表框</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">ListView使用</h1>
+
+<p>
+<img src="pic/listview.png" />
+</p>
+
+<ul>
+<li>
+创建适配器，有几种常用适配器ArrayAdapter,SimpleAdapter,SimpleCursorAdapter
+</li>
+<li>
+设置Adapter，将数据与各种类型的Adapter绑定。
+</li>
+<li>
+ListView对象调用setAdapter()方法与数据进行绑定。
+</li>
+<li>
+追加Item被点击时候的处理，调用setOnItemClickListener()方法。
+</li>
+<li>
+追加Item被选择时候的处理，调用setOnItemSelectedListener()方法。
+</li>
+</ul>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush: java">
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.AdapterView;
+</pre>
+
+<h2 id="toc_1.2">例程源码(Java) --- 绑定ArrayAdapter</h2>
+<pre class="brush: java">
+ArrayAdapter&lt;String&gt; adapter = new ArrayAdapter&lt;String&gt;(
+this, android.R.layout.simple_list_item_1);
+ 
+adapter.add("red");
+adapter.add("green");
+adapter.add("blue");
+  
+ListView listView = (ListView) findViewById(R.id.listView);
+
+listView.setAdapter(adapter);
+</pre>
+
+<h2 id="toc_1.3">例程源码(JAVA) --- 绑定SimpleCursorAdapter</h2>
+<pre class="brush:java">
+ListView listView = new ListView(this); 
+
+Cursor c = getContentResolver().query(People.CONTENT_URI, null, null, null, null);         
+startManagingCursor(c);
+
+ListAdapter adapter = new SimpleCursorAdapter(this,    
+         android.R.layout.simple_list_item_1,       // 布局文件,表示一列 
+         c,                                         // 数据库光标 
+         new String[] {People.NAME} ,               // 数据库的列名
+         new int[] {android.R.id.text1});           // 映射到的视图 
+         
+listView.setAdapter(adapter);
+</pre>
+
+<h2 id="toc_1.4">例程源码(JAVA) --- 绑定SimpleAdapter</h2>
+<pre class="brush:java">
+@Override  
+public void onCreate(Bundle savedInstanceState) {   
+    super.onCreate(savedInstanceState);   
+  
+    List&lt;Map&lt;String, Object&gt;&gt; list;   
+    list = getListForSimpleAdapter();   
+
+    SimpleAdapter adapter = new SimpleAdapter(this, 
+        list,                                                       // 数据源 
+        R.layout.item,                                              // item布局文件 
+        new String[] { "BigText", "LittleText", "img" },            // HashMap的Key
+        new int[] { R.id.BigText, R.id.LittleText, R.id.img });     // 映射到的视图
+
+    setListAdapter(adapter);   
+}   
+
+private List&lt;Map&lt;String, Object&gt;&gt; getListForSimpleAdapter() {   
+    List&lt;Map&lt;String,Object&gt;&gt; list = new ArrayList&lt;Map&lt;String, Object&gt;&gt;(3);   
+    
+    Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();   
+    map.put("BigText", "Android");   
+    map.put("LittleText", "Google phone."); 
+    map.put("img", R.drawable.n); 
+    list.add(map); 
+
+    map = new HashMap&lt;String, Object&gt;();   
+    map.put("BigText", "Lenovo");   
+    map.put("LittleText", "Ophone");   
+    map.put("img", R.drawable.o);   
+    list.add(map);   
+
+    map = new HashMap&lt;String, Object&gt;();   
+    map.put("BigText", "Droid");   
+    map.put("LittleText", "Motorola");   
+    map.put("img", R.drawable.droid);   
+    list.add(map);   
+
+    return list; 
+}
+</pre>
+
+<h2 id="toc_1.5">例程源码(JAVA) --- 处理事件响应</h2>
+<pre class="brush: java">
+listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	
+    @Override
+    public void onItemClick(
+            AdapterView&lt;?&gt; parent,
+            View view,
+            int position,
+            long id) {
+        ListView listView = (ListView) parent;
+        Log.v("Test", "id = " + id + "("
+                + listView.getItemAtPosition(position).toString() + ")");
+    }
+});
+	 
+listView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+    @Override
+    public void onItemSelected(
+            AdapterView&lt;?&gt; parent,
+            View view,
+            int position,
+            long id) {
+        ListView listView = (ListView) parent;
+        Log.v("Test", "id = " + id + "("
+                + listView.getSelectedItem().toString() + ")");
+    }
+    
+    @Override
+    public void onNothingSelected(AdapterView&lt;?&gt; parent) {
+    }
+});
+</pre>
+
+<h2 id="toc_1.6">例程源码(XML) -- ListView</h2>
+<pre class="brush: xml">
+&lt;ListView android:id="@+id/listView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" /&gt;
+</pre>
+
+<h2 id="toc_1.7">例程源码(XML) -- item布局</h2>
+<pre class="brush: xml">
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left"
+    &gt;
+
+    &lt;TextView
+        android:id="@+id/item_id1"
+        android:text="item1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" /&gt;
+
+    &lt;TextView
+        android:id="@+id/item_id2"
+        android:text="item2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" /&gt;
+&lt;/LinearLayout&gt;
+</pre>
+
+<h2 id="toc_1.8">例程源码(XML) --- 带图片的item布局</h2>
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;    
+
+&lt;LinearLayout   
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="wrap_content"  
+    android:layout_height="wrap_content"  
+    android:orientation="horizontal"&gt;   
+ 
+    &lt;ImageView android:id="@+id/img"  
+    android:layout_width="wrap_content"  
+    android:layout_height="wrap_content"  
+    /&gt; 
+    
+    &lt;LinearLayout android:orientation="vertical"  
+    android:layout_width="wrap_content"  
+    android:layout_height="wrap_content"  
+    &gt;   
+        &lt;TextView android:id="@+id/BigText"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:textColor="#FFFFFFFF"  
+        android:textSize="30px"  
+        /&gt;   
+        
+        &lt;TextView android:id="@+id/LittleText"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:textColor="#FFFFFFFF"  
+        android:textSize="15px"  
+        /&gt;   
+    &lt;/LinearLayout&gt;   
+ 
+&lt;/LinearLayout&gt;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

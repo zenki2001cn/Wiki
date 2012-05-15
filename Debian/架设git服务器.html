@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>架设git服务器</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">架设git服务器</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">架设git服务器</a></li>
+<ul>
+<li><a href="#toc_1.1">创建git服务器</a></li>
+<ul>
+<li><a href="#toc_1.1.1">1.下载安装包</a></li>
+<li><a href="#toc_1.1.2">2.创建git用户</a></li>
+<li><a href="#toc_1.1.3">3.创建ssh的公钥和密钥</a></li>
+<li><a href="#toc_1.1.4">4. 初始化gitosis</a></li>
+<li><a href="#toc_1.1.5">5.加入一个工程到仓库中</a></li>
+<li><a href="#toc_1.1.6">6.抓取仓库中的项目</a></li>
+</ul>
+<li><a href="#toc_1.2">通过SSH协议访问git服务器</a></li>
+<ul>
+<li><a href="#toc_1.2.1">1. 生成rsa公钥</a></li>
+<li><a href="#toc_1.2.2">2. 添加公钥信息</a></li>
+<li><a href="#toc_1.2.3">3. 配置文件</a></li>
+<li><a href="#toc_1.2.4">4. 添加rsa的密钥</a></li>
+<li><a href="#toc_1.2.5">5. 启用ssh-agent</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">创建git服务器</h2>
+<h3 id="toc_1.1.1">1.下载安装包</h3>
+<pre class="brush:bash">
+$ sudo apt-get install git-core gitosis git-daemon-run openssh-server openssh-client
+</pre>
+
+<h3 id="toc_1.1.2">2.创建git用户</h3>
+<pre class="brush:bash">
+$ sudo useradd -m git
+$ sudo passwd git
+</pre>
+
+<h3 id="toc_1.1.3">3.创建ssh的公钥和密钥</h3>
+<ul>
+<li>
+生成的一组公钥和密钥在~/.ssh/目录下
+</li>
+</ul>
+
+<pre class="brush:bash">
+$ ssh-keygen
+$ ssh-keygen -t rsa
+$ ssh-keygen -t rsa -b 4096
+</pre>
+
+<h3 id="toc_1.1.4">4. 初始化gitosis</h3>
+<ul>
+<li>
+运行以下命令，会在/home/git/目录下生成gitosis、repositories两个目录：
+</li>
+<ul>
+<li>
+repositories目录作为Server端的仓库根目录，用来保存各种项目的仓库信息。
+</li>
+<li>
+repositories/gitosis-admin.git目录作为管理员的配置文件，同样以git仓库的形式供客户端访问。
+</li>
+</ul>
+<li>
+在push之前，需要在gitosis-admin.git/gitosis.conf配置指定的项目的组和访问权限
+</li>
+</ul>
+
+<pre class="brush:bash">
+$ sudo -H -u git gitosis-init &lt; ~/.ssh/id_rsa.pub
+</pre>
+
+<h3 id="toc_1.1.5">5.加入一个工程到仓库中</h3>
+<pre class="brush:bash">
+# 切换到某个工程目录，并创建一个文件
+$ cd matroska
+$ touch readme
+
+# 初始化git仓库，
+$ git init
+
+# 添加一个远程的仓库
+$ git remote add origin git@127.0.0.1:matroska.git
+
+# 将matroska目录下的所有文件设置成staged状态
+$ git add .
+
+# 使用commit提交修改
+$ git commit -m "init matroska"
+
+# 在gitosis.conf文件中加入该项目的配置
+$ vim /home/git/repositories/gitosis-admin.git/gitosis.conf
+[gitosis]
+
+[group gitosis-admin]
+writable = gitosis-admin
+members = zenki@zenki-ubuntu
+
+[group matroska]
+writable = matroska
+members = zenki@zenki-ubuntu
+
+# 将数据提交repositories/matroska.git目录中，该目录则为该项目的仓库。
+$ git push origin master
+</pre>
+
+<h3 id="toc_1.1.6">6.抓取仓库中的项目</h3>
+<pre class="brush:bash">
+$ git clone git@127.0.0.1:matroska.git
+</pre>
+
+<h2 id="toc_1.2">通过SSH协议访问git服务器</h2>
+<h3 id="toc_1.2.1">1. 生成rsa公钥</h3>
+<pre class="brush:bash">
+# 生成的公钥和密钥默认在~/.ssh/下
+$ ssh-keygen -t rsa -C "zenki.j.zha@foxconn.com"
+</pre>
+
+<h3 id="toc_1.2.2">2. 添加公钥信息</h3>
+<pre class="brush:bash">
+# 将公钥信息添加到服务器，服务器会提供如Web方式，导入你的公钥。
+# 同时修改你的公钥和密钥权限
+$ chmod 700 ~/.ssh/
+$ chmod 600 ~/.ssh/*
+</pre>
+
+<h3 id="toc_1.2.3">3. 配置文件</h3>
+<pre class="brush:bash">
+# 添加以下信息到~/.ssh/config，用来管理登录信息
+Host tr
+  Hostname gerrit.ext.ti.com
+  Port 29418
+  User Zenki
+</pre>
+
+<h3 id="toc_1.2.4">4. 添加rsa的密钥</h3>
+<pre class="brush:bash">
+$ ssh-add ~/.ssh/id_rsa
+Identity added: /home/zenki/.ssh/id_rsa (/home/zenki/.ssh/id_rsa)
+</pre>
+
+<h3 id="toc_1.2.5">5. 启用ssh-agent</h3>
+<pre class="brush:bash">
+$ ssh-agent 
+SSH_AUTH_SOCK=/tmp/ssh-wlxQyJ4684/agent.4684; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=4685; export SSH_AGENT_PID;
+echo Agent pid 4685;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

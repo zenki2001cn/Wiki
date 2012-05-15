@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GPS的HAL层</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">GPS的HAL层</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">GPS的HAL层</a></li>
+<ul>
+<li><a href="#toc_1.1">GPS接口定义</a></li>
+<ul>
+<li><a href="#toc_1.1.1">GpsInterface</a></li>
+<li><a href="#toc_1.1.2">GpsNiInterface</a></li>
+<li><a href="#toc_1.1.3">GpsXtraInterface</a></li>
+<li><a href="#toc_1.1.4">AGpsInterface</a></li>
+<li><a href="#toc_1.1.5">gps_device_t</a></li>
+</ul>
+<li><a href="#toc_1.2">接口的回调定义</a></li>
+<ul>
+<li><a href="#toc_1.2.1">GpsCallbacks</a></li>
+<li><a href="#toc_1.2.2">GpsNiCallbacks</a></li>
+<li><a href="#toc_1.2.3">GpsXtraCallbacks</a></li>
+<li><a href="#toc_1.2.4">AGpsCallbacks</a></li>
+</ul>
+<li><a href="#toc_1.3">GPS模块实现</a></li>
+<ul>
+<li><a href="#toc_1.3.1">模块初始化</a></li>
+<li><a href="#toc_1.3.2">open_gps</a></li>
+<li><a href="#toc_1.3.3">gps_get_hardware_interface</a></li>
+</ul>
+<li><a href="#toc_1.4">GPS模块的使用</a></li>
+<ul>
+<li><a href="#toc_1.4.1">get_gps_interface</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">GPS接口定义</h2>
+<ul>
+<li>
+gps.h中定义了GPS的设备结构gps_device_t，并且按照功能划分抽象成各个接口：
+</li>
+<ul>
+<li>
+GpsInterface：由设备获取的接口。
+</li>
+<li>
+GpsNiInterface：关于NI的接口。
+</li>
+<li>
+GpsXtraInterface：获取辅助数据的接口。
+</li>
+<li>
+AGpsInterface：AGPS相关的接口。
+</li>
+</ul>
+</ul>
+
+<h3 id="toc_1.1.1">GpsInterface</h3>
+<pre class="brush:c">
+/** Represents the standard GPS interface. */
+typedef struct {
+    /** set to sizeof(GpsInterface) */
+    size_t          size;
+    /**
+     * Opens the interface and provides the callback routines
+     * to the implemenation of this interface.
+     */
+    int   (*init)( GpsCallbacks* callbacks );
+
+    /** Starts navigating. */
+    int   (*start)( void );
+
+    /** Stops navigating. */
+    int   (*stop)( void );
+
+    /** Closes the interface. */
+    void  (*cleanup)( void );
+
+    /** Injects the current time. */
+    int   (*inject_time)(GpsUtcTime time, int64_t timeReference,
+                         int uncertainty);
+
+    /** Injects current location from another location provider
+     *  (typically cell ID).
+     *  latitude and longitude are measured in degrees
+     *  expected accuracy is measured in meters
+     */
+    int  (*inject_location)(double latitude, double longitude, float accuracy);
+
+    /**
+     * Specifies that the next call to start will not use the
+     * information defined in the flags. GPS_DELETE_ALL is passed for
+     * a cold start.
+     */
+    void  (*delete_aiding_data)(GpsAidingData flags);
+
+    /**
+     * min_interval represents the time between fixes in milliseconds.
+     * preferred_accuracy represents the requested fix accuracy in meters.
+     * preferred_time represents the requested time to first fix in milliseconds.
+     */
+    int   (*set_position_mode)(GpsPositionMode mode, GpsPositionRecurrence recurrence,
+            uint32_t min_interval, uint32_t preferred_accuracy, uint32_t preferred_time);
+
+    /** Get a pointer to extension information. */
+    const void* (*get_extension)(const char* name);
+} GpsInterface;
+</pre>
+
+<h3 id="toc_1.1.2">GpsNiInterface</h3>
+<pre class="brush:c">
+/**
+ * Extended interface for Network-initiated (NI) support.
+ */
+typedef struct
+{
+    /** set to sizeof(GpsNiInterface) */
+    size_t          size;
+
+   /** Registers the callbacks for HAL to use. */
+   void (*init) (GpsNiCallbacks *callbacks);
+
+   /** Sends a response to HAL. */
+   void (*respond) (int notif_id, GpsUserResponseType user_response);
+} GpsNiInterface;
+</pre>
+
+<h3 id="toc_1.1.3">GpsXtraInterface</h3>
+<pre class="brush:c">
+/** Extended interface for XTRA support. */
+typedef struct {
+    /** set to sizeof(GpsXtraInterface) */
+    size_t          size;
+    /**
+     * Opens the XTRA interface and provides the callback routines
+     * to the implemenation of this interface.
+     */
+    int  (*init)( GpsXtraCallbacks* callbacks );
+    /** Injects XTRA data into the GPS. */
+    int  (*inject_xtra_data)( char* data, int length );
+} GpsXtraInterface;
+</pre>
+
+<h3 id="toc_1.1.4">AGpsInterface</h3>
+<pre class="brush:c">
+typedef struct {
+    /** set to sizeof(AGpsInterface) */
+    size_t          size;
+
+    /**
+     * Opens the AGPS interface and provides the callback routines
+     * to the implemenation of this interface.
+     */
+    void  (*init)( AGpsCallbacks* callbacks );
+    /**
+     * Notifies that a data connection is available and sets 
+     * the name of the APN to be used for SUPL.
+     */
+    int  (*data_conn_open)( const char* apn );
+    /**
+     * Notifies that the AGPS data connection has been closed.
+     */
+    int  (*data_conn_closed)();
+    /**
+     * Notifies that a data connection is not available for AGPS. 
+     */
+    int  (*data_conn_failed)();
+    /**
+     * Sets the hostname and port for the AGPS server.
+     */
+    int  (*set_server)( AGpsType type, const char* hostname, int port );
+} AGpsInterface;
+</pre>
+
+<h3 id="toc_1.1.5">gps_device_t</h3>
+<pre class="brush:c">
+struct gps_device_t {
+    struct hw_device_t common;
+
+    /**
+     * Set the provided lights to the provided values.
+     *
+     * Returns: 0 on succes, error code on failure.
+     */
+    const GpsInterface* (*get_gps_interface)(struct gps_device_t* dev);
+};
+</pre>
+
+<h2 id="toc_1.2">接口的回调定义</h2>
+<h3 id="toc_1.2.1">GpsCallbacks</h3>
+<pre class="brush:c">
+typedef struct {
+    /** set to sizeof(GpsCallbacks) */
+    size_t      size;
+    gps_location_callback location_cb;
+    gps_status_callback status_cb;
+    gps_sv_status_callback sv_status_cb;
+    gps_nmea_callback nmea_cb;
+    gps_set_capabilities set_capabilities_cb;
+    gps_acquire_wakelock acquire_wakelock_cb;
+    gps_release_wakelock release_wakelock_cb;
+    gps_create_thread create_thread_cb;
+} GpsCallbacks;
+</pre>
+
+<h3 id="toc_1.2.2">GpsNiCallbacks</h3>
+<pre class="brush:c">
+/** GPS NI callback structure. */
+typedef struct
+{
+    /**
+     * Sends the notification request from HAL to GPSLocationProvider.
+     */
+    gps_ni_notify_callback notify_cb;
+    gps_create_thread create_thread_cb;
+} GpsNiCallbacks;
+</pre>
+
+<h3 id="toc_1.2.3">GpsXtraCallbacks</h3>
+<pre class="brush:c">
+typedef struct {
+    gps_xtra_download_request download_request_cb;
+    gps_create_thread create_thread_cb;
+} GpsXtraCallbacks;
+</pre>
+
+<h3 id="toc_1.2.4">AGpsCallbacks</h3>
+<pre class="brush:c">
+typedef struct {
+    agps_status_callback status_cb;
+    gps_create_thread create_thread_cb;
+} AGpsCallbacks;
+</pre>
+
+<h2 id="toc_1.3">GPS模块实现</h2>
+<ul>
+<li>
+GPS模块的实现遵循Android的标准方法，通过初始化hw_module_t结构变量，并设置其open方法。
+</li>
+<li>
+在该实现的open方法中不仅实现了初始化设备的功能，还提供了获取get_gps_interface接口的方法，而GPS的基本功能都是由这个接口提供。
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">模块初始化</h3>
+<pre class="brush:c">
+static struct hw_module_methods_t hw_module_methods = {
+    .open = open_gps
+};
+
+const struct hw_module_t HAL_MODULE_INFO_SYM = {
+    .tag = HARDWARE_MODULE_TAG,
+    .version_major = 1,
+    .version_minor = 0,
+    .id = GPS_HARDWARE_MODULE_ID,
+    .name = "lcsapi GPS Module",
+    .author = "Broadcom Corporation",
+    .methods = &amp;hw_module_methods,
+};
+</pre>
+
+<h3 id="toc_1.3.2">open_gps</h3>
+<pre class="brush:c">
+static int open_gps(const struct hw_module_t* module, char const* name,
+                    struct hw_device_t** device)
+{
+    struct gps_device_t *gps_device = malloc(sizeof(struct gps_device_t));
+    if (gps_device)
+    {
+        memset(gps_device, 0, sizeof(struct gps_device_t));
+        gps_device-&gt;common.tag        = HARDWARE_DEVICE_TAG;
+        gps_device-&gt;common.version    = 0;
+        gps_device-&gt;common.module     = (struct hw_module_t*)module;
+        gps_device-&gt;get_gps_interface = gps_get_hardware_interface;
+
+        *device = (struct hw_device_t*)gps_device;
+
+        return 0;
+    }
+
+    return 1; 
+}
+</pre>
+
+<h3 id="toc_1.3.3">gps_get_hardware_interface</h3>
+<pre class="brush:c">
+const GpsInterface* gps_get_hardware_interface(struct gps_device_t* dev)
+{
+	return &amp;_GpsInterface;
+}
+</pre>
+
+<h2 id="toc_1.4">GPS模块的使用</h2>
+<ul>
+<li>
+通常在JNI层会通过GPS模块打开设备，并获取GpsInterface结构指针。
+</li>
+</ul>
+
+<h3 id="toc_1.4.1">get_gps_interface</h3>
+<pre class="brush:c">
+static const GpsInterface* get_gps_interface() {
+    int err;
+    hw_module_t* module;
+    const GpsInterface* interface = NULL;
+
+    err = hw_get_module(GPS_HARDWARE_MODULE_ID, (hw_module_t const**)&amp;module);
+    if (err == 0) {
+        hw_device_t* device;
+        err = module-&gt;methods-&gt;open(module, GPS_HARDWARE_MODULE_ID, &amp;device);
+        if (err == 0) {
+            gps_device_t* gps_device = (gps_device_t *)device;
+            interface = gps_device-&gt;get_gps_interface(gps_device);
+        }
+    }
+
+    return interface;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

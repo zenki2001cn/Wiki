@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>接口和内部类</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">接口</h1>
+
+<h2 id="toc_1.1">接口概述</h2>
+<p>
+1.一个接口表示"所有实现了该特定接口的类看起来都像它",需要使用关键字interface来声明
+</p>
+
+<p>
+2.为了遵循某个特定的接口,需要使用关键字implements,它表示"该接口是这个类的外貌,而我是这个接口的实现"
+</p>
+
+<p>
+3.接口必须是public类型的,因为它是一个抽象类型,需要由其他的类来继承实现
+</p>
+<pre class="brush: java">
+public interface Instrument {
+    public void play() {}
+    public String what() {}
+}
+
+public class Wind implements Instrument {
+    public void play() {
+        // do something
+    }
+
+    public String what() {
+        // do something
+    }
+}
+</pre>
+
+<h3 id="toc_1.1.1">初始化接口的数据成员</h3>
+<p>
+接口的数据成员都是static和final类型的,并且它们不能是"空final",这些成员都不是接口的一部分,它们被存储在静态存储区域
+</p>
+
+<h2 id="toc_1.2">类的多重继承</h2>
+<p>
+1.一个导出类可以有多个接口,通过多个接口实现多重继承
+</p>
+
+<p>
+2.使用多个接口的导出类,目的是希望upcast到不止一个类,这是提供接口的本质原因
+</p>
+
+<p>
+3.避免在组合的接口中使用相同的方法名
+</p>
+<pre class="brush: java">
+class Hero extends ActionCharacter
+    implements CanFight, CanFly, CanSwim {
+    public CanFight() {
+        // do something
+    }
+    
+    public CanFly() {
+        // do something
+    }
+    
+    public CanSwim() {
+        // do something
+    }
+}
+</pre>
+
+<h2 id="toc_1.3">接口的多重继承</h2>
+<p>
+可以使用extends来扩展接口,使其可以多重继承
+</p>
+<pre class="brush: java">
+interface Vampire extends DangerousMonster, Lethal {
+    void drinkBlood();
+}
+</pre>
+
+<h1 id="toc_2">内部类</h1>
+
+<h2 id="toc_2.1">内部类概述</h2>
+<p>
+inner class 表示可以将一个类的定义放在另一个类的定义内部
+</p>
+<pre class="brush: java">
+public class A {
+    class B() {
+        // do something
+    }
+    
+    class C() {
+        // do something
+    }
+}
+</pre>
+
+<h3 id="toc_2.1.1">内部类与upcast</h3>
+<p>
+定义一个private的内部类,并将其实现一个外部接口,便可以隐藏一个接口的实现细节
+</p>
+<pre class="brush: java">
+public class A {
+    private B implements inter1 {
+        // do something
+    }
+    
+    private C implements inter2 {
+        // do something
+    }
+}
+</pre>
+<p>
+<em>有以下方式实现匿名内部类:</em>
+</p>
+
+<p>
+<em>1.在方法中可以定义内部类</em>
+</p>
+
+<p>
+<em>2.定义在作用域中的内,该作用域在方法内部</em>
+</p>
+
+<p>
+<em>3.一个实现了接口的匿名类</em>
+</p>
+
+
+<h3 id="toc_2.1.2">匿名内部类</h3>
+<p>
+1.传递给匿名内部类的变量,如果是被内部类使用的,必须是final类型的
+</p>
+
+<p>
+2.匿名内部类可以引用外围类的成员变量,因为在构造一个匿名内部类的时候,
+实际上传递了一个外围类的引用给内部类,这个引用是隐藏的
+</p>
+<pre class="brush: java">
+public class A {
+    private static final int size = 10;
+
+    public B getB(final int i) {
+        new B() {
+            private int num = 0;
+
+            public setVal() {
+                num = i * size;
+           }
+        };
+    }
+}
+</pre>
+
+<h3 id="toc_2.1.3">嵌套类</h3>
+<p>
+1.嵌套类是声明为static的内部类,这时该内部类就没有指向外部类的引用,并且此时
+对于该内部类的调用也需要是static的
+</p>
+
+<p>
+2.通常情况下接口中不含有方法的实现,但是嵌套类可以作为接口的一部分提供方法的
+实现
+</p>
+<pre class="brush: java">
+public interface Interface {
+    static class Inner {
+        int i, j, k;
+        public Inner() {}
+        void f() {}
+    }
+}
+</pre>
+
+<h3 id="toc_2.1.4">多层嵌套</h3>
+<p>
+1.如果要生成某个类的内部类,必须在new表达式中提供一个引用,指向外部类的对象,如果是嵌套内部类,则不需要对其外部类的引用
+</p>
+
+<p>
+2.无论内部类嵌套多少层,它都可以透明的访问外围类所有成员
+</p>
+
+<p>
+3.".new"语法的使用
+</p>
+<pre class="brush: java">
+class ABC {
+    private void f() {}
+    class B {
+        private void m() {}
+        class C {
+            private void n() {
+                f();
+                m();
+            }
+        }
+    }
+    
+    public static main(String [] args) {
+        ABC abc = new ABC();
+        ABC.B b = abc.new B();
+        ABC.B.C c = b.new C();
+    }
+}
+</pre>
+
+<h2 id="toc_2.2">内部类的继承</h2>
+<p>
+1.因为内部类的构造器要用到外部类的引用,因此,当继承一个内部类时,需要提供特殊的语法以支持外部类的初始化
+</p>
+
+<p>
+2.".super()"语法的使用
+</p>
+
+<p>
+3.继承了某个外部类的子类,重载其内部类是没有实际效果的,只有继承自内部类重载才可以生效
+</p>
+<pre class="brush: java">
+class ABCD extends ABC.A {
+    public ABCD (ABC abc) {
+        abc.super();
+    }
+    
+    public static main(String [] agrs) {
+        ABC abc = new ABC();
+        ABCD abcd = new ABCD(abc);
+    }
+}
+</pre>
+
+<h3 id="toc_2.2.1">局部内部类和匿名内部类的使用</h3>
+<p>
+1.局部内部类和匿名内部类具有相同的行为和能力,而局部内部类具有已命名的构造器,匿名类则只能用于实例初始化
+</p>
+
+<p>
+2.当需要不止一个内部类的对象时,需要定义局部内部类,而不适匿名内部类
+</p>
+
+<h3 id="toc_2.2.2">内部类标识符</h3>
+<p>
+1.每一个类都生成一个class文件,内部类生成的class文件有严格的规则: 外部类名 + $ + 内部类名(匿名内部类使用数字)
+</p>
+<pre class="brush: java">
+ABC.class
+ABC$A.class
+ABC$A$B.calss
+</pre>
+
+<h3 id="toc_2.2.3">为什么使用内部类</h3>
+<p>
+<strong>1.每个内部类都能独立的继承一个接口的实现,所以无论外围类是否继承那个接口,对内部类都没有影响,同时内部类也不会影响外围类</strong>
+</p>
+
+<p>
+<strong>2.当外围类是接口是可以有两种方式实现多重继承:内部类和单一的多重继承.如果外围类是抽象类或具体类时,则必须要使用内部类来提供多重继承</strong>
+</p>
+
+<p>
+<strong>3.内部类可以有多个实例,每个实例都有自己的状态信息,并且与其外围类对象的信息相互独立</strong>
+</p>
+
+<p>
+<strong>4.在外围类中可以用多个内部类来实现同一个接口或继承同一个类,这样就可以让该外围类具有多个可扩展的行为,且实现了细节的封装</strong>
+</p>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>StatusBarPolicy</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">StatusBarPolicy</h1>
+<p>
+<em>简单来说，是用来控制图标的显示与更新。通过BroadcastReceiver机制来处理更新。</em>
+</p>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">StatusBarPolicy</a></li>
+<ul>
+<li><a href="#toc_1.1">要点分析</a></li>
+<li><a href="#toc_1.2">代码片断解析</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">要点分析</h2>
+<ul>
+<li>
+图标资源使用一个<code>private static final int[]</code>来定义。
+</li>
+<li>
+通过<code>IconData.makeIcon</code>和<code>service.addIcon</code>方法创建和加载图标，并设置相应的slot名称，该slot在<code>StatusBarService</code>中用来处理对应的事件。
+</li>
+<li>
+<code>IconData</code>用来标识图标类型，图标资源ID和Slot信息。
+</li>
+<li>
+<code>addIcon</code>方法生成IBinder类型变量，该变量用于在StatusBarService中处理消息。
+</li>
+<li>
+定义了<code>mIntentReceiver</code>接收广播，<code>filter.addAction</code>来过滤action类型，并根据action来更新图标。
+</li>
+<li>
+<code>StatusBarHandler</code>用来处理消息。
+</li>
+</ul>
+
+<h2 id="toc_1.2">代码片断解析</h2>
+<pre class="brush:java">
+......
+
+// 定义图标资源
+// Use 3G icons for EVDO data and 1x icons for 1XRTT data
+private static final int[] sDataNetType_1x = new int[] {
+    com.android.internal.R.drawable.stat_sys_data_connected_1x,
+    com.android.internal.R.drawable.stat_sys_data_in_1x,
+    com.android.internal.R.drawable.stat_sys_data_out_1x,
+    com.android.internal.R.drawable.stat_sys_data_inandout_1x,
+};
+
+// 构造方法中初始化图标
+private StatusBarPolicy(Context context, StatusBarService service) {
+    ......
+
+    // 定义IconData和IBinder
+    // IconData中包含图标资源ID，图标类型和Slot标识
+    // 通过service.addIcon方法初始化IBinder变量，并且通过该变量进行以后的更新操作
+    private IconData mMusicData;
+    private IBinder mMusicIcon;
+
+    ......
+    
+    // 设置图标slot，资源，并将之与StatusBarService关联
+    mMusicData = IconData.makeIcon("music", null, com.android.internal.R.drawable.statusbar_music, 0, 0);
+    mMusicIcon = service.addIcon(mMusicData, null);
+    service.setIconVisibility(mMusicIcon, false);
+    
+    ......
+    
+    // 添加事件过滤
+    filter.addAction(Intent.ACTION_TIME_TICK);
+    filter.addAction(Intent.ACTION_TIME_CHANGED);
+    filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
+    filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+    filter.addAction(Intent.ACTION_BATTERY_LOW);
+    filter.addAction(Intent.ACTION_BATTERY_OKAY);
+    filter.addAction(Intent.ACTION_POWER_CONNECTED);
+    filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+    ......
+    mContext.registerReceiver(mIntentReceiver, filter, null, mHandler);
+}
+
+......
+
+// 通过BroadcastReceiver来更新图标
+private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        
+        if (action.equals(Intent.ACTION_TIME_TICK)) {
+            updateClock();
+        }
+        else if (action.equals(Intent.ACTION_TIME_CHANGED)) {
+            updateClock();
+        }
+        else if (action.equals(Intent.ACTION_BATTERY_CHANGED)) {
+            updateBattery(intent);
+        }
+        ......
+        ......
+    }
+}
+
+// 更新图标方法
+private final void updateClock() {
+    mCalendar.setTimeInMillis(System.currentTimeMillis());
+    mClockData.text = DateFormat.getTimeFormat(mContext).format(mCalendar.getTime());
+    mService.updateIcon(mClockIcon, mClockData, null);
+}
+
+private final void updateMusic(Intent intent) {
+    final String action = intent.getAction();
+    if (action.equals("com.android.music.MUSIC_ON_PLAY")) {
+        mService.setIconVisibility(mMusicIcon, true);
+        mService.setIconVisibility(mMusicPlayerIcon, false);
+    }
+    else if (action.equals("com.android.music.MUSIC_CANCEL")) {
+        mService.setIconVisibility(mMusicPlayerIcon, true);
+        mService.setIconVisibility(mMusicIcon, false);
+    }
+}
+
+......
+
+// 消息处理
+private class StatusBarHandler extends Handler {
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+        case EVENT_BATTERY_CLOSE:
+            if (msg.arg1 == mBatteryViewSequence) {
+                closeLastBatteryView();
+            }
+            break;
+        case EVENT_UMS_CLOSE:
+            closeLastUmsView();
+            break;
+        case EVENT_UMS_KEYGUARD_ENABLE:
+            mUmsDialog.show();
+            break;
+        case EVENT_UMS_KEYGUARD_DISABLE:
+            mUmsDialog.dismiss();
+            break;
+        }
+    }
+}
+
+......
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

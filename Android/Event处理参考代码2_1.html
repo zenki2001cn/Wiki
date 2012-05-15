@@ -1,0 +1,694 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Event处理参考代码2_1</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">Event处理参考代码(Android 2.1)</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Event处理参考代码(Android 2.1)</a></li>
+<ul>
+<li><a href="#toc_1.1">IWindowManager.aidl</a></li>
+<ul>
+<li><a href="#toc_1.1.1">IWindowManager</a></li>
+</ul>
+<li><a href="#toc_1.2">WindowManagerService.java</a></li>
+<ul>
+<li><a href="#toc_1.2.1">WindowManagerService</a></li>
+<li><a href="#toc_1.2.2">InputDispatcherThread</a></li>
+</ul>
+<li><a href="#toc_1.3">KeyInputQueue.java</a></li>
+<ul>
+<li><a href="#toc_1.3.1">KeyInputQueue</a></li>
+<li><a href="#toc_1.3.2">mThread</a></li>
+<li><a href="#toc_1.3.3">native方法</a></li>
+</ul>
+<li><a href="#toc_1.4">com_android_server_KeyInputQueue.cpp</a></li>
+<ul>
+<li><a href="#toc_1.4.1">android_server_KeyInputQueue_readEvent</a></li>
+</ul>
+<li><a href="#toc_1.5">EventHub.h</a></li>
+<ul>
+<li><a href="#toc_1.5.1">enum设备类型</a></li>
+</ul>
+<li><a href="#toc_1.6">EventHub.cpp</a></li>
+<ul>
+<li><a href="#toc_1.6.1">EventHub::getEvent</a></li>
+<li><a href="#toc_1.6.2">EventHub::openPlatformInput</a></li>
+<li><a href="#toc_1.6.3">EventHub::scan_dir</a></li>
+<li><a href="#toc_1.6.4">EventHub::open_device</a></li>
+</ul>
+<li><a href="#toc_1.7">KeyLayoutMap.cpp</a></li>
+<ul>
+<li><a href="#toc_1.7.1">KeyLayoutMap::load</a></li>
+</ul>
+<li><a href="#toc_1.8">android_text_KeyCharacterMap.cpp</a></li>
+<ul>
+<li><a href="#toc_1.8.1">ctor</a></li>
+</ul>
+<li><a href="#toc_1.9">KeyCharacterMap.h</a></li>
+<ul>
+<li><a href="#toc_1.9.1">struct Key</a></li>
+</ul>
+<li><a href="#toc_1.10">KeyCharacterMap.cpp</a></li>
+<ul>
+<li><a href="#toc_1.10.1">KeyCharacterMap::load</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">IWindowManager.aidl</h2>
+<h3 id="toc_1.1.1">IWindowManager</h3>
+<pre class="brush:java">
+interface IWindowManager
+{
+    ......   
+    // These require the READ_INPUT_STATE permission.
+    int getSwitchState(int sw);
+    int getSwitchStateForDevice(int devid, int sw);
+    int getScancodeState(int sw);
+    int getScancodeStateForDevice(int devid, int sw);
+    int getTrackballScancodeState(int sw);
+    int getDPadScancodeState(int sw);
+    int getKeycodeState(int sw);
+    int getKeycodeStateForDevice(int devid, int sw);
+    int getTrackballKeycodeState(int sw);
+    int getDPadKeycodeState(int sw);
+    
+    // Report whether the hardware supports the given keys; returns true if successful
+    boolean hasKeys(in int[] keycodes, inout boolean[] keyExists);
+    
+    ......
+}
+</pre>
+
+<h2 id="toc_1.2">WindowManagerService.java</h2>
+<h3 id="toc_1.2.1">WindowManagerService</h3>
+<pre class="brush:java">
+private WindowManagerService(Context context, PowerManagerService pm,
+            boolean haveInputMethods) {
+    
+    ......
+    
+    mQueue = new KeyQ();
+
+    mInputThread = new InputDispatcherThread();
+
+    PolicyThread thr = new PolicyThread(mPolicy, this, context, pm);
+    thr.start();
+
+    synchronized (thr) {
+        while (!thr.mRunning) {
+            try {
+                thr.wait();
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    mInputThread.start();
+
+    // Add ourself to the Watchdog monitors.
+    Watchdog.getInstance().addMonitor(this);
+}
+</pre>
+
+<h3 id="toc_1.2.2">InputDispatcherThread</h3>
+<pre class="brush:java">
+private final class InputDispatcherThread extends Thread {
+
+    ......
+    private void process() {
+        android.os.Process.setThreadPriority(
+                android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY);
+
+        ......
+        while (true) {
+        
+            ......
+            // 从KeyQ获取Event
+            QueuedEvent ev = mQueue.getEvent(
+                (int)((!configChanged &amp;&amp; curTime &lt; nextKeyTime)
+                        ? (nextKeyTime-curTime) : 0));
+
+            ......
+            try {
+                if (ev != null) {
+                
+                    ......
+                    switch (ev.classType) {
+                        // 处理keyboard事件
+                        case RawInputEvent.CLASS_KEYBOARD:
+                            KeyEvent ke = (KeyEvent)ev.event;
+                            if (ke.isDown()) {
+                                lastKey = ke;
+                                downTime = curTime;
+                                keyRepeatCount = 0;
+                                lastKeyTime = curTime;
+                                nextKeyTime = lastKeyTime
+                                        + ViewConfiguration.getLongPressTimeout();
+                            } else {
+                                lastKey = null;
+                                downTime = 0;
+                                // Arbitrary long timeout.
+                                lastKeyTime = curTime;
+                                nextKeyTime = curTime + LONG_WAIT;
+                            }
+                            dispatchKey((KeyEvent)ev.event, 0, 0);
+                            mQueue.recycleEvent(ev);
+                            break;
+                        // 处理touch事件
+                        case RawInputEvent.CLASS_TOUCHSCREEN:
+                            //Slog.i(TAG, "Read next event " + ev);
+                            dispatchPointer(ev, (MotionEvent)ev.event, 0, 0);
+                            break;
+                        // 处理轨迹球事件
+                        case RawInputEvent.CLASS_TRACKBALL:
+                            dispatchTrackball(ev, (MotionEvent)ev.event, 0, 0);
+                            break;
+                        case RawInputEvent.CLASS_CONFIGURATION_CHANGED:
+                            configChanged = true;
+                            break;
+                        default:
+                            mQueue.recycleEvent(ev);
+                        break;
+                    }
+
+                } 
+                
+                ......
+            } catch (Exception e) {
+            }
+        }
+    }
+}
+</pre>
+
+<h2 id="toc_1.3">KeyInputQueue.java</h2>
+<h3 id="toc_1.3.1">KeyInputQueue</h3>
+<pre class="brush:java">
+KeyInputQueue(Context context, HapticFeedbackCallback  hapticFeedbackCallback) {
+    
+    ......
+    mFirst = new QueuedEvent();
+    mLast = new QueuedEvent();
+    mFirst.next = mLast;
+    mLast.prev = mFirst;
+
+    mThread.start();
+}
+</pre>
+
+<h3 id="toc_1.3.2">mThread</h3>
+<pre class="brush:java">
+Thread mThread = new Thread("InputDeviceReader") {
+    public void run() {
+        android.os.Process.setThreadPriority(
+                android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY);
+        
+        RawInputEvent ev = new RawInputEvent();
+        while (true) {
+            try {
+                InputDevice di;
+
+                // block, doesn't release the monitor
+                readEvent(ev);
+            }
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.3.3">native方法</h3>
+<pre class="brush:java">
+public static native String getDeviceName(int deviceId);
+public static native int getDeviceClasses(int deviceId);
+public static native void addExcludedDevice(String deviceName);
+public static native boolean getAbsoluteInfo(int deviceId, int axis,
+                                             InputDevice.AbsoluteInfo outInfo);
+public static native int getSwitchState(int sw);
+public static native int getSwitchState(int deviceId, int sw);
+public static native int nativeGetScancodeState(int code);
+public static native int nativeGetScancodeState(int deviceId, int code);
+public static native int nativeGetKeycodeState(int code);
+public static native int nativeGetKeycodeState(int deviceId, int code);
+public static native int scancodeToKeycode(int deviceId, int scancode);
+public static native boolean hasKeys(int[] keycodes, boolean[] keyExists);
+
+private static native boolean readEvent(RawInputEvent outEvent);
+</pre>
+
+<h2 id="toc_1.4">com_android_server_KeyInputQueue.cpp</h2>
+<h3 id="toc_1.4.1">android_server_KeyInputQueue_readEvent</h3>
+<pre class="brush:c++">
+static jboolean
+android_server_KeyInputQueue_readEvent(JNIEnv* env, jobject clazz,
+                                          jobject event)
+{
+    gLock.lock();
+    sp&lt;EventHub&gt; hub = gHub;
+    if (hub == NULL) {
+        hub = new EventHub;
+        gHub = hub;
+    }
+    gLock.unlock();
+
+    int32_t deviceId;
+    int32_t type;
+    int32_t scancode, keycode;
+    uint32_t flags;
+    int32_t value;
+    nsecs_t when;
+    bool res = hub-&gt;getEvent(&amp;deviceId, &amp;type, &amp;scancode, &amp;keycode,
+            &amp;flags, &amp;value, &amp;when);
+
+    env-&gt;SetIntField(event, gInputOffsets.mDeviceId, (jint)deviceId);
+    env-&gt;SetIntField(event, gInputOffsets.mType, (jint)type);
+    env-&gt;SetIntField(event, gInputOffsets.mScancode, (jint)scancode);
+    env-&gt;SetIntField(event, gInputOffsets.mKeycode, (jint)keycode);
+    env-&gt;SetIntField(event, gInputOffsets.mFlags, (jint)flags);
+    env-&gt;SetIntField(event, gInputOffsets.mValue, value);
+    env-&gt;SetLongField(event, gInputOffsets.mWhen,
+                        (jlong)(nanoseconds_to_milliseconds(when)));
+
+    return res;
+}
+</pre>
+
+<h2 id="toc_1.5">EventHub.h</h2>
+<h3 id="toc_1.5.1">enum设备类型</h3>
+<pre class="brush:c++">
+enum {
+    CLASS_KEYBOARD      = 0x00000001,
+    CLASS_ALPHAKEY      = 0x00000002,
+    CLASS_TOUCHSCREEN   = 0x00000004,
+    CLASS_TRACKBALL     = 0x00000008,
+    CLASS_TOUCHSCREEN_MT= 0x00000010,
+    CLASS_DPAD          = 0x00000020
+};
+</pre>
+
+<h2 id="toc_1.6">EventHub.cpp</h2>
+<h3 id="toc_1.6.1">EventHub::getEvent</h3>
+<pre class="brush:c++">
+bool EventHub::getEvent(int32_t* outDeviceId, int32_t* outType,
+        int32_t* outScancode, int32_t* outKeycode, uint32_t *outFlags,
+        int32_t* outValue, nsecs_t* outWhen)
+{
+
+    ......
+    // Note that we only allow one caller to getEvent(), so don't need
+    // to do locking here...  only when adding/removing devices.
+
+    if (!mOpened) {
+        mError = openPlatformInput() ? NO_ERROR : UNKNOWN_ERROR;
+        mOpened = true;
+    }
+
+    while(1) {
+
+        ......
+        release_wake_lock(WAKE_LOCK_ID);
+
+        pollres = poll(mFDs, mFDCount, -1);
+
+        acquire_wake_lock(PARTIAL_WAKE_LOCK, WAKE_LOCK_ID);
+
+        if (pollres &lt;= 0) {
+            if (errno != EINTR) {
+                LOGW("select failed (errno=%d)\n", errno);
+                usleep(100000);
+            }
+            continue;
+        }
+
+        ...... 
+    }
+}
+</pre>
+
+<h3 id="toc_1.6.2">EventHub::openPlatformInput</h3>
+<pre class="brush:c++">
+bool EventHub::openPlatformInput(void)
+{
+    int res;
+
+    ......
+    
+    // device_path = "/dev/input";
+    res = scan_dir(device_path);
+    if(res &lt; 0) {
+    }
+
+    return true;
+}
+</pre>
+
+<h3 id="toc_1.6.3">EventHub::scan_dir</h3>
+<pre class="brush:c++">
+int EventHub::scan_dir(const char *dirname)
+{
+    char devname[PATH_MAX];
+    char *filename;
+    DIR *dir;
+    struct dirent *de;
+    dir = opendir(dirname);
+    if(dir == NULL)
+        return -1;
+    strcpy(devname, dirname);
+    filename = devname + strlen(devname);
+    *filename++ = '/';
+    while((de = readdir(dir))) {
+        if(de-&gt;d_name[0] == '.' &amp;&amp;
+           (de-&gt;d_name[1] == '\0' ||
+            (de-&gt;d_name[1] == '.' &amp;&amp; de-&gt;d_name[2] == '\0')))
+            continue;
+        strcpy(filename, de-&gt;d_name);
+        open_device(devname);
+    }
+    closedir(dir);
+    return 0;
+}
+</pre>
+
+<h3 id="toc_1.6.4">EventHub::open_device</h3>
+<pre class="brush:c++">
+int EventHub::open_device(const char *deviceName)
+{
+    ......
+    AutoMutex _l(mLock);
+
+    // 打开设备节点
+    fd = open(deviceName, O_RDWR);
+    if(fd &lt; 0) {
+        return -1;
+    }
+
+    ......    
+    // 处理keyboard
+    uint8_t key_bitmask[(KEY_MAX+7)/8];
+    memset(key_bitmask, 0, sizeof(key_bitmask));
+    if (ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(key_bitmask)), key_bitmask) &gt;= 0) {
+        for (int i=0; i&lt;((BTN_MISC+7)/8); i++) {
+            if (key_bitmask[i] != 0) {
+                device-&gt;classes |= CLASS_KEYBOARD;
+                break;
+            }
+        }
+        if ((device-&gt;classes &amp; CLASS_KEYBOARD) != 0) {
+            device-&gt;keyBitmask = new uint8_t[sizeof(key_bitmask)];
+            if (device-&gt;keyBitmask != NULL) {
+                memcpy(device-&gt;keyBitmask, key_bitmask, sizeof(key_bitmask));
+            } else {
+                delete device;
+                return -1;
+            }
+        }
+    }
+    
+    // 处理轨迹球
+    if (test_bit(BTN_MOUSE, key_bitmask)) {
+        uint8_t rel_bitmask[(REL_MAX+7)/8];
+        memset(rel_bitmask, 0, sizeof(rel_bitmask));
+        if (ioctl(fd, EVIOCGBIT(EV_REL, sizeof(rel_bitmask)), rel_bitmask) &gt;= 0)
+        {
+            if (test_bit(REL_X, rel_bitmask) &amp;&amp; test_bit(REL_Y, rel_bitmask)) {
+                device-&gt;classes |= CLASS_TRACKBALL;
+            }
+        }
+    }
+    
+    uint8_t abs_bitmask[(ABS_MAX+7)/8];
+    memset(abs_bitmask, 0, sizeof(abs_bitmask));
+    ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(abs_bitmask)), abs_bitmask);
+    
+    // 处理多点触摸
+    if (test_bit(ABS_MT_TOUCH_MAJOR, abs_bitmask)
+            &amp;&amp; test_bit(ABS_MT_POSITION_X, abs_bitmask)
+            &amp;&amp; test_bit(ABS_MT_POSITION_Y, abs_bitmask)) {
+        device-&gt;classes |= CLASS_TOUCHSCREEN | CLASS_TOUCHSCREEN_MT;
+        
+    // 处理单点触摸
+    } else if (test_bit(BTN_TOUCH, key_bitmask)
+            &amp;&amp; test_bit(ABS_X, abs_bitmask) &amp;&amp; test_bit(ABS_Y, abs_bitmask)) {
+        device-&gt;classes |= CLASS_TOUCHSCREEN;
+    }
+
+    // 处理*.kl映射文件
+    if ((device-&gt;classes&amp;CLASS_KEYBOARD) != 0) {
+        char tmpfn[sizeof(name)];
+        char keylayoutFilename[300];
+
+        device-&gt;name = name;
+
+        strcpy(tmpfn, name);
+        for (char *p = strchr(tmpfn, ' '); p &amp;&amp; *p; p = strchr(tmpfn, ' '))
+            *p = '_';
+
+        // 查找所有*.kl文件
+        const char* root = getenv("ANDROID_ROOT");
+        snprintf(keylayoutFilename, sizeof(keylayoutFilename),
+                 "%s/usr/keylayout/%s.kl", root, tmpfn);
+        bool defaultKeymap = false;
+        if (access(keylayoutFilename, R_OK)) {
+            snprintf(keylayoutFilename, sizeof(keylayoutFilename),
+                     "%s/usr/keylayout/%s", root, "qwerty.kl");
+            defaultKeymap = true;
+        }
+        // 读取*.kl文件
+        device-&gt;layoutMap-&gt;load(keylayoutFilename);
+
+        // 设置系统属性
+        if (!mHaveFirstKeyboard &amp;&amp; !defaultKeymap &amp;&amp; strstr(name, "-keypad")) {
+            // the built-in keyboard has a well-known device ID of 0,
+            // this device better not go away.
+            mHaveFirstKeyboard = true;
+            mFirstKeyboardId = device-&gt;id;
+            property_set("hw.keyboards.0.devname", name);
+        } else {
+            // ensure mFirstKeyboardId is set to -something-.
+            if (mFirstKeyboardId == 0) {
+                mFirstKeyboardId = device-&gt;id;
+            }
+        }
+        char propName[100];
+        sprintf(propName, "hw.keyboards.%u.devname", device-&gt;id);
+        property_set(propName, name);
+        
+        ......
+    }
+
+    mDevicesById[devid].device = device;
+    device-&gt;next = mOpeningDevices;
+    mOpeningDevices = device;
+    mDevices[mFDCount] = device;
+
+    mFDCount++;
+    return 0;
+}
+</pre>
+
+<h2 id="toc_1.7">KeyLayoutMap.cpp</h2>
+<h3 id="toc_1.7.1">KeyLayoutMap::load</h3>
+<pre class="brush:c++">
+status_t
+KeyLayoutMap::load(const char* filename)
+{
+    int fd = open(filename, O_RDONLY);
+    
+    ......
+    while (true) {
+        String8 token = next_token(&amp;p, &amp;line);
+        if (*p == '\0') {
+            break;
+        }
+        switch (state)
+        {
+            case BEGIN:
+                if (token == "key") {
+                    state = SCANCODE;
+                } else {
+                    err = BAD_VALUE;
+                    goto done;
+                }
+                break;
+            case SCANCODE:
+                scancode = strtol(token.string(), &amp;end, 0);
+                if (*end != '\0') {
+                    goto done;
+                }
+                state = KEYCODE;
+                break;
+            case KEYCODE:
+                keycode = token_to_value(token.string(), KEYCODES);
+                if (keycode == 0) {
+                    goto done;
+                }
+                state = FLAG;
+                break;
+            case FLAG:
+                if (token == "key") {
+                    if (scancode != -1) {
+                        Key k = { keycode, flags };
+                        m_keys.add(scancode, k);
+                        state = SCANCODE;
+                        scancode = -1;
+                        keycode = -1;
+                        flags = 0;
+                        break;
+                    }
+                }
+                tmp = token_to_value(token.string(), FLAGS);
+                if (tmp == 0) {
+                    goto done;
+                }
+                flags |= tmp;
+                break;
+        }
+    }
+    if (state == FLAG &amp;&amp; scancode != -1 ) {
+        Key k = { keycode, flags };
+        m_keys.add(scancode, k);
+    }
+
+done:
+    free(buf);
+    close(fd);
+
+    m_status = err;
+    return err;
+}
+</pre>
+
+<h2 id="toc_1.8">android_text_KeyCharacterMap.cpp</h2>
+<h3 id="toc_1.8.1">ctor</h3>
+<pre class="brush:c++">
+static jint
+ctor(JNIEnv *env, jobject clazz, jint id)
+{
+    return reinterpret_cast&lt;int&gt;(KeyCharacterMap::load(id));
+}
+</pre>
+
+<h2 id="toc_1.9">KeyCharacterMap.h</h2>
+<h3 id="toc_1.9.1">struct Key</h3>
+<pre class="brush:c++">
+struct Key
+{
+    int32_t keycode;
+    uint16_t display_label;
+    uint16_t number;
+    uint16_t data[META_MASK + 1];
+};
+</pre>
+
+<h2 id="toc_1.10">KeyCharacterMap.cpp</h2>
+<h3 id="toc_1.10.1">KeyCharacterMap::load</h3>
+<pre class="brush:c++">
+KeyCharacterMap*
+KeyCharacterMap::load(int id)
+{
+    KeyCharacterMap* rv = NULL;
+    char path[PATH_MAX];
+    char propName[100];
+    char dev[PROPERTY_VALUE_MAX];
+    char tmpfn[PROPERTY_VALUE_MAX];
+    int err;
+    const char* root = getenv("ANDROID_ROOT");
+
+    sprintf(propName, "hw.keyboards.%u.devname", id);
+    err = property_get(propName, dev, "");
+    if (err &gt; 0) {
+        strcpy(tmpfn, dev);
+        for (char *p = strchr(tmpfn, ' '); p &amp;&amp; *p; p = strchr(tmpfn, ' '))
+            *p = '_';
+        snprintf(path, sizeof(path), "%s/usr/keychars/%s.kcm.bin", root, tmpfn);
+        rv = try_file(path);
+        if (rv != NULL) {
+            return rv;
+        }
+        LOGW("Error loading keycharmap file '%s'. %s='%s'", path, propName, dev);
+    } else {
+        LOGW("No keyboard for id %d", id);
+    }
+
+    snprintf(path, sizeof(path), "%s/usr/keychars/qwerty.kcm.bin", root);
+    rv = try_file(path);
+    if (rv == NULL) {
+        LOGE("Can't find any keycharmaps (also tried %s)", path);
+        return NULL;
+    }
+    LOGW("Using default keymap: %s", path);
+
+    return rv;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

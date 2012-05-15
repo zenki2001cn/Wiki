@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>管理和更新多个软件版本</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">管理和更新多个软件版本</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">管理和更新多个软件版本</a></li>
+<ul>
+<li><a href="#toc_1.1">使用update-alternatives</a></li>
+<li><a href="#toc_1.2">添加新的版本</a></li>
+<li><a href="#toc_1.3">显示软件版本的配置</a></li>
+<li><a href="#toc_1.4">手动配置软件版本</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">使用update-alternatives</h2>
+<ul>
+<li>
+update-alternatives用来管理软件的多个版本，使用方法如下：
+</li>
+</ul>
+
+<pre class="brush:bash">
+Usage: update-alternatives [&lt;option&gt; ...] &lt;command&gt;
+
+Commands:
+  --install &lt;link&gt; &lt;name&gt; &lt;path&gt; &lt;priority&gt;
+    [--slave &lt;link&gt; &lt;name&gt; &lt;path&gt;] ...
+                           add a group of alternatives to the system.
+  --remove &lt;name&gt; &lt;path&gt;   remove &lt;path&gt; from the &lt;name&gt; group alternative.
+  --remove-all &lt;name&gt;      remove &lt;name&gt; group from the alternatives system.
+  --auto &lt;name&gt;            switch the master link &lt;name&gt; to automatic mode.
+  --display &lt;name&gt;         display information about the &lt;name&gt; group.
+  --query &lt;name&gt;           machine parseable version of --display &lt;name&gt;.
+  --list &lt;name&gt;            display all targets of the &lt;name&gt; group.
+  --config &lt;name&gt;          show alternatives for the &lt;name&gt; group and ask the
+                           user to select which one to use.
+  --set &lt;name&gt; &lt;path&gt;      set &lt;path&gt; as alternative for &lt;name&gt;.
+  --all                    call --config on all alternatives.
+
+&lt;link&gt; is the symlink pointing to /etc/alternatives/&lt;name&gt;.
+  (e.g. /usr/bin/pager)
+&lt;name&gt; is the master name for this link group.
+  (e.g. pager)
+&lt;path&gt; is the location of one of the alternative target files.
+  (e.g. /usr/bin/less)
+&lt;priority&gt; is an integer; options with higher numbers have higher priority in
+  automatic mode.
+</pre>
+
+<h2 id="toc_1.2">添加新的版本</h2>
+<pre class="brush:bash">
+$ update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.5.0_22/bin/java 1066
+</pre>
+
+<h2 id="toc_1.3">显示软件版本的配置</h2>
+<pre class="brush:bash">
+$ update-alternatives --list java
+</pre>
+
+<h2 id="toc_1.4">手动配置软件版本</h2>
+<pre class="brush:bash">
+$ update-alternatives --config java
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

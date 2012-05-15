@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>修改登录画面</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">修改登录画面</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">修改登录画面</a></li>
+<ul>
+<li><a href="#toc_1.1">修改开机画面</a></li>
+<li><a href="#toc_1.2">修改登录画面</a></li>
+<ul>
+<li><a href="#toc_1.2.1">相关代码</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">修改开机画面</h2>
+<p>
+system\core\init\Init.h中有一宏定义：
+</p>
+<pre class="brush:c">
+#define INIT_IMAGE_FILE "/initlogo.rle"
+</pre>
+
+<p>
+system\core\init\Init.c中有如下代码段：
+</p>
+<pre class="brush:c">
+if( load_565rle_image(INIT_IMAGE_FILE) ) {
+    fd = open("/dev/tty0", O_WRONLY);
+    if (fd &gt;= 0) {
+        const char *msg;
+            msg = "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"  // console is 40 cols x 30 lines
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "             A N D R O I D ";
+        write(fd, msg, strlen(msg));
+        close(fd);
+</pre>
+<p>
+读取/initlogo.rle（一张565 rle 压缩的图片），如果成功则在/dev/graphics/fb0显示Logo,如果失败则将/dev/tty0设为TEXT模式并打开/dev/tty0,输出文本“ANDROID”字样。
+</p>
+
+<pre class="brush:text">
+修改步骤：
+    1.处理一张rle的图片，使用android编译好的工具rgb2565（out/host/linux-86/bin）,命令：
+    rgb2565 -rle &lt;initlogo.raw&gt; initlogo.rle。
+    
+    2.将这张图片打包到ramdisk.img 的根目录中。个人方法：在code下加入了vender文件夹，将initlogo.rle
+放入此文件夹，在generic.mk中加入：
+    PRODUCT_COPY_FILES := \
+        vendor/initloge.rle:root/initloge.rle
+        
+    3.编译源码即可。
+</pre>
+
+<h2 id="toc_1.2">修改登录画面</h2>
+<h3 id="toc_1.2.1">相关代码</h3>
+<pre class="brush:text">
+\frameworks\base\cmds\bootanimation\BootAnimation.h
+\frameworks\base\cmds\bootanimation\BootAnimation.cpp
+
+\frameworks\base\core\res\assets\images\android-logo-mask.png
+Android默认的前景图片，文字部分镂空，大小256×64
+\frameworks\base\core\res\assets\images\android-logo-shine.png
+Android默认的背景图片，有动感效果，大小512×64
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

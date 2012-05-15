@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ADMEMS的三个阶段</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">ADMEMS的三个阶段</h1>
+
+<h2 id="toc_1.1">三个阶段</h2>
+<ul>
+<li>
+预备架构(Pre-architecture)阶段(简称 PA 阶段)
+</li>
+<ul>
+<li>
+最大误区:架构师是技术人员不必懂需求
+</li>
+<li>
+实践要点:摒弃“需求列表”方式,建立二维需求观
+</li>
+<li>
+思维工具:ADMEMS 矩阵等
+</li>
+</ul>
+<li>
+概念架构(Conceptual Architecture)阶段(简称 CA 阶段)
+</li>
+<ul>
+<li>
+最大误区:概念架构 = 理想设计
+</li>
+<li>
+实践要点:重大需求塑造概念架构
+</li>
+<li>
+思维工具:鲁棒图、目标-场景-决策表等
+</li>
+</ul>
+<li>
+细化架构(Refined Architecture)阶段(简称 RA 阶段)
+</li>
+<ul>
+<li>
+最大误区:架构 = 模块 + 接口
+</li>
+<li>
+实践要点:贴近实践的 5 视图法
+</li>
+<li>
+思维工具:包图、包-接口图、灰盒包图、序列图、目标-场景-决策表等
+</li>
+</ul>
+<li>
+对非功能性目标的考虑
+</li>
+</ul>
+
+<p>
+<a href="pic/ADMEMS_jieduan.png"><img src="pic/ADMEMS_jieduan.png" /></a>
+</p>
+
+<h2 id="toc_1.2">Pre-architecture</h2>
+<table>
+<tr>
+<th>&nbsp;</th>
+<th>功能</th>
+<th>质量</th>
+<th>约束</th>
+</tr>
+<tr>
+<td>组织需求</td>
+<td>业务目标</td>
+<td>快、好、省</td>
+<td>技术性约束、法规性约束、技术趋势、竞争因素和竞争对手</td>
+</tr>
+<tr>
+<td>用户需求</td>
+<td>用户需求</td>
+<td>运行期质量</td>
+<td>用户群特点、用户水平、多国语言</td>
+</tr>
+<tr>
+<td>开发需求</td>
+<td>行为需求</td>
+<td>开发期质量</td>
+<td>开发团队技术水平、开发团队分布情况</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">Conceptual Architecture</h2>
+<ul>
+<li>
+概念架构 ≠ 理想化架构
+</li>
+</ul>
+<p>
+<a href="pic/Conceptual_Architecture.png"><img src="pic/Conceptual_Architecture.png" /></a>
+</p>
+
+<h2 id="toc_1.4">Refined Architecture</h2>
+<ul>
+<li>
+五视图法
+</li>
+</ul>
+<p>
+<a href="pic/Refined_Architecture.png"><img src="pic/Refined_Architecture.png" /></a>
+</p>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

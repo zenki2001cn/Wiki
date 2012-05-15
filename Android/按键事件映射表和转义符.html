@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>按键事件映射表和转义符</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">按键映射表和转义符</h1>
+
+<pre class="brush:text">
+KeyEvent.KEYCODE_UNKNOWN,
+KeyEvent.KEYCODE_SOFT_LEFT,
+KeyEvent.KEYCODE_SOFT_RIGHT,
+KeyEvent.KEYCODE_HOME,
+KeyEvent.KEYCODE_BACK,
+KeyEvent.KEYCODE_CALL,
+KeyEvent.KEYCODE_ENDCALL,
+KeyEvent.KEYCODE_0 | ('\uff09' &lt;&lt; SHIFT_FWCH), // )
+KeyEvent.KEYCODE_1 | ('\uff01' &lt;&lt; SHIFT_FWCH), // !
+KeyEvent.KEYCODE_2 | ('\uff20' &lt;&lt; SHIFT_FWCH), // @
+KeyEvent.KEYCODE_3 | ('\uff03' &lt;&lt; SHIFT_FWCH), // #
+KeyEvent.KEYCODE_4 | ('\uffe5' &lt;&lt; SHIFT_FWCH), // $ - fullwidth Yuan
+KeyEvent.KEYCODE_5 | ('\uff05' &lt;&lt; SHIFT_FWCH), // %
+KeyEvent.KEYCODE_6 | ('\u2026' &lt;&lt; SHIFT_FWCH), // ^ - Apostrophe
+KeyEvent.KEYCODE_7 | ('\uff06' &lt;&lt; SHIFT_FWCH), // &amp;
+KeyEvent.KEYCODE_8 | ('\uff0a' &lt;&lt; SHIFT_FWCH), // *
+KeyEvent.KEYCODE_9 | ('\uff08' &lt;&lt; SHIFT_FWCH), // (
+KeyEvent.KEYCODE_STAR,
+KeyEvent.KEYCODE_POUND,
+KeyEvent.KEYCODE_DPAD_UP,
+KeyEvent.KEYCODE_DPAD_DOWN,
+KeyEvent.KEYCODE_DPAD_LEFT,
+KeyEvent.KEYCODE_DPAD_RIGHT,
+KeyEvent.KEYCODE_DPAD_CENTER,
+KeyEvent.KEYCODE_VOLUME_UP,
+KeyEvent.KEYCODE_VOLUME_DOWN,
+KeyEvent.KEYCODE_POWER,
+KeyEvent.KEYCODE_CAMERA,
+KeyEvent.KEYCODE_CLEAR,
+KeyEvent.KEYCODE_A,
+KeyEvent.KEYCODE_B | ('\uff3d' &lt;&lt; SHIFT_FWCH), // ]
+KeyEvent.KEYCODE_C | ('\u00a9' &lt;&lt; SHIFT_FWCH), // copyright
+KeyEvent.KEYCODE_D | ('\u3001' &lt;&lt; SHIFT_FWCH), // \\
+KeyEvent.KEYCODE_E | ('_' &lt;&lt; SHIFT_FWCH), // _
+KeyEvent.KEYCODE_F | ('\uff5b' &lt;&lt; SHIFT_FWCH), // {
+KeyEvent.KEYCODE_G | ('\uff5d' &lt;&lt; SHIFT_FWCH), // }
+KeyEvent.KEYCODE_H | ('\uff1a' &lt;&lt; SHIFT_FWCH), // :
+KeyEvent.KEYCODE_I | ('\uff0d' &lt;&lt; SHIFT_FWCH), // -
+KeyEvent.KEYCODE_J | ('\uff1b' &lt;&lt; SHIFT_FWCH), // ;
+KeyEvent.KEYCODE_K | ('\u201c' &lt;&lt; SHIFT_FWCH), // "
+KeyEvent.KEYCODE_L | ('\u2019' &lt;&lt; SHIFT_FWCH), // '
+KeyEvent.KEYCODE_M | ('\u300b' &lt;&lt; SHIFT_FWCH), // &gt; - French quotes
+KeyEvent.KEYCODE_N | ('\u300a' &lt;&lt; SHIFT_FWCH), // &lt; - French quotes
+KeyEvent.KEYCODE_O | ('\uff0b' &lt;&lt; SHIFT_FWCH), // +
+KeyEvent.KEYCODE_P | ('\uff1d' &lt;&lt; SHIFT_FWCH), // =
+KeyEvent.KEYCODE_Q | ('\t' &lt;&lt; SHIFT_FWCH), // \t
+KeyEvent.KEYCODE_R | ('\u00ae' &lt;&lt; SHIFT_FWCH), // trademark
+KeyEvent.KEYCODE_S | ('\uff5c' &lt;&lt; SHIFT_FWCH), // |
+KeyEvent.KEYCODE_T | ('\u20ac' &lt;&lt; SHIFT_FWCH), //
+KeyEvent.KEYCODE_U | ('\u00d7' &lt;&lt; SHIFT_FWCH), // multiplier
+KeyEvent.KEYCODE_V | ('\uff3b' &lt;&lt; SHIFT_FWCH), // [
+KeyEvent.KEYCODE_W | ('\uff40' &lt;&lt; SHIFT_FWCH), // `
+KeyEvent.KEYCODE_X, KeyEvent.KEYCODE_Y | ('\u00f7' &lt;&lt; SHIFT_FWCH),
+KeyEvent.KEYCODE_Z,
+KeyEvent.KEYCODE_COMMA | ('\uff1f' &lt;&lt; SHIFT_FWCH),
+KeyEvent.KEYCODE_PERIOD | ('\uff0f' &lt;&lt; SHIFT_FWCH),
+KeyEvent.KEYCODE_ALT_LEFT, KeyEvent.KEYCODE_ALT_RIGHT,
+KeyEvent.KEYCODE_SHIFT_LEFT, KeyEvent.KEYCODE_SHIFT_RIGHT,
+KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_SYM,
+KeyEvent.KEYCODE_EXPLORER, KeyEvent.KEYCODE_ENVELOPE,
+KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DEL,
+KeyEvent.KEYCODE_GRAVE, KeyEvent.KEYCODE_MINUS,
+KeyEvent.KEYCODE_EQUALS, KeyEvent.KEYCODE_LEFT_BRACKET,
+KeyEvent.KEYCODE_RIGHT_BRACKET, KeyEvent.KEYCODE_BACKSLASH,
+KeyEvent.KEYCODE_SEMICOLON, KeyEvent.KEYCODE_APOSTROPHE,
+KeyEvent.KEYCODE_SLASH,
+KeyEvent.KEYCODE_AT | ('\uff5e' &lt;&lt; SHIFT_FWCH),
+KeyEvent.KEYCODE_NUM, KeyEvent.KEYCODE_HEADSETHOOK,
+KeyEvent.KEYCODE_FOCUS, KeyEvent.KEYCODE_PLUS,
+KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_NOTIFICATION,
+KeyEvent.KEYCODE_SEARCH
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

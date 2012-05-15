@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>编译系统详解</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">编译系统详解</h1>
+<p>
+<em>本章内容实际是Android的Makefile详解，使用Makefile语法，但又带有Andriod的特色。</em>
+</p>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">编译系统详解</a></li>
+<ul>
+<li><a href="#toc_1.1">Android Makefile的作用</a></li>
+<ul>
+<li><a href="#toc_1.1.1">Android.mk示例</a></li>
+</ul>
+<li><a href="#toc_1.2">Build环境解析</a></li>
+<ul>
+<li><a href="#toc_1.2.1">Build Layers</a></li>
+<li><a href="#toc_1.2.2">几个重要的.mk文件</a></li>
+</ul>
+<li><a href="#toc_1.3">Build工作流程</a></li>
+<ul>
+<li><a href="#toc_1.3.1">设定环境变量</a></li>
+<li><a href="#toc_1.3.2">设定product</a></li>
+<li><a href="#toc_1.3.3">设定toolchain和BoardConfig</a></li>
+<li><a href="#toc_1.3.4">编译所有模块</a></li>
+<li><a href="#toc_1.3.5">产生目标镜像</a></li>
+</ul>
+<li><a href="#toc_1.4">各组件编译详解</a></li>
+<ul>
+<li><a href="#toc_1.4.1">系统属性prop文件设置</a></li>
+<li><a href="#toc_1.4.2">签名机制详解</a></li>
+<li><a href="#toc_1.4.3">如何进行版本发布</a></li>
+<li><a href="#toc_1.4.4">怎样制作update升级包</a></li>
+</ul>
+<li><a href="#toc_1.5">build/core下的参考文件</a></li>
+<li><a href="#toc_1.6">Product Tree 示例</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">Android Makefile的作用</h2>
+<ul>
+<li>
+Android Makefile具有以下几个重要的功能：
+</li>
+<ul>
+<li>
+增添子模块编译
+</li>
+<li>
+多CPU架构 –  ARM/PPC(maybe)/X86(maybe)
+</li>
+<li>
+多语言编译 – C/C++/Java
+</li>
+<li>
+多目标 – static lib/share lib/execute/Java/Java library
+</li>
+<li>
+多发布版本
+</li>
+</ul>
+</ul>
+
+<ul>
+<li>
+Android Makefile包含以下几个重要元素：
+</li>
+<ul>
+<li>
+清空变量：清空本地变量。<code>include $(CLEAR_VARS)</code>
+</li>
+<li>
+名称：模块的名称。<code>LOCAL_MODULE := &lt;build_name&gt;</code>
+</li>
+<li>
+文件列表：模块依赖的源文件。<code>LOCAL_SRC_FILES := main.c</code>
+</li>
+<li>
+TAGS：必要时定义标识。<code>LOCAL_MODULE_TAGS := eng development</code>
+</li>
+<li>
+库：依赖的其他库。<code>LOCAL_SHARED_LIBRARIES := cutils</code>
+</li>
+<li>
+编译指令：用来编译的makefile模板。<code>include $(BUILD_EXECUTABLE)</code>
+</li>
+</ul>
+</ul>
+
+<h3 id="toc_1.1.1">Android.mk示例</h3>
+<pre class="brush:bash">
+LOCAL_PATH := $(my-dir)
+include $(CLEAR_VARS)
+LOCAL_MODULE := &lt;buil_name&gt;
+LOCAL_SRC_FILES := main.c
+LOCAL_MODULE_TAGS := eng development
+LOCAL_SHARED_LIBRARIES := cutils
+include $(BUILD_EXECUTABLE)
+</pre>
+
+<h2 id="toc_1.2">Build环境解析</h2>
+<h3 id="toc_1.2.1">Build Layers</h3>
+<ul>
+<li>
+Build Layers描述的是产品的硬件配置情况，据此make时选择不同的配置和模块。
+</li>
+</ul>
+
+<table>
+<tr>
+<th>Layer</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>Product</td>
+<td>产品类型的代号</td>
+</tr>
+<tr>
+<td>Device</td>
+<td>设备类型的代号</td>
+</tr>
+<tr>
+<td>Board</td>
+<td>板子类型的代号</td>
+</tr>
+<tr>
+<td>Arch</td>
+<td>处理器种类</td>
+</tr>
+</table>
+
+<ul>
+<li>
+<a href="Build目录树.html">Build目录树</a>
+</li>
+<li>
+<a href="Build环境变量.html">Build环境变量</a>
+</li>
+<li>
+<a href="envsetup脚本解析.html">envsetup脚本解析</a>
+</li>
+</ul>
+
+<h3 id="toc_1.2.2">几个重要的.mk文件</h3>
+<table>
+<tr>
+<th>文件名</th>
+<th>功能</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>buildspec.mk</td>
+<td>位于根目录下，可在此选择要产生的product 、平台、额外的module/package等。buildspec.mk.default是样板文件。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>AndroidProducts.mk</td>
+<td>build system提供给厂商的接口文件。通过此文件即可定义所需编译和安装的packages（也即应用程序）。缺省选项是generic。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>BoardConfig.mk</td>
+<td>为product主板做设定，例如driver选择设定，选择CPU架构等等。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Android.mk</td>
+<td>module和package的设置文件，每个 module/package 的目录下都会有一个Android.mk。所谓的module是指系统的native code，相对于用Java写成的Android application 称为 package。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>envsetup.mk</td>
+<td>编译环境初始化，定义一些实用的shell函数，方便编译使用。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>build/core/Makefile</td>
+<td>包含在build/core/main.mk，此文件主要控制生成属性信息、system.img、ramdisk.img、userdata.img，以及recorvery image、sdk等。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>main.mk</td>
+<td>实际的主控Makefile，例如找到TOP目录下所有Android.mk文件。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>config.mk</td>
+<td>定义了编译目标程序所需的工具链及编译参数。</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>base_rules.mk</td>
+<td>对一些Makefile的变量规则化</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>binary.mk</td>
+<td>控制如何生成目标文件</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>clear_vars.mk</td>
+<td>清除编译系统中用到的临时变量</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>definations.mk</td>
+<td>定义了很多编译系统中用到的宏，相当于函数库</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>copy_headers.mk</td>
+<td>将头文件拷贝到指定目录</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>combo/linux-arm.mk</td>
+<td>控制如何生成linux-arm二进制文件，包括ARM相关的编译器，编译参数等的设置</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>build/envsetup.sh</td>
+<td>提供了几个有用的命令，执行. build/envsetup.sh(.后面有空格)。</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">Build工作流程</h2>
+<p>
+整个编译环境以<code>build/core/main.mk</code>为入口，并和其他*.mk组成整个编译环境。编译过程可参考以下流程。
+<h3 id="toc_1.3.1">设定环境变量</h3>
+</p>
+<ul>
+<li>
+1. 初始化相关变量
+</li>
+<li>
+2. 检测编译环境和目标环境
+</li>
+</ul>
+
+<pre class="brush:text">
+    由build/core/config.mk开始。build/core/envsetup.mk检查developer的设定(buildspec.mk)，并检查执行环境，
+以决定输出目录和环境设定。build/core/config.mk本身还依据参数，决定解释时的相关参数，例如compiler的路径、flags，lex 、yacc
+的路径参数等。关于product的相关设定，则是由build/core/product_config.mk所处理，使用build/core/product.mk提供的macro载入。
+根据AndroidProduct.mk的內容，product_config.mk决定了：PRODUCT_TAGS，OTA_PUBLIC_KEYS，PRODUCT_POLICY等。
+</pre>
+
+<h3 id="toc_1.3.2">设定product</h3>
+<ul>
+<li>
+3. 决定目标product
+</li>
+<li>
+4. 读取product的设定
+</li>
+<li>
+5. 读取product所指定之目标平台架构设定
+</li>
+</ul>
+
+<pre class="brush:text">
+    Android product的设定来自于build/target/product/AndroidProduct.mk和vendor子目录下AndroidProduct.mk。
+building system透过find指令，找出所有可能的AndroidProduct.mk。AndroidProduct.mk里定义PRODUCT_MAKEFILES变量，列举所有实际定义
+product的makefile。这些makefile各自定义独立的product。product相关参数被存成PRODUCTS.*.*形式的变量，并将makefile路径存在PRODUCTS变量。
+因此，透过PRODUCTS能取得所有的product路径/名称，并透过PRODUCTS.*.*形式的变量取得內容。
+</pre>
+
+<h3 id="toc_1.3.3">设定toolchain和BoardConfig</h3>
+<ul>
+<li>
+6. 选择toolchain
+</li>
+<li>
+7. 指定编译参数(*-.mk)
+</li>
+<li>
+8. 清除输出目录
+</li>
+<li>
+9. 设定/检查版本编号
+</li>
+<li>
+10. 读取所有BoardConfig.mk文件
+</li>
+</ul>
+
+<pre class="brush:text">
+    目标平台主板相关的设定，例如使用了什么装置、driver等，或是否需要编译bootloader、kernel等，都是在BoardConfig.mk里设定。同样，
+每张主板可以有不同设定，存在不同目录下的BoardConfig.mk中，以find寻找如下文件:
+    build/target/board/$(TARGET_DEVICE)/BoardConfig.mk
+    device$(TARGET_DEVICE)/BoardConfig.mk
+    
+    TARGET_DEVICE是product所定义，因此同一个BoardConfig.mk可被多个product所使用。一个TARGET_DEVICE，通常只有一个BoardConfig.mk。
+BoardConfig.mk会被直接include到building system的name space里。因此，一些module的enable/disable，可以在BoardConfig.mk定义以对应不同的主板。
+</pre>
+
+<h3 id="toc_1.3.4">编译所有模块</h3>
+<ul>
+<li>
+11. 读取所有module的设定
+</li>
+</ul>
+
+<pre class="brush:text">
+    Module是指native code的软件模块，而Java application則被称为package。build/core/definitions.mk定义module/package相关macro，用来读取、
+检查module/package的定义档。
+    build/core/main.mk使用find指令，在这些子目录下找出所有Android.mk，并将路径存在subdir_makefiles变量里。最后，include这些文件。这些
+Android.mk会被include定义成变量BUILD_SHARED_LIBRARY 、BUILD_PACKAGE等和其目的相配的makefile。这些makefile会将Android.mk定义的內容，
+存成ALL_MODULES.&lt;Android.mk&gt;.*的形式。例如，Android.mk定义了LOCAL_MODULE_SUFFIX，会变存成ALL_MODULES.&lt;Android.mk&gt;.LOCAL_MODULE_SUFFIX。
+而Android.mk路径，同样会存于ALL_MODULES变量中。基本上会在整个source tree中查找Android.mk的路径。但会依特定的goal，选择性只找寻特定目录。
+例如SDK只需特定目录下的Android.mk。
+</pre>
+
+<ul>
+<li>
+12. 根据设定，产生必需的rule
+</li>
+</ul>
+
+<pre class="brush:text">
+    在module的定义文件Android.mk中，可定义module的tag——LOCAL_MODULE_TAGS，以分类这些module。每一个product可以指定需要的tag(PRODUCT_TAGS)，
+使building system只遍历标识这些tag的module。在build/core/main.mk里，所有标示特定tag的module被加入到ALL_DEFAULT_INSTALLED_MODULES中，并被
+build/core/Makefile处理。build/core/Makefile为这些module产生rule，并使产生image的目标依赖这些rule，使这些module被编译。
+</pre>
+
+<h3 id="toc_1.3.5">产生目标镜像</h3>
+<ul>
+<li>
+13. 设定prop属性(参见<a href="系统属性prop文件设置.html">系统属性prop文件设置</a>)
+</li>
+<li>
+14. 产生image
+</li>
+</ul>
+
+<pre class="brush:text">
+    Makefile根据之前的product设定和一些默认设定生成prop的属性列表。并将生成的目标文件打包成相应的ramdisk.img，system.img，userdata.img。
+</pre>
+
+<p>
+<a href="pic/build_system_main.png"><img src="pic/build_system_main.png" /></a>
+</p>
+
+<h2 id="toc_1.4">各组件编译详解</h2>
+<h3 id="toc_1.4.1">系统属性prop文件设置</h3>
+<ul>
+<li>
+<a href="系统属性prop文件设置.html">系统属性prop文件设置</a>
+</li>
+</ul>
+
+<h3 id="toc_1.4.2">签名机制详解</h3>
+<ul>
+<li>
+<a href="签名机制.html">签名机制</a>
+</li>
+</ul>
+
+<h3 id="toc_1.4.3">如何进行版本发布</h3>
+<ul>
+<li>
+<a href="版本发布.html">版本发布</a>
+</li>
+</ul>
+
+<h3 id="toc_1.4.4">怎样制作update升级包</h3>
+<ul>
+<li>
+<a href="制作update升级包.html">制作update升级包</a>
+</li>
+</ul>
+
+<p>
+<a href="pic/build_system_sub.png"><img src="pic/build_system_sub.png" /></a>
+</p>
+
+<h2 id="toc_1.5">build/core下的参考文件</h2>
+<ul>
+<li>
+<a href="示例文件.html">示例文件</a>
+</li>
+</ul>
+
+<h2 id="toc_1.6">Product Tree 示例</h2>
+<ul>
+<li>
+<a href="制作自己的Product Tree.html">制作自己的Product Tree</a>
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

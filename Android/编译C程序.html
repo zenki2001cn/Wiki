@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>编译C程序</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">编译C模块</h1>
+<ul>
+<li>
+<a href="Android.html">Android</a>
+</li>
+</ul>
+
+<h2 id="toc_1.1">使用Android.mk编译</h2>
+<ul>
+<li>
+将源码放在Android_src/development目录下，并编写Android.mk
+</li>
+<li>
+在Android顶层目录执行<code>make module-name</code>
+</li>
+</ul>
+
+<p>
+Android.mk文件示例
+</p>
+<pre class="brush:make">
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+# 源文件目录
+LOCAL_SRC_FILES := \
+    hello.c
+
+# 模块名
+LOCAL_MODULE := helloworld
+# 创建可执行程序
+include $(BUILD_EXECUTABLE)
+
+# 创建共享库
+#include $(BUILD_SHARED_LIBRARY)
+# 引用库
+#LOCAL_LDLIBS := -lz
+</pre>
+
+<p>
+编译命令
+</p>
+<pre class="brush:bash">
+make helloworld
+
+# 显示详细信息
+make helloworld showcommands
+
+# 清除目标文件
+make clean-helloworld
+</pre>
+
+<h3 id="toc_1.1.1">生成目录</h3>
+<ul>
+<li>
+目标生成目录为<code>out/target/product/generic/system/bin/</code>
+</li>
+</ul>
+
+<h2 id="toc_1.2">手动编译</h2>
+<ul>
+<li>
+交叉编译工具链的目录prebuilt/linux-x86/toolchain/arm-eabi-4.2.1/bin/arm-eabi-gcc
+</li>
+<li>
+头文件目录bionic/libc/include
+</li>
+<li>
+动态库目录out/target/product/generic/obj/lib
+</li>
+<li>
+链接器选项-Wl,-dynamic-linker,/system/bin/linker
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

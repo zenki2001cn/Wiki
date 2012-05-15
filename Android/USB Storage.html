@@ -1,0 +1,537 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>USB Storage</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">USB Storage</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">USB Storage</a></li>
+<ul>
+<li><a href="#toc_1.1">概述</a></li>
+<li><a href="#toc_1.2">结构图</a></li>
+<li><a href="#toc_1.3">StorageManager管理类</a></li>
+<ul>
+<li><a href="#toc_1.3.1">StorageManager的初始化</a></li>
+<li><a href="#toc_1.3.2">mListeners</a></li>
+<li><a href="#toc_1.3.3">StorageManager</a></li>
+<li><a href="#toc_1.3.4">registerListener</a></li>
+<li><a href="#toc_1.3.5">mountObb</a></li>
+<li><a href="#toc_1.3.6">StorageManager.MountServiceBinderListener</a></li>
+</ul>
+<li><a href="#toc_1.4">MountService服务</a></li>
+<li><a href="#toc_1.5">什么是Vold</a></li>
+<li><a href="#toc_1.6">Vold功能实现</a></li>
+<li><a href="#toc_1.7">Vold与MountService的传输协议</a></li>
+<ul>
+<li><a href="#toc_1.7.1">volume操作</a></li>
+<li><a href="#toc_1.7.2">share操作</a></li>
+<li><a href="#toc_1.7.3">storage操作</a></li>
+<li><a href="#toc_1.7.4">asec操作</a></li>
+<li><a href="#toc_1.7.5">obb操作</a></li>
+<li><a href="#toc_1.7.6">xwrap操作</a></li>
+</ul>
+<li><a href="#toc_1.8">调试Vold</a></li>
+<li><a href="#toc_1.9">USB Storage框架总结</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<pre class="brush:text">
+    Android的USB存储管理从上到下主要分为StorageManager、MountService、Vold几个模块。
+    framework层的功能主要是由后台服务MountService实现，与其他Service一样，
+启动时会在SystemService中注册该服务。
+    StorageManager是管理类，主要是提供给上层应用程序开发者的调用接口，具体实现会调用
+MountService服务。
+    Vold是系统的守护进程，用来监测内核事件消息和framework层的消息，都是使用socket来进行通讯，
+后面会详细分析Vold的实现。
+</pre>
+
+<h2 id="toc_1.2">结构图</h2>
+<p>
+<a href="pic/usb_storage.jpg"><img src="pic/usb_storage.jpg" /></a>
+</p>
+
+<h2 id="toc_1.3">StorageManager管理类</h2>
+<ul>
+<li>
+StorageManager是提供给应用层的接口管理类，用来负责USB设备的操作，如挂载外置存储卡，获取存储卡状态：
+</li>
+<li>
+registerListener方法注册的是StorageEventListener接口，该接口用来处理UMS事件。
+</li>
+<li>
+mountObb方法注册的是OnObbStateChangeListener接口，该接口用来处理Obb事件。
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">StorageManager的初始化</h3>
+<ul>
+<li>
+StorageManager的初始化很简单，获取MountService对象，注册MountServiceBinderListener。
+</li>
+<li>
+这里要注意几个回调的注册过程：
+</li>
+<ul>
+<li>
+StorageManager.MountServiceBinderListener类：该类是注册给MountService的回调，由MountService.updatePublicVolumeState方法触发(见<a href="MountService实现.html">MountService实现</a>)。
+</li>
+<li>
+StorageEventListener：应用层通过StorageManager.registerListener方法注册该回调，该回调在<code>StorageManager.MountServiceBinderListener</code>中触发。(可以理解为回调中的回调)
+</li>
+<li>
+OnObbStateChangeListener回调：obb状态改变时被调用，该回调会直接注册给MountService，由MountService.updatePublicVolumeState方法触发。
+</li>
+</ul>
+</ul>
+
+<h3 id="toc_1.3.2">mListeners</h3>
+<pre class="brush:java">
+private List&lt;ListenerDelegate&gt; mListeners = new ArrayList&lt;ListenerDelegate&gt;();
+</pre>
+
+<h3 id="toc_1.3.3">StorageManager</h3>
+<pre class="brush:java">
+public StorageManager(Looper tgtLooper) throws RemoteException {
+    mMountService = IMountService.Stub.asInterface(ServiceManager.getService("mount"));
+    if (mMountService == null) {
+        return;
+    }
+    mTgtLooper = tgtLooper;
+    mBinderListener = new MountServiceBinderListener();
+    mMountService.registerListener(mBinderListener);
+}
+</pre>
+
+<h3 id="toc_1.3.4">registerListener</h3>
+<pre class="brush:java">
+public void registerListener(StorageEventListener listener) {
+    if (listener == null) {
+        return;
+    }
+
+    synchronized (mListeners) {
+        mListeners.add(new ListenerDelegate(listener));
+    }
+}
+</pre>
+
+<h3 id="toc_1.3.5">mountObb</h3>
+<pre class="brush:java">
+public boolean mountObb(String filename, String key, OnObbStateChangeListener listener) {
+    ...... 
+    try {
+        final int nonce = mObbActionListener.addListener(listener);
+        mMountService.mountObb(filename, key, mObbActionListener, nonce);
+        return true;
+    } catch (RemoteException e) {
+    }
+
+    return false;
+}
+</pre>
+
+<h3 id="toc_1.3.6">StorageManager.MountServiceBinderListener</h3>
+<pre class="brush:java">
+private class MountServiceBinderListener extends IMountServiceListener.Stub {
+    public void onUsbMassStorageConnectionChanged(boolean available) {
+        final int size = mListeners.size();
+        for (int i = 0; i &lt; size; i++) {
+            mListeners.get(i).sendShareAvailabilityChanged(available);
+        }
+    }
+
+    public void onStorageStateChanged(String path, String oldState, String newState) {
+        final int size = mListeners.size();
+        for (int i = 0; i &lt; size; i++) {
+            mListeners.get(i).sendStorageStateChanged(path, oldState, newState);
+        }
+    }
+}
+</pre>
+
+<h2 id="toc_1.4">MountService服务</h2>
+<ul>
+<li>
+MountService是运行在SystemServer中的服务，它为StorageManager提供了接口实现，主要提供以下关于设备操作的功能：
+</li>
+</ul>
+<table>
+<tr>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>setUsbMassStorageEnabled</td>
+<td>设置U盘模式</td>
+</tr>
+<tr>
+<td>isUsbMassStorageEnabled</td>
+<td>检测当前是否是U盘模式</td>
+</tr>
+<tr>
+<td>mountVolume</td>
+<td>挂载磁盘</td>
+</tr>
+<tr>
+<td>unmountVolume</td>
+<td>卸载磁盘</td>
+</tr>
+<tr>
+<td>formatVolume</td>
+<td>格式化磁盘</td>
+</tr>
+<tr>
+<td>getVolumeState</td>
+<td>获取磁盘状态</td>
+</tr>
+<tr>
+<td>mountSecureContainer</td>
+<td>挂载secure分区</td>
+</tr>
+<tr>
+<td>unmountSecureContainer</td>
+<td>卸载secure分区</td>
+</tr>
+<tr>
+<td>isSecureContainerMounted</td>
+<td>检测secure分区状态</td>
+</tr>
+<tr>
+<td>mountObb</td>
+<td>挂载obb分区</td>
+</tr>
+<tr>
+<td>unmountObb</td>
+<td>卸载obb分区</td>
+</tr>
+<tr>
+<td>isObbMounted</td>
+<td>检测obb分区状态</td>
+</tr>
+<tr>
+<td>registerListener</td>
+<td>注册外部回调接口，用来做设备状态变更处理</td>
+</tr>
+</table>
+
+<ul>
+<li>
+<a href="MountService实现.html">MountService实现</a>
+</li>
+</ul>
+
+<h2 id="toc_1.5">什么是Vold</h2>
+<ul>
+<li>
+<a href="什么是Vold.html">什么是Vold</a>
+</li>
+</ul>
+
+<h2 id="toc_1.6">Vold功能实现</h2>
+<ul>
+<li>
+<a href="Vold功能实现.html">Vold功能实现</a>
+</li>
+</ul>
+
+<h2 id="toc_1.7">Vold与MountService的传输协议</h2>
+<ul>
+<li>
+MountService使用socket与Vold通讯，以下为socket通讯的协议：
+</li>
+</ul>
+
+<h3 id="toc_1.7.1">volume操作</h3>
+<ul>
+<li>
+实现参考CommandListener::VolumeCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>volume list</td>
+<td>返回设备列表</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>volume debug &lt;off/on&gt;</td>
+<td>开启debug模式</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>volume mount &lt;path&gt;</td>
+<td>挂载对应指定挂载点的设备</td>
+<td>path表示挂载点</td>
+</tr>
+<tr>
+<td>volume unmount &lt;path&gt; [force]</td>
+<td>卸载指定挂载点的设备</td>
+<td>path表示挂载点</td>
+</tr>
+<tr>
+<td>volume format &lt;path&gt;</td>
+<td>格式化对应挂载点的设备</td>
+<td>path表示挂载点</td>
+</tr>
+<tr>
+<td>volume share &lt;path&gt; &lt;method&gt;</td>
+<td>开启ums模式</td>
+<td>path表示挂载点，method可设置为"ums"</td>
+</tr>
+<tr>
+<td>volume unshare &lt;path&gt; &lt;method&gt;</td>
+<td>关闭ums模式</td>
+<td>path表示挂载点，method可设置为"ums"</td>
+</tr>
+</table>
+
+<h3 id="toc_1.7.2">share操作</h3>
+<ul>
+<li>
+实现参考CommandListener::ShareCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>share status</td>
+<td>返回ums的信息</td>
+<td>返回usb状态，true为usb已连接并开启ums模式，否则为false</td>
+</tr>
+</table>
+
+<h3 id="toc_1.7.3">storage操作</h3>
+<ul>
+<li>
+实现参考CommandListener::StorageCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>storage users</td>
+<td>获取设备关联的进程信息</td>
+<td>读取/proc目录下相关进程的信息</td>
+</tr>
+</table>
+
+<h3 id="toc_1.7.4">asec操作</h3>
+<ul>
+<li>
+实现参考CommandListener::AsecCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>asec list</td>
+<td>扫描asec目录，返回.asec结尾的文件名</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec create &lt;container-id&gt; &lt;size_mb&gt; &lt;fstype&gt; &lt;key&gt; &lt;ownerUid&gt;</td>
+<td>创建asec目录和文件</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec finalize &lt;container-id&gt;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec destroy &lt;container-id&gt; [force]</td>
+<td>删除asec目录和文件</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec mount &lt;namespace-id&gt; &lt;key&gt; &lt;ownerUid&gt;</td>
+<td>挂载asec目录</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec unmount &lt;container-id&gt; [force]</td>
+<td>卸载asec目录</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec rename &lt;old_id&gt; &lt;new_id&gt;</td>
+<td>重命名asec目录</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>asec path &lt;container-id&gt;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3 id="toc_1.7.5">obb操作</h3>
+<ul>
+<li>
+实现参考CommandListener::ObbCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>obb list</td>
+<td>扫描/proc/mounts目录，返回挂载信息</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>obb mount &lt;filename&gt; &lt;key&gt; &lt;ownerUid&gt;</td>
+<td>挂载obb镜像</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>obb unmount &lt;source file&gt; [force]</td>
+<td>卸载obb镜像</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>obb path &lt;source file&gt;</td>
+<td>返回obb挂载路径</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h3 id="toc_1.7.6">xwrap操作</h3>
+<ul>
+<li>
+实现参考CommandListener::XwrapCmd类
+</li>
+</ul>
+<table>
+<tr>
+<th>协议字符串</th>
+<th>用法描述</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>xwrap enable</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>xwrap disable</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>xwrap status</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h2 id="toc_1.8">调试Vold</h2>
+<ul>
+<li>
+参见<a href="Android工具集.html">Android工具集</a>。
+</li>
+</ul>
+
+<h2 id="toc_1.9">USB Storage框架总结</h2>
+<ul>
+<li>
+Storage管理从上到下主要涉及三个类：StorageManager、MountService、Vold。我们要了解Storage提供了基本的接口，MountService实现了接口代理。而Vold是真正实现设备操作的守护进程。
+</li>
+<li>
+Vold的实现依赖uevent机制。
+</li>
+<li>
+从整个框架来看，Storage的管理属于C/S架构，通讯机制使用socket，底层通讯使用netlink。
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

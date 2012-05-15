@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>创建和编译工程</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">创建和编译工程</h1>
+
+<h2 id="toc_1.1">创建工程</h2>
+<pre class="brush: bash">
+#创建一个新的工程
+$ android create project -t 1 -k org.example.demo -a demo -n project_demo -p ./demo
+Options:
+  -t --target   Target id of the new project [required]
+  -k --package  Package name [required]
+  -a --activity Activity name [required]
+  -n --name     Project name
+  -p --path     Location path of new project [required]
+
+#更新工程 (must have an AndroidManifest.xml).
+$ android update project
+Options:
+  -l --library  Location path of an Android Library to add, relative to the main project
+  -s --subprojects Also update any projects in sub-folders, such as test projects.
+  -n --name     Project name
+  -t --target   Target id to set for the project
+  -p --path     Location path of the project [required]
+
+#创建新的测试工程
+$ android create test-project
+Options:
+  -m --main     Location path of the project to test, relative to the new project [required]
+  -n --name     Project name
+  -p --path     Location path of new project [required]
+
+#更新测试工程 (must have an AndroidManifest.xml).
+$ android update test-project
+Options:
+  -m --main     Location path of the project to test, relative to the new project [required]
+  -p --path     Location path of the project [required]
+
+#创建一个库
+$ android create lib-project
+Options:
+  -n --name     Project name
+  -t --target   Target id of the new project [required]
+  -p --path     Location path of new project [required]
+  -k --package  Package name [required]
+
+#更新库 (must have an AndroidManifest.xml).
+$ android update lib-project
+Options:
+  -t --target   Target id to set for the project
+  -p --path     Location path of the project [required]
+  -l --library  Location path of an Android Library to add, relative to the main project
+</pre>
+
+<h2 id="toc_1.2">编译工程</h2>
+<pre class="brush: bash">
+#编译debug版
+$ ant debug
+
+#编译release版
+$ ant release
+
+#clean
+$ ant clean
+</pre>
+
+<h2 id="toc_1.3">运行程序</h2>
+<pre class="brush: bash">
+#打开模拟器
+$ emulator -avd AVD1
+
+#添加和删除程序
+#默认安装在system/app下
+$ adb install xxx.apk
+
+$ adb push xxx.apk /data/app
+$ adb shell rm /data/app/xxx.apk
+</pre>
+
+<h2 id="toc_1.4">调试程序</h2>
+<pre class="brush: bash">
+#运行调试器
+$ ddms &amp;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>自定义View的步骤</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">自定义View的步骤</h1>
+
+<h2 id="toc_1.1">基本流程</h2>
+<ul>
+<li>
+设置属性：XML中添加属性
+</li>
+<li>
+设置焦点：<code>requestFocus()</code>强制获取焦点
+</li>
+<li>
+设置事件监听
+</li>
+<li>
+设置是否可见：<code>setVisibility(int)</code>设置是否可见
+</li>
+</ul>
+
+<h2 id="toc_1.2">重载方法</h2>
+<table>
+<tr>
+<th>周期</th>
+<th>调用方法</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>初始化</td>
+<td>Constructors</td>
+<td>从代码创建视图或是从XML文件创建</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onFinishInflate()</td>
+<td>当本视图和它的子视图从XML中解压后调用该方法</td>
+</tr>
+<tr>
+<td>布局</td>
+<td>onMeasure(int, int)</td>
+<td>设置本视图和它的子视图时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onLayout(boolean, int, int, int, int)</td>
+<td>本视图为它的子视图设置大小和位置时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onSizeChanged(int, int, int, int)</td>
+<td>本视图大小改变时调用</td>
+</tr>
+<tr>
+<td>绘图</td>
+<td>onDraw(Canvas)</td>
+<td>本视图渲染内容时调用</td>
+</tr>
+<tr>
+<td>事件处理</td>
+<td>onKeyDown(int, KeyEvent)</td>
+<td>键盘按下时触发</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onKeyUp(int, KeyEvent)</td>
+<td>键盘按键弹起时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onTrackballEvent(MotionEvent)</td>
+<td>轨迹球事件响应</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onTouchEvent(MotionEvent)</td>
+<td>触摸事件响应</td>
+</tr>
+<tr>
+<td>焦点</td>
+<td>onFocusChanged(boolean, int, Rect)</td>
+<td>焦点变化时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onWindowFocusChanged(boolean)</td>
+<td>包含该该图的窗口焦点发生变化时调用</td>
+</tr>
+<tr>
+<td>附着</td>
+<td>onAttachedToWindow()</td>
+<td>当视图附着到一个窗口时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onDetachedFromWindow()</td>
+<td>当视图离开窗口时调用</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>onWindowVisibilityChanged(int)</td>
+<td>当包含该视图的窗口可见性变化时调用</td>
+</tr>
+</table>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

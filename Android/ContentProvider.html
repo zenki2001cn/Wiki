@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ContentProvider</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">ContentProvider使用详解</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">ContentProvider使用详解</a></li>
+<ul>
+<li><a href="#toc_1.1">相关类</a></li>
+<li><a href="#toc_1.2">什么是ContentProvider？</a></li>
+<li><a href="#toc_1.3">什么是Uri</a></li>
+<ul>
+<li><a href="#toc_1.3.1">Uri的组成和说明</a></li>
+</ul>
+<li><a href="#toc_1.4">辅助类</a></li>
+<ul>
+<li><a href="#toc_1.4.1">UriMatcher</a></li>
+<li><a href="#toc_1.4.2">ContentUris</a></li>
+<li><a href="#toc_1.4.3">ContentResolver</a></li>
+<li><a href="#toc_1.4.4">Uri</a></li>
+<ul>
+<li><a href="#toc_1.4.4.1">主要方法说明</a></li>
+</ul>
+</ul>
+<li><a href="#toc_1.5">示例代码</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.UriMatcher;
+import android.net.Uri;
+</pre>
+
+<h2 id="toc_1.2">什么是ContentProvider？</h2>
+<pre class="brush:text">
+当应用继承ContentProvider，并重写该类提供数据存储的方法，便可以向其他应用共享其数据。
+使用该方法的好处是统一了数据访问的方法。
+</pre>
+
+<h2 id="toc_1.3">什么是Uri</h2>
+<pre class="brush:text">
+Uri表示需要操作的数据，主要包含两部分信息：
+1. 需要操作的ContentProvider
+2. 对哪些数据进行操作
+</pre>
+
+<h3 id="toc_1.3.1">Uri的组成和说明</h3>
+<p>
+<img src="pic/uri.jpg" />
+</p>
+<pre class="brush:text">
+1.scheme：ContentProvider（内容提供者）的scheme由Android规定为：content://。
+2.主机名（或Authority）：用于唯一标识这个ContentProvider，外部调用者可以根据这个标识来找到它。
+3.路径（path）：可以用来表示我们要操作的数据，路径的构建应根据业务而定，如下：
+* 要操作contact表中id为10的记录，表示为:/contact/10
+* 要操作contact表中id为10的记录的name字段，表示为:contact/10/name
+* 要操作contact表中的所有记录，表示为:/contact
+</pre>
+
+<h2 id="toc_1.4">辅助类</h2>
+<h3 id="toc_1.4.1">UriMatcher</h3>
+<ul>
+<li>
+用于匹配URI，常用方法如下
+</li>
+</ul>
+
+<pre class="brush:java">
+//常量UriMatcher.NO_MATCH表示不匹配任何路径的返回码(-1)。
+UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+//如果match()方法匹配content://com.changcheng.sqlite.provider.contactprovider/contact路径，返回匹配码为1
+uriMatcher.addURI(“com.changcheng.sqlite.provider.contactprovider”, “contact”, 1);
+
+//如果match()方法匹配content://com.changcheng.sqlite.provider.contactprovider/contact/230路径，返回匹配码为2
+//#号为通配符
+uriMatcher.addURI(“com.changcheng.sqlite.provider.contactprovider”, “contact/#”, 2);
+
+//使用UriMatcher.match()方法对uri进行匹配，如果成功则返回匹配的ID，为addURI()方法的第三个参数
+int id = uriMatcher.match(uri);
+</pre>
+
+<h3 id="toc_1.4.2">ContentUris</h3>
+<ul>
+<li>
+用于分析URI的ID
+</li>
+</ul>
+
+<pre class="brush:java">
+// 为指定的URI添加ID
+static Uri.Builder appendId(Uri.Builder  builder, long id)
+
+// 解析出URI的ID
+static long parseId(Uri  contentUri)
+
+// 组合新的ID，从而生成URI
+static Uri withAppendedId(Uri contentUri, long id)
+</pre>
+ 
+<h3 id="toc_1.4.3">ContentResolver</h3>
+<ul>
+<li>
+外部应用可以使用ContentResolver来对ContentProvider中的数据进行添加、删除、修改和查询操作
+</li>
+<li>
+ContentResolver使用insert、delete、update、query方法，来操作数据。
+</li>
+</ul>
+
+<h3 id="toc_1.4.4">Uri</h3>
+<h4 id="toc_1.4.4.1">主要方法说明</h4>
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>Uri</td>
+<td>fromFile(File file)</td>
+<td>从文件返回Uri</td>
+</tr>
+<tr>
+<td>String</td>
+<td>getLastPathSegment()</td>
+<td>获取Uri最后一个片断</td>
+</tr>
+<tr>
+<td>List&lt;String&gt;</td>
+<td>getPathSegment()</td>
+<td>获取Uri片断列表</td>
+</tr>
+<tr>
+<td>String</td>
+<td>getAuthority()</td>
+<td>获取Authority部分</td>
+</tr>
+<tr>
+<td>Uri</td>
+<td>parse(String uriString)</td>
+<td>从字符串返回Uri</td>
+</tr>
+<tr>
+<td>Uri</td>
+<td>withAppendedPath  (Uri baseUri, String pathSegment)</td>
+<td>添加新的片断组成Uri</td>
+</tr>
+</table>
+
+<h2 id="toc_1.5">示例代码</h2>
+<ul>
+<li>
+<a href="ContentProvider子类.html">ContentProvider子类</a>
+</li>
+<li>
+<a href="BaseColumns子类.html">BaseColumns子类</a>
+</li>
+</ul>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

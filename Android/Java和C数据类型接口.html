@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Java和C数据类型接口</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">常用的Java接口</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">常用的Java接口</a></li>
+<ul>
+<li><a href="#toc_1.1">包含头文件</a></li>
+<li><a href="#toc_1.2">数据类型定义</a></li>
+<ul>
+<li><a href="#toc_1.2.1">基本数据类型</a></li>
+<li><a href="#toc_1.2.2">引用数据类型</a></li>
+</ul>
+<li><a href="#toc_1.3">获取和设置Java类对象和成员</a></li>
+<li><a href="#toc_1.4">调用Java类的方法</a></li>
+<li><a href="#toc_1.5">获取和设置java数组类型数据</a></li>
+<li><a href="#toc_1.6">String相关方法</a></li>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">包含头文件</h2>
+<pre class="brush:c">
+/usr/lib/jvm/jdk1.5.0_22/include 
+/usr/lib/jvm/jdk1.5.0_22/include/linux
+</pre>
+
+<ul>
+<li>
+<a href="jni头文件.html">jni头文件</a>
+</li>
+</ul>
+
+<h2 id="toc_1.2">数据类型定义</h2>
+<h3 id="toc_1.2.1">基本数据类型</h3>
+<table>
+<tr>
+<th>Java</th>
+<th>C</th>
+<th>符号类型</th>
+<th>字节</th>
+<th>对应签名字母</th>
+</tr>
+<tr>
+<td>boolean</td>
+<td>jboolean</td>
+<td>无符号</td>
+<td>8  位</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>jbyte</td>
+<td>无符号</td>
+<td>8  位</td>
+<td>B</td>
+</tr>
+<tr>
+<td>char</td>
+<td>jchar</td>
+<td>无符号</td>
+<td>16  位</td>
+<td>C</td>
+</tr>
+<tr>
+<td>short</td>
+<td>jshort</td>
+<td>有符号</td>
+<td>16  位</td>
+<td>S</td>
+</tr>
+<tr>
+<td>int</td>
+<td>jint</td>
+<td>有符号</td>
+<td>32  位</td>
+<td>I</td>
+</tr>
+<tr>
+<td>long</td>
+<td>jlong</td>
+<td>有符号</td>
+<td>64  位</td>
+<td>J</td>
+</tr>
+<tr>
+<td>float</td>
+<td>jfloat</td>
+<td>有符号</td>
+<td>32  位</td>
+<td>F</td>
+</tr>
+<tr>
+<td>double</td>
+<td>jdouble</td>
+<td>有符号</td>
+<td>64  位</td>
+<td>D</td>
+</tr>
+<tr>
+<td>无返回值</td>
+<td>void</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>V</td>
+</tr>
+</table>
+
+<h3 id="toc_1.2.2">引用数据类型</h3>
+<table>
+<tr>
+<th>Java</th>
+<th>C</th>
+<th>符号类型</th>
+<th>字节</th>
+<th>对应签名字母</th>
+</tr>
+<tr>
+<td>all objects</td>
+<td>jobjects</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>L/java/lang/object;</td>
+</tr>
+<tr>
+<td>java.lang.Class</td>
+<td>jcalss</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>L/java/lang/Class</td>
+</tr>
+<tr>
+<td>java.lang.String</td>
+<td>jstring</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>L/java/lang/String</td>
+</tr>
+<tr>
+<td>Object[]</td>
+<td>jobjectArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[L/java/lang/Object;</td>
+</tr>
+<tr>
+<td>boolean[]</td>
+<td>jbooleanArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[Z</td>
+</tr>
+<tr>
+<td>byte[]</td>
+<td>jbyteArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[B</td>
+</tr>
+<tr>
+<td>java.lang.Throwable</td>
+<td>jthrowable</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>L/java/lang/Throwable</td>
+</tr>
+<tr>
+<td>char[]</td>
+<td>jcharArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[C</td>
+</tr>
+<tr>
+<td>short[]</td>
+<td>jshortArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[S</td>
+</tr>
+<tr>
+<td>int[]</td>
+<td>jintArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[I</td>
+</tr>
+<tr>
+<td>long[]</td>
+<td>jlongArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[J</td>
+</tr>
+<tr>
+<td>float[]</td>
+<td>jfloatArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[F</td>
+</tr>
+<tr>
+<td>double[]</td>
+<td>jdoubleArray</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[D</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">获取和设置Java类对象和成员</h2>
+<pre class="brush:c">
+// 类
+jclass FindClass(const char *name);
+jclass GetObjectClass(jobject obj);
+jclass GetSuperclass(jclass sub);
+jboolean IsInstanceOf(jobject obj, jclass clazz);
+
+// 获取成员变量ID
+jfieldID GetFieldID(jclass clazz, const char *name, const char *sig);
+
+// 获取对象类型成员
+jobject GetObjectField(jobject obj, jfieldID fieldID);
+void SetObjectField(jobject obj, jfieldID fieldID, jobject val);
+
+// 获取boolean类型成员
+jboolean GetBooleanField(jobject obj, jfieldID fieldID);
+void SetBooleanField(jobject obj, jfieldID fieldID, jboolean val);
+
+// 获取byte类型成员
+jbyte GetByteField(jobject obj, jfieldID fieldID);
+void SetByteField(jobject obj, jfieldID fieldID, jbyte val);
+
+// 获取char类型成员
+jchar GetCharField(jobject obj, jfieldID fieldID);
+void SetCharField(jobject obj, jfieldID fieldID, jchar val);
+
+// 获取short类型成员
+jshort GetShortField(jobject obj, jfieldID fieldID);
+void SetShortField(jobject obj, jfieldID fieldID, jshort val);
+
+// 获取int类型成员
+jint GetIntField(jobject obj, jfieldID fieldID);
+void SetIntField(jobject obj, jfieldID fieldID, jint val);
+
+// 获取long类型成员
+jlong GetLongField(jobject obj, jfieldID fieldID);
+void SetLongField(jobject obj, jfieldID fieldID, jlong val);
+
+// 获取float类型成员
+jfloat GetFloatField(jobject obj, jfieldID fieldID);
+void SetFloatField(jobject obj, jfieldID fieldID, jfloat val);
+
+// 获取double类型成员
+jdouble GetDoubleField(jobject obj, jfieldID fieldID);
+void SetDoubleField(jobject obj, jfieldID fieldID, jdouble val);
+</pre>
+
+<h2 id="toc_1.4">调用Java类的方法</h2>
+<pre class="brush:c">
+// 获取方法ID
+jmethodID GetMethodID(jclass clazz, const char *name, const char *sig);
+// 通过构造方法返回对象
+jobject NewObject(jclass clazz, jmethodID methodID, ...);
+
+// 返回值为object的方法调用
+jobject CallObjectMethod(jobject obj, jmethodID methodID, ...); 
+jobject CallObjectMethodV(jobject obj, jmethodID methodID, va_list args);
+jobject CallObjectMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+
+// 返回值为boolean的方法调用
+jboolean CallBooleanMethod(jobject obj, jmethodID methodID, ...); 
+jboolean CallBooleanMethodV(jobject obj, jmethodID methodID, va_list args);
+jboolean CallBooleanMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+
+// 返回值为byte的方法调用
+jbyte CallByteMethod(jobject obj, jmethodID methodID, ...);
+jbyte CallByteMethodV(jobject obj, jmethodID methodID, va_list args);
+jbyte CallByteMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+
+// 返回值为char的方法调用
+jchar CallCharMethod(jobject obj, jmethodID methodID, ...); 
+jchar CallCharMethodV(jobject obj, jmethodID methodID, va_list args);
+jchar CallCharMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+
+// 返回值为short的方法调用
+jshort CallShortMethod(jobject obj, jmethodID methodID, ...);
+jshort CallShortMethodV(jobject obj, jmethodID methodID, va_list args);
+jshort CallShortMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+
+// 返回值为int的方法调用
+jint CallIntMethod(jobject obj, jmethodID methodID, ...);
+jint CallIntMethodV(jobject obj, jmethodID methodID, va_list args);
+jint CallIntMethodA(jobject obj, jmethodID methodID, const jvalue * args);
+</pre>
+
+<h2 id="toc_1.5">获取和设置java数组类型数据</h2>
+<pre class="brush:c">
+// 获取数组大小
+jsize GetArrayLength(jarray array); 
+
+// 对象数组
+jobjectArray NewObjectArray(jsize len, jclass clazz, jobject init);
+jobject GetObjectArrayElement(jobjectArray array, jsize index);
+void SetObjectArrayElement(jobjectArray array, jsize index, jobject val);
+
+// boolean数组
+jbooleanArray NewBooleanArray(jsize len);
+jboolean * GetBooleanArrayElements(jbooleanArray array, jboolean *isCopy); 
+void GetBooleanArrayRegion(jbooleanArray array, jsize start, jsize len, jboolean *buf); 
+void SetBooleanArrayRegion(jbooleanArray array, jsize start, jsize len, const jboolean *buf);
+void ReleaseBooleanArrayElements(jbooleanArray array, jboolean *elems, jint mode); 
+
+// byte数组
+jbyteArray NewByteArray(jsize len);
+jbyte * GetByteArrayElements(jbyteArray array, jboolean *isCopy); 
+void GetByteArrayRegion(jbyteArray array, jsize start, jsize len, jbyte *buf); 
+void SetByteArrayRegion(jbyteArray array, jsize start, jsize len, const jbyte *buf);
+void ReleaseByteArrayElements(jbyteArray array, jbyte *elems, jint mode); 
+
+// char数组
+jcharArray NewCharArray(jsize len);
+jchar * GetCharArrayElements(jcharArray array, jboolean *isCopy);
+void GetCharArrayRegion(jcharArray array, jsize start, jsize len, jchar *buf); 
+void SetCharArrayRegion(jcharArray array, jsize start, jsize len, const jchar *buf);
+void ReleaseCharArrayElements(jcharArray array, jchar *elems, jint mode); 
+
+// short数组
+jshortArray NewShortArray(jsize len);
+jshort * GetShortArrayElements(jshortArray array, jboolean *isCopy); 
+void GetShortArrayRegion(jshortArray array, jsize start, jsize len, jshort *buf); 
+void SetShortArrayRegion(jshortArray array, jsize start, jsize len, const jshort *buf);
+void ReleaseShortArrayElements(jshortArray array, jshort *elems, jint mode);
+
+// int数组
+jintArray NewIntArray(jsize len);
+jint * GetIntArrayElements(jintArray array, jboolean *isCopy); 
+void GetIntArrayRegion(jintArray array, jsize start, jsize len, jint *buf); 
+void SetIntArrayRegion(jintArray array, jsize start, jsize len, const jint *buf);
+void ReleaseIntArrayElements(jintArray array, jint *elems, jint mode);
+
+// long数组
+jlongArray NewLongArray(jsize len);
+jlong * GetLongArrayElements(jlongArray array, jboolean *isCopy); 
+void GetLongArrayRegion(jlongArray array, jsize start, jsize len, jlong *buf); 
+void SetLongArrayRegion(jlongArray array, jsize start, jsize len, const jlong *buf);
+void ReleaseLongArrayElements(jlongArray array, jlong *elems, jint mode); 
+
+// float数组
+jfloatArray NewFloatArray(jsize len);
+jfloat * GetFloatArrayElements(jfloatArray array, jboolean *isCopy); 
+void GetFloatArrayRegion(jfloatArray array, jsize start, jsize len, jfloat *buf); 
+void SetFloatArrayRegion(jfloatArray array, jsize start, jsize len, const jfloat *buf);
+void ReleaseFloatArrayElements(jfloatArray array, jfloat *elems, jint mode);
+
+// double数组
+jdoubleArray NewDoubleArray(jsize len);
+jdouble * GetDoubleArrayElements(jdoubleArray array, jboolean *isCopy); 
+void GetDoubleArrayRegion(jdoubleArray array, jsize start, jsize len, jdouble *buf); 
+void SetDoubleArrayRegion(jdoubleArray array, jsize start, jsize len, const jdouble *buf);
+void ReleaseDoubleArrayElements(jdoubleArray array, jdouble *elems, jint mode); 
+</pre>
+
+<h2 id="toc_1.6">String相关方法</h2>
+<pre class="brush:c">
+jstring NewString(const jchar *unicode, jsize len);
+jsize GetStringLength(jstring str); 
+const jchar *GetStringChars(jstring str, jboolean *isCopy); 
+void ReleaseStringChars(jstring str, const jchar *chars); 
+
+jstring NewStringUTF(const char *utf); 
+jsize GetStringUTFLength(jstring str); 
+const char* GetStringUTFChars(jstring str, jboolean *isCopy); 
+void ReleaseStringUTFChars(jstring str, const char* chars); 
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

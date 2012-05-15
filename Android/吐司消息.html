@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>吐司消息</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">吐司消息</h1>
+
+<p>
+<img src="pic/toast.png" />
+</p>
+
+<h2 id="toc_1.1">相关类</h2>
+<pre class="brush:java">
+import android.widget.Toast;
+import android.widget.ImageView;
+</pre>
+
+<h3 id="toc_1.1.1">文字的Toast</h3>
+<ul>
+<li>
+新建Toast实例，调用Toast.makeText()方法。
+</li>
+<ol>
+<li>
+第1个参数 Context
+</li>
+<li>
+第2个参数 要表示的字符串
+</li>
+<li>
+第3个参数 表示期间 （LENGTH_SHORT，LENGTH_LONG）。
+</li>
+</ol>
+<li>
+Toast的表示，调用show()方法。
+</li>
+</ul>
+
+<p>
+例程源码(Java)
+</p>
+<pre class="brush: java">
+Toast.makeText(this, "Test", Toast.LENGTH_LONG).show();
+</pre>
+
+<h3 id="toc_1.1.2">带图片的Toast</h3>
+<ul>
+<li>
+新建Toast实例和ImageView实例
+</li>
+<li>
+调用Toast.setView()方法
+</li>
+<li>
+调用Toast.show()方法
+</li>
+</ul>
+
+<p>
+例程源码(JAVA)
+</p>
+<pre class="brush:java">
+Toast toast = new Toast(this); 
+ImageView view = new ImageView(this); 
+
+view.setImageResource(R.drawable.icon); 
+toast.setView(view); 
+toast.show();
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>vsftp配置</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">vsftp配置</h1>
+
+<h2 id="toc_1.1">安装步骤</h2>
+<h3 id="toc_1.1.1">安装vsftp</h3>
+<pre class="brush:bash">
+#安装vsftp
+$sudo apt-get install vsftp
+</pre>
+
+<h3 id="toc_1.1.2">添加组和用户</h3>
+<pre class="brush:bash">
+#添加组
+$sudo groupadd ftpgroup
+#添加用户
+$sudo useradd -g ftpgroup -d /dir/to -M username
+#设置用户密码
+$sudo passwd username
+</pre>
+
+<h3 id="toc_1.1.3">编辑配置文件</h3>
+<pre class="brush:bash">
+#编辑全局配置文件
+$sudo vim /etc/vsftpd.conf
+
+#添加本地用户列表的配置文件
+$sudo vim /etc/vsftpd_user_conf/username
+#输入以下内容
+    write_enable=YES
+    anon_world_readable_only=NO 
+    anon_upload_enable=YES 
+    anon_mkdir_write_enable=YES 
+    anon_other_write_enable=YES
+    local_root=/home/vsftpd/sqa
+</pre>
+
+<h2 id="toc_1.2">配置文件注释</h2>
+<table>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+<tr>
+<td>listen_address=ip address</td>
+<td>指定侦听IP</td>
+</tr>
+<tr>
+<td>listen_port=port_value</td>
+<td>指定侦听端口，默认21</td>
+</tr>
+<tr>
+<td>anonymous_enable=YES</td>
+<td>是否允许使用匿名帐户</td>
+</tr>
+<tr>
+<td>local_enable=YES</td>
+<td>是否允许本地用户登录</td>
+</tr>
+<tr>
+<td>nopriv_user=ftp</td>
+<td>指定vsftpd服务的运行帐户，不指定时使用ftp</td>
+</tr>
+<tr>
+<td>write_enable=YES</td>
+<td>是否允许写入</td>
+</tr>
+<tr>
+<td>anon_upload_enable=YES</td>
+<td>匿名用户是否可上传文件</td>
+</tr>
+<tr>
+<td>anon_mkdir_write_enable=YES</td>
+<td>匿名用户是否建立目录</td>
+</tr>
+<tr>
+<td>dirmessage_enable=YES</td>
+<td>进入每个目录是显示欢迎信息，在每个目录下建立.message文件在里面写欢迎信息</td>
+</tr>
+<tr>
+<td>xferlog_enable=YES</td>
+<td>上传/下载文件时记录日志</td>
+</tr>
+<tr>
+<td>connect_from_port_20=YES</td>
+<td>是否使用20端口传输数据(是否使用主动模式)</td>
+</tr>
+<tr>
+<td>chown_uploads=YES、chown_username=whoever</td>
+<td>修改匿名用户上传文件的拥有者</td>
+</tr>
+<tr>
+<td>xferlog_file=/var/log/vsftpd.log</td>
+<td>日志文件</td>
+</tr>
+<tr>
+<td>xferlog_std_format=YES</td>
+<td>使用标准文件日志</td>
+</tr>
+<tr>
+<td>idle_session_timeout=600</td>
+<td>会话超时，客户端连接到ftp但未操作</td>
+</tr>
+<tr>
+<td>data_connection_timeout=120</td>
+<td>数据传输超时</td>
+</tr>
+<tr>
+<td>async_abor_enable=YES</td>
+<td>是否允许客户端使用sync等命令</td>
+</tr>
+<tr>
+<td>ascii_upload_enable=YES、ascii_download_enable=YES</td>
+<td>是否允许上传/下载二进制文件</td>
+</tr>
+<tr>
+<td>chroot_local_user=YES</td>
+<td>限制所有的本地用户在自家目录</td>
+</tr>
+<tr>
+<td>chroot_list_enable=YES、chroot_list_file=/etc/vsftpd/chroot_list</td>
+<td>指定不能离开家目录的用户，将用户名一个一行写在/etc/vsftpd/chroot_list文件里，使用此方法时必须chroot_local_user=NO</td>
+</tr>
+<tr>
+<td>ls_recurse_enable=YES</td>
+<td>是否允许使用ls -R等命令</td>
+</tr>
+<tr>
+<td>listen=YES</td>
+<td>开启ipv4监听</td>
+</tr>
+<tr>
+<td>listen_ipv6=YES</td>
+<td>开启ipv6监听</td>
+</tr>
+<tr>
+<td>pam_service_name=vsftpd</td>
+<td>使用pam模块控制，vsftpd文件在/etc/pam.d目录下</td>
+</tr>
+<tr>
+<td>userlist_enable=YES</td>
+<td>此选项被激活后，vsftpd将读取userlist_file参数所指定的文件中的用户列表。当列表中的用户登录FTP服务器时，该用户在提示输入密码之前就被禁止了。即该用户名输入后，vsftpd查到该用户名在列表中，vsftpd就直接禁止掉该用户，不会再进行询问密码等后续步聚</td>
+</tr>
+<tr>
+<td>userlist_deny=YES</td>
+<td>决定禁止还是只允许由userlist_file指定文件中的用户登录FTP服务器。此选项在userlist_enable 选项启动后才生效。YES，默认值，禁止文件中的用户登录，同时也不向这些用户发出输入密码的提示。NO，只允许在文件中的用户登录FTP服务器</td>
+</tr>
+<tr>
+<td>tcp_wrappers=YES</td>
+<td>是否允许tcp_wrappers管理</td>
+</tr>
+<tr>
+<td>local_root=/home/ftp</td>
+<td>所有用户的根目录，对匿名用户无效</td>
+</tr>
+<tr>
+<td>anon_max_rate</td>
+<td>匿名用户的最大传输速度，单位是Byts/s</td>
+</tr>
+<tr>
+<td>local_max_rate</td>
+<td>本地用户的最大传输速度，单位是Byts/s</td>
+</tr>
+<tr>
+<td>download_enable= YES</td>
+<td>是否允许下载</td>
+</tr>
+</table>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

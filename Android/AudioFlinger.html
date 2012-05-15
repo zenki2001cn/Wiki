@@ -1,0 +1,731 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>AudioFlinger</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">AudioFlinger</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">AudioFlinger</a></li>
+<ul>
+<li><a href="#toc_1.1">概述</a></li>
+<li><a href="#toc_1.2">功能描述</a></li>
+<li><a href="#toc_1.3">AudioFlinger初始化</a></li>
+<ul>
+<li><a href="#toc_1.3.1">AudioFlinger::AudioFlinger</a></li>
+</ul>
+<li><a href="#toc_1.4">音轨抽象类和共享内存</a></li>
+<ul>
+<li><a href="#toc_1.4.1">AudioFlinger::ThreadBase::TrackBase::TrackBase</a></li>
+<li><a href="#toc_1.4.2">AudioFlinger::PlaybackThread::Track::Track</a></li>
+<li><a href="#toc_1.4.3">AudioFlinger::RecordThread::RecordTrack::RecordTrack</a></li>
+</ul>
+<li><a href="#toc_1.5">音频输出流程</a></li>
+<ul>
+<li><a href="#toc_1.5.1">创建硬件抽象层的I/O对象</a></li>
+<ul>
+<li><a href="#toc_1.5.1.1">AudioSystem::getOutput</a></li>
+<li><a href="#toc_1.5.1.2">AudioPolicyService::getOutput</a></li>
+</ul>
+<li><a href="#toc_1.5.2">播放线程初始化</a></li>
+<ul>
+<li><a href="#toc_1.5.2.1">AudioFlinger::openOutput</a></li>
+</ul>
+<li><a href="#toc_1.5.3">通过TrackHandle播放</a></li>
+<ul>
+<li><a href="#toc_1.5.3.1">AudioFlinger::createTrack</a></li>
+<li><a href="#toc_1.5.3.2">AudioFlinger::checkPlaybackThread_l</a></li>
+<li><a href="#toc_1.5.3.3">AudioFlinger::PlaybackThread::createTrack_l</a></li>
+</ul>
+<li><a href="#toc_1.5.4">播放线程堆栈图</a></li>
+</ul>
+<li><a href="#toc_1.6">音频采集流程</a></li>
+<ul>
+<li><a href="#toc_1.6.1">创建硬件抽象层的I/O对象</a></li>
+<ul>
+<li><a href="#toc_1.6.1.1">AudioSystem::getInput</a></li>
+<li><a href="#toc_1.6.1.2">AudioPolicyService::getInput</a></li>
+</ul>
+<li><a href="#toc_1.6.2">录音线程初始化</a></li>
+<ul>
+<li><a href="#toc_1.6.2.1">AudioFlinger::openInput</a></li>
+</ul>
+<li><a href="#toc_1.6.3">通过RecordHandle录音</a></li>
+<ul>
+<li><a href="#toc_1.6.3.1">AudioFlinger::openRecord</a></li>
+<li><a href="#toc_1.6.3.2">AudioFlinger::checkRecordThread_l</a></li>
+<li><a href="#toc_1.6.3.3">AudioFlinger::RecordThread::createRecordTrack_l</a></li>
+</ul>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<pre class="brush:text">
+    AudioFlinger向下访问AudioHardware，实现输出音频数据，控制音频参数。同时，
+AudioFlinger向上通过IAudioFinger接口提供服务。所以，AudioFlinger在Android的
+音频系统框架中起着承上启下的作用，地位相当重要。
+</pre>
+
+<h2 id="toc_1.2">功能描述</h2>
+<ul>
+<li>
+AudioFlinger包含以下内部类：
+</li>
+<ul>
+<li>
+<code>IAudioFlinger接口</code>：这是AudioFlinger向外提供服务的接口，例如openOutput，openInput，createTrack，openRecord等等，应用程序或者其他service通过ServiceManager可以获得该接口。该接口通过继承BnAudioFlinger得到。
+</li>
+</ul>
+<li>
+<code>ThreadBase</code>：在AudioFlinger中，Android为每一个放音/录音设备均创建一个处理线程，负责音频数据的I/O和合成，ThreadBase是这些线程的基类，所有的播放和录音线程都派生自ThreadBase。
+</li>
+<ul>
+<li>
+<code>PlaybackThread</code>：音频输出线程。它有一个mOutput变量，类型为AudioStreamOutput*，因此它与HAL层的音频输出相关联。
+</li>
+<ul>
+<li>
+<code>MixerThread</code>：混音线程，它将来自多个源的音频数据混音后再输出。
+</li>
+<li>
+<code>DirectOutputThread</code>：多路输出线程，它从MixerThread派生，意味着它也能够混音。它最终会把混音后的数据写到多个输出中，也就是一份数据会有多个接收者。这就是Duplicate的含义。
+</li>
+<li>
+PlaybackThread维护两个Track数组，一个是mActiveTracks，表示当前活跃的Track。另一个是mTracks，表示所有Track。
+</li>
+</ul>
+<li>
+<code>RecordThread</code>：音频采集线程。它有一个mInput变量，类型为AudioStreamInput*，因此它与HAL层的音频采集相关联。
+</li>
+</ul>
+</ul>
+
+<ul>
+<li>
+旧的pic/audio_flinger.jpg
+</li>
+</ul>
+<p>
+<a href="pic/Audio_Thread.png"><img src="pic/Audio_Thread.png" /></a>
+</p>
+
+<h2 id="toc_1.3">AudioFlinger初始化</h2>
+<ul>
+<li>
+初始化最主要的功能是创建HAL层的模块对象，并初始化默认音频设置。
+</li>
+<li>
+关注该构造方法是为了明确如何访问HAL层的接口。
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">AudioFlinger::AudioFlinger</h3>
+<pre class="brush:c++">
+AudioFlinger::AudioFlinger() : BnAudioFlinger(),
+        mAudioHardware(0), mMasterVolume(1.0f), mMasterMute(false), mNextUniqueId(1)
+{
+    // 获取hardware模块对象
+    mHardwareStatus = AUDIO_HW_IDLE;
+    mAudioHardware = AudioHardwareInterface::create();
+    mHardwareStatus = AUDIO_HW_INIT;
+    
+    if (mAudioHardware-&gt;initCheck() == NO_ERROR) {
+        // open 16-bit output stream for s/w mixer
+        mMode = AudioSystem::MODE_NORMAL;
+        setMode(mMode);
+
+        setMasterVolume(1.0f);
+        setMasterMute(false);
+    } else {
+    }
+}
+</pre>
+
+<h2 id="toc_1.4">音轨抽象类和共享内存</h2>
+<ul>
+<li>
+在现实世界，每一种音色的声音可以定义为一个音轨，而Android的世界，同样有对应的抽象类。
+</li>
+<li>
+<code>TrackBase</code>：应用程序每创建一个音轨（AudioTrack / AudioRecord），在AudioFlinger中都会创建一个对应的Track实例，TrackBase就是这些Track的基类，它的主要任务是分配共享内存空间。其派生类有：
+</li>
+<ul>
+<li>
+PlaybackTread::Track：用于普通播放，对应于应用层的AudioTrack。
+</li>
+<li>
+PlaybackThread::OutputTrack：用于多重设备输出，当蓝牙播放开启时使用。
+</li>
+<li>
+RecordThread::RecordTrack：用于录音，对应于应用层的AudioRecord。
+</li>
+</ul>
+</ul>
+
+<p>
+<a href="pic/Audio_Track.png"><img src="pic/Audio_Track.png" /></a>
+</p>
+
+<h3 id="toc_1.4.1">AudioFlinger::ThreadBase::TrackBase::TrackBase</h3>
+<pre class="brush:c++">
+AudioFlinger::ThreadBase::TrackBase::TrackBase(
+            ......
+            int sessionId) : RefBase(), ......
+{
+    ......
+    if (client != NULL) {
+        mCblkMemory = client-&gt;heap()-&gt;allocate(size);
+        if (mCblkMemory != 0) {
+            mCblk = static_cast&lt;audio_track_cblk_t *&gt;(mCblkMemory-&gt;pointer());
+            if (mCblk) {
+                // C++的new操作符的替换，在特定的mCblk对象上分配内存
+                new(mCblk) audio_track_cblk_t();
+                ......
+            }
+        } else {
+            return;
+        }
+    } else {
+        mCblk = (audio_track_cblk_t *)(new uint8_t[size]);
+        if (mCblk) {
+            // C++的new操作符的替换，在特定的mCblk对象上分配内存
+            new(mCblk) audio_track_cblk_t();
+            ......
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.4.2">AudioFlinger::PlaybackThread::Track::Track</h3>
+<pre class="brush:c++">
+AudioFlinger::PlaybackThread::Track::Track(
+            ......
+            int sessionId) : TrackBase(thread, ......)
+{
+    if (mCblk != NULL) {
+        sp&lt;ThreadBase&gt; baseThread = thread.promote();
+        if (baseThread != 0) {
+            PlaybackThread *playbackThread = (PlaybackThread *)baseThread.get();
+            mName = playbackThread-&gt;getTrackName_l();
+            mMainBuffer = playbackThread-&gt;mixBuffer();
+        }
+        if (mName &lt; 0) {
+        }
+        mVolume[0] = 1.0f;
+        mVolume[1] = 1.0f;
+        mStreamType = streamType;
+        mCblk-&gt;frameSize = audio_is_linear_pcm(format) ? mChannelCount * sizeof(int16_t) : sizeof(uint8_t);
+    }
+}
+</pre>
+
+<h3 id="toc_1.4.3">AudioFlinger::RecordThread::RecordTrack::RecordTrack</h3>
+<pre class="brush:c++">
+AudioFlinger::RecordThread::RecordTrack::RecordTrack(
+            ......
+            int sessionId) : TrackBase(thread, ......),
+{
+    if (mCblk != NULL) {
+       if (format == AUDIO_FORMAT_PCM_16_BIT) {
+           mCblk-&gt;frameSize = mChannelCount * sizeof(int16_t);
+       } else if (format == AUDIO_FORMAT_PCM_8_BIT) {
+           mCblk-&gt;frameSize = mChannelCount * sizeof(int8_t);
+       } else {
+           mCblk-&gt;frameSize = sizeof(int8_t);
+       }
+    }
+}
+</pre>
+
+<h2 id="toc_1.5">音频输出流程</h2>
+<h3 id="toc_1.5.1">创建硬件抽象层的I/O对象</h3>
+<ul>
+<li>
+要与硬件设备通信，需要涉及到I/O的操作，而在Framework中，<code>该I/O操作被抽象成audio_io_handle_t</code>。
+</li>
+<li>
+在<a href="AudioTrack.html">AudioTrack</a>一节，我们分析了AudioTrack::set方法初始化时会调用AudioSystem::getOutput方法获取一个output句柄标识。
+</li>
+<li>
+AudioSystem又会进一步通过IAudioPolicyService接口得到真正的io句柄。
+</li>
+</ul>
+
+<h4 id="toc_1.5.1.1">AudioSystem::getOutput</h4>
+<pre class="brush:c++">
+audio_io_handle_t AudioSystem::getOutput(audio_stream_type_t stream, uint32_t samplingRate,
+                                    uint32_t format, uint32_t channels,
+                                    audio_policy_output_flags_t flags)
+{
+    audio_io_handle_t output = 0;
+    if ((flags &amp; AUDIO_POLICY_OUTPUT_FLAG_DIRECT) == 0 &amp;&amp;
+        ((stream != AUDIO_STREAM_VOICE_CALL &amp;&amp; stream != AUDIO_STREAM_BLUETOOTH_SCO) ||
+         channels != AUDIO_CHANNEL_OUT_MONO ||
+         (samplingRate != 8000 &amp;&amp; samplingRate != 16000))) {
+        Mutex::Autolock _l(gLock);
+        // 如果有符合条件的io句柄，则在容器中查找
+        output = AudioSystem::gStreamOutputMap.valueFor(stream);
+    }
+    if (output == 0) {
+        const sp&lt;IAudioPolicyService&gt;&amp; aps = AudioSystem::get_audio_policy_service();
+        if (aps == 0) return 0;
+        // 否则，调用IAudioPolicyService接口，创建一个新的audio_io_handle_t
+        output = aps-&gt;getOutput(stream, samplingRate, format, channels, flags);
+        if ((flags &amp; AUDIO_POLICY_OUTPUT_FLAG_DIRECT) == 0) {
+            Mutex::Autolock _l(gLock);
+            // 加入到容器中，以便下次快速获取
+            AudioSystem::gStreamOutputMap.add(stream, output);
+        }
+    }
+    return output;
+}
+</pre>
+
+<h4 id="toc_1.5.1.2">AudioPolicyService::getOutput</h4>
+<pre class="brush:c++">
+audio_io_handle_t AudioPolicyService::getOutput(AudioSystem::stream_type stream,
+                                    uint32_t samplingRate, uint32_t format,
+                                    uint32_t channels, AudioSystem::output_flags flags)
+{
+    if (mpPolicyManager == NULL) {
+        return 0;
+    }
+    Mutex::Autolock _l(mLock);
+    return mpPolicyManager-&gt;getOutput(stream, samplingRate, format, channels, flags);
+}
+</pre>
+
+<h3 id="toc_1.5.2">播放线程初始化</h3>
+<ul>
+<li>
+首先通过硬件抽象层获取AudioStreamOut对象，之后创建<code>DirectOutputThread</code>或<code>MixerThread</code>对象。
+</li>
+<li>
+创建好的线程会把该线程和它的ID保存在AudioFlinger的成员变量mPlaybackThreads中，mPlaybackThreads是一个Vector，AudioFlinger创建的线程都会保存在里面。最后，openOutput返回该线程的ID这个ID也就是所谓的audio_io_handle_t。这样，AudioFlinger的调用者（如AudioTrack）就能看到这个ID，当需要访问时传入该ID，AudioFlinger会通过mPlaybackThreads，得到该线程的指针。
+</li>
+</ul>
+
+<h4 id="toc_1.5.2.1">AudioFlinger::openOutput</h4>
+<pre class="brush:c++">
+int AudioFlinger::openOutput(uint32_t *pDevices, uint32_t *pSamplingRate,
+                                uint32_t *pFormat, uint32_t *pChannels,
+                                uint32_t *pLatencyMs, uint32_t flags)
+{
+    ......
+    Mutex::Autolock _l(mLock);
+    AudioStreamOut *output = mAudioHardware-&gt;openOutputStream(*pDevices,
+                                                             (int *)&amp;format,
+                                                             &amp;channels,
+                                                             &amp;samplingRate,
+                                                             &amp;status);
+    ......
+    if (output != 0) {
+        int id = nextUniqueId();
+        if ((flags &amp; AudioSystem::OUTPUT_FLAG_DIRECT) ||
+            (format != AudioSystem::PCM_16_BIT) ||
+            (channels != AudioSystem::CHANNEL_OUT_STEREO)) {
+            // 创建DirectOutputThread
+            thread = new DirectOutputThread(this, output, id, *pDevices);
+        } else {
+            // 创建MixerThread
+            thread = new MixerThread(this, output, id, *pDevices);
+        }
+        // 加入线程ID
+        mPlaybackThreads.add(id, thread);
+
+        // 通知上层i/o配置发生变化 
+        thread-&gt;audioConfigChanged_l(AudioSystem::OUTPUT_OPENED);
+        return id;
+    }
+
+    return 0;
+}
+</pre>
+
+<h3 id="toc_1.5.3">通过TrackHandle播放</h3>
+<ul>
+<li>
+创建Track对象：回忆<a href="AudioTrack.html">AudioTrack</a>一节，上层应用首先要通过IAudioFlinger接口，调用createTrack()，createTrack会调用PlaybackThread类的createTrack_l方法。
+</li>
+<ul>
+<li>
+checkPlaybackThread_l：根据线程句柄标识，在线程的容器中找到对应的PlaybackThread线程。该线程句柄标识由调用者AudioTrack传入。
+</li>
+<li>
+createTrack_l：创建了PlaybackThread::Track对象，然后加入播放线程的track列表mTracks中。
+</li>
+</ul>
+<li>
+createTrack最后创建了TrackHandle类并返回。<code>有了io句柄，就有了播放线程，播放线程又创建了不同的Track</code>，TrackHandle的作用就是封装这些Track，并继承实现IAudioTrack接口，提供跨进程的访问。之后，createTrack的调用者可以通过IAudioTrack接口与AudioFlinger中对应的Track实例交互。
+</li>
+<li>
+播放线程实际上是MixerThread或DirectOutputThread的一个实例，该实例的<code>threadLoop()</code>会把该线程中的各个Track进行混合，必要时还要进行ReSample(重采样)的动作，转换为统一的采样率(44.1K)，然后通过音频系统的AudioHardware层输出音频数据。
+</li>
+</ul>
+
+<h4 id="toc_1.5.3.1">AudioFlinger::createTrack</h4>
+<pre class="brush:c++">
+sp&lt;IAudioTrack&gt; AudioFlinger::createTrack(
+        ......
+        status_t *status)
+{
+    sp&lt;PlaybackThread::Track&gt; track;
+    sp&lt;TrackHandle&gt; trackHandle;
+    sp&lt;Client&gt; client;
+    wp&lt;Client&gt; wclient;
+
+    if (streamType &gt;= AUDIO_STREAM_CNT) {
+        lStatus = BAD_VALUE;
+        goto Exit;
+    }
+
+    Mutex::Autolock _l(mLock);
+    // 查找音频输出的工作线程
+    PlaybackThread *thread = checkPlaybackThread_l(output);
+    PlaybackThread *effectThread = NULL;
+    if (thread == NULL) {
+        LOGE("unknown output thread");
+        lStatus = BAD_VALUE;
+        goto Exit;
+    }
+
+    sp&lt;PlaybackThread::Track&gt; track;
+    sp&lt;TrackHandle&gt; trackHandle;
+    ......
+    {
+        track = thread-&gt;createTrack_l(client, streamType, sampleRate, format,
+                channelCount, frameCount, sharedBuffer, lSessionId, &amp;lStatus);
+
+        // move effect chain to this output thread if an effect on same session was waiting
+        // for a track to be created
+        if (lStatus == NO_ERROR &amp;&amp; effectThread != NULL) {
+            Mutex::Autolock _dl(thread-&gt;mLock);
+            Mutex::Autolock _sl(effectThread-&gt;mLock);
+            moveEffectChain_l(lSessionId, effectThread, thread, true);
+        }
+    }
+    
+    if (lStatus == NO_ERROR) {
+        // 创建TrackHandle
+        trackHandle = new TrackHandle(track);
+    } else {
+        ......
+    }
+
+Exit:
+    ......
+    return trackHandle;
+}
+</pre>
+
+<h4 id="toc_1.5.3.2">AudioFlinger::checkPlaybackThread_l</h4>
+<pre class="brush:c++">
+AudioFlinger::PlaybackThread *AudioFlinger::checkPlaybackThread_l(int output) const
+{
+    PlaybackThread *thread = NULL;
+    if (mPlaybackThreads.indexOfKey(output) &gt;= 0) {
+        thread = (PlaybackThread *)mPlaybackThreads.valueFor(output).get();
+    }
+    return thread;
+}
+</pre>
+
+<h4 id="toc_1.5.3.3">AudioFlinger::PlaybackThread::createTrack_l</h4>
+<pre class="brush:c++">
+sp&lt;AudioFlinger::PlaybackThread::Track&gt;  AudioFlinger::PlaybackThread::createTrack_l(
+        ......
+        status_t *status)
+{
+    sp&lt;Track&gt; track;
+    status_t lStatus;
+
+    ......
+    { 
+        Mutex::Autolock _l(mLock);
+        ...... 
+        // 创建Track
+        track = new Track(this, client, streamType, sampleRate, format,
+                channelCount, frameCount, sharedBuffer, sessionId);
+        if (track-&gt;getCblk() == NULL || track-&gt;name() &lt; 0) {
+            lStatus = NO_MEMORY;
+            goto Exit;
+        }
+        // 将新创建的Track加入内部数组
+        mTracks.add(track);
+
+        sp&lt;EffectChain&gt; chain = getEffectChain_l(sessionId);
+        if (chain != 0) {
+            track-&gt;setMainBuffer(chain-&gt;inBuffer());
+            chain-&gt;setStrategy(AudioSystem::getStrategyForStream((AudioSystem::stream_type)track-&gt;type()));
+        }
+    }
+    lStatus = NO_ERROR;
+
+Exit:
+    ......
+    return track;
+}
+</pre>
+
+<h3 id="toc_1.5.4">播放线程堆栈图</h3>
+<ul>
+<li>
+旧的pic/playthread.png
+</li>
+</ul>
+<p>
+<a href="pic/AudioPlaybackThread.png"><img src="pic/AudioPlaybackThread.png" /></a>
+</p>
+
+<h2 id="toc_1.6">音频采集流程</h2>
+<ul>
+<li>
+录音的流程和放音差不多，只不过数据流动的方向相反，录音线程变成RecordThread，Track变成了RecordTrack，openRecord返回RecordHandle。
+</li>
+</ul>
+
+<h3 id="toc_1.6.1">创建硬件抽象层的I/O对象</h3>
+<ul>
+<li>
+在<a href="AudioRecord.html">AudioRecord</a>一节中描述了AudioRecord初始化时会调用AudioSystem::getInput方法创建audio_io_handle_t句柄，而该方法又会进一步通过IAudioPolicyService接口来获取真正的io句柄。
+</li>
+</ul>
+
+<h4 id="toc_1.6.1.1">AudioSystem::getInput</h4>
+<pre class="brush:c++">
+audio_io_handle_t AudioSystem::getInput(int inputSource,
+                                    uint32_t samplingRate,
+                                    uint32_t format,
+                                    uint32_t channels,
+                                    audio_in_acoustics_t acoustics,
+                                    int sessionId)
+{
+    const sp&lt;IAudioPolicyService&gt;&amp; aps = AudioSystem::get_audio_policy_service();
+    if (aps == 0) return 0;
+    return aps-&gt;getInput(inputSource, samplingRate, format, channels, acoustics, sessionId);
+}
+</pre>
+
+<h4 id="toc_1.6.1.2">AudioPolicyService::getInput</h4>
+<pre class="brush:c++">
+audio_io_handle_t AudioPolicyService::getInput(int inputSource,
+                                    uint32_t samplingRate, uint32_t format,
+                                    uint32_t channels, AudioSystem::audio_in_acoustics acoustics)
+{
+    if (mpPolicyManager == NULL) {
+        return 0;
+    }
+    Mutex::Autolock _l(mLock);
+    return mpPolicyManager-&gt;getInput(inputSource, samplingRate, format, channels, acoustics);
+}
+</pre>
+
+<h3 id="toc_1.6.2">录音线程初始化</h3>
+<ul>
+<li>
+AudioFlinger::openInput首先创建AudioStreamIn对象，之后创建RecordThread线程并加入到线程队列中。
+</li>
+</ul>
+
+<h4 id="toc_1.6.2.1">AudioFlinger::openInput</h4>
+<pre class="brush:c++">
+int AudioFlinger::openInput(uint32_t *pDevices, uint32_t *pSamplingRate,
+                                uint32_t *pFormat, uint32_t *pChannels,
+                                uint32_t acoustics)
+{
+    ......
+    Mutex::Autolock _l(mLock);
+    AudioStreamIn *input = 
+        mAudioHardware-&gt;openInputStream(*pDevices, (int *)&amp;format,
+                                        &amp;channels, &amp;samplingRate, &amp;status, 
+                                        (AudioSystem::audio_in_acoustics)acoustics);
+
+    if (input != 0) {
+        int id = nextUniqueId();
+        // 创建RecordThread线程
+        thread = new RecordThread(this, input, reqSamplingRate, reqChannels, id);
+        // 加入线程列表
+        mRecordThreads.add(id, thread);
+        ...... 
+        input-&gt;standby();
+
+        // 通知i/o设备变更
+        thread-&gt;audioConfigChanged_l(AudioSystem::INPUT_OPENED);
+        return id;
+    }
+
+    return 0;
+}
+</pre>
+
+<h3 id="toc_1.6.3">通过RecordHandle录音</h3>
+<ul>
+<li>
+应用程序通过IAudioFlinger接口调用openRecord方法，该方法通过RecordThread创建RecordTrack对象，并最终初始化RecordHandle。
+</li>
+<li>
+RecordHandle实现了IAudioRecord接口，应用程序最终通过该接口与RecordThread交互进行录音操作。
+</li>
+<li>
+录音的线程处理请查看<code>AudioFlinger::RecordThread::threadLoop()</code>方法。
+</li>
+</ul>
+
+<h4 id="toc_1.6.3.1">AudioFlinger::openRecord</h4>
+<pre class="brush:c++">
+sp&lt;IAudioRecord&gt; AudioFlinger::openRecord(
+        pid_t pid,
+        int input,
+        uint32_t sampleRate,
+        uint32_t format,
+        uint32_t channelMask,
+        int frameCount,
+        uint32_t flags,
+        int *sessionId,
+        status_t *status)
+{
+    sp&lt;RecordThread::RecordTrack&gt; recordTrack;
+    sp&lt;RecordHandle&gt; recordHandle;
+    RecordThread *thread;
+    ......
+
+    { 
+        Mutex::Autolock _l(mLock);
+        // 根据io句柄获取一个线程对象
+        thread = checkRecordThread_l(input);
+
+        // 创建一个RecordTrack
+        recordTrack = thread-&gt;createRecordTrack_l(client, sampleRate, format,
+                                                channelMask, frameCount, flags,
+                                                lSessionId, &amp;lStatus);
+    }
+
+    // 创建一个RecordHandle对象
+    recordHandle = new RecordHandle(recordTrack);
+
+Exit:
+    ...... 
+    return recordHandle;
+}
+</pre>
+
+<h4 id="toc_1.6.3.2">AudioFlinger::checkRecordThread_l</h4>
+<pre class="brush:c++">
+AudioFlinger::RecordThread *AudioFlinger::checkRecordThread_l(int input) const
+{
+    RecordThread *thread = NULL;
+    if (mRecordThreads.indexOfKey(input) &gt;= 0) {
+        thread = (RecordThread *)mRecordThreads.valueFor(input).get();
+    }
+    return thread;
+}
+</pre>
+
+<h4 id="toc_1.6.3.3">AudioFlinger::RecordThread::createRecordTrack_l</h4>
+<pre class="brush:c++">
+sp&lt;AudioFlinger::RecordThread::RecordTrack&gt; AudioFlinger::RecordThread::createRecordTrack_l(
+        ......
+        status_t *status)
+{
+    sp&lt;RecordTrack&gt; track;
+    status_t lStatus;
+
+    lStatus = initCheck();
+    if (lStatus != NO_ERROR) {
+        goto Exit;
+    }
+
+    { // scope for mLock
+        Mutex::Autolock _l(mLock);
+
+        track = new RecordTrack(this, client, sampleRate,
+                      format, channelMask, frameCount, flags, sessionId);
+
+        if (track-&gt;getCblk() == NULL) {
+            lStatus = NO_MEMORY;
+            goto Exit;
+        }
+
+        mTrack = track.get();
+        // disable AEC and NS if the device is a BT SCO headset supporting those pre processings
+        bool suspend = audio_is_bluetooth_sco_device(
+                (audio_devices_t)(mDevice &amp; AUDIO_DEVICE_IN_ALL)) &amp;&amp; mAudioFlinger-&gt;btNrecIsOff();
+        setEffectSuspended_l(FX_IID_AEC, suspend, sessionId);
+        setEffectSuspended_l(FX_IID_NS, suspend, sessionId);
+    }
+    lStatus = NO_ERROR;
+
+Exit:
+    return track;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

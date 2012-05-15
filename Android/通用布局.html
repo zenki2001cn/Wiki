@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>通用布局</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">通用布局</h1>
+
+<h2 id="toc_1.1">继承关系</h2>
+
+<p>
+<img src="pic/view_her.jpg" />
+</p>
+
+<h2 id="toc_1.2">布局类型</h2>
+<h3 id="toc_1.2.1">FrameLayout</h3>
+<p>
+框架布局,该布局默认以左上角为基准,简单排放对象视图,通常用来显示图片
+</p>
+
+<h3 id="toc_1.2.2">LinearLayout</h3>
+<p>
+线性布局,该布局将视图排放为水平或垂直形状
+</p>
+
+<h3 id="toc_1.2.3">TableLayout</h3>
+<p>
+表格布局,该布局将视图分为行和列的形式
+</p>
+
+<h3 id="toc_1.2.4">RelativeLayout</h3>
+<p>
+关联布局,该布局将一组相关视图关联起来,且任意设置位置
+</p>
+
+<p>
+<img src="pic/layoutparams.png" />
+</p>
+
+<h2 id="toc_1.3">生成布局</h2>
+
+<h3 id="toc_1.3.1">相关类</h3>
+<pre class="brush:java">
+import android.view.LayoutInflater;
+
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
+import android.widget.TableRow;
+import android.widget.TableRow.LayoutParams;
+
+import android.util.AttributeSet;
+</pre>
+
+<h3 id="toc_1.3.2">在Activity中通过XML来加载视图</h3>
+<ul>
+<li>
+在xml中定义视图的布局
+</li>
+<li>
+在Activity派生类的<code>onCreate</code>方法中调用<code>setContentView</code>
+</li>
+</ul>
+ 
+<pre class="brush:java">
+setContentView(R.layout.layout2);
+</pre>
+
+<h3 id="toc_1.3.3">从XML膨胀视图</h3>
+<ul>
+<li>
+需要android.view.LayoutInflater类,该类通过from方法生成实例,或者getSystemService方法获取
+</li>
+<li>
+该实例通过inflate方法可以生成view对象
+</li>
+</ul>
+ 
+<pre class="brush:java">
+LayoutInflater factory = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+LayoutInflater factory = LayoutInflater.from(this);
+
+final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry, null);
+</pre>
+
+<h3 id="toc_1.3.4">在Activity中用代码生成视图</h3>
+<ul>
+<li>
+需要生成android.widget.Layout的派生类的实例
+</li>
+<li>
+使用addView方法将View视图加入Layout,其中还需要将<code>LayoutParams</code>作为参数传入
+</li>
+</ul>
+
+<pre class="brush:java">
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+     
+    // Create a simple layout
+    LinearLayout layout = new LinearLayout(this);
+    layout.setOrientation(LinearLayout.VERTICAL);
+        
+    // Create the spinner to allow the user to choose a menu XML
+    ArrayAdapter&lt;String&gt; adapter = new ArrayAdapter&lt;String&gt;(this,
+            android.R.layout.simple_spinner_item, sMenuExampleNames); 
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    
+    mSpinner = new Spinner(this);
+    // When programmatically creating views, make sure to set an ID
+    // so it will automatically save its instance state
+    mSpinner.setId(R.id.spinner);
+    mSpinner.setAdapter(adapter);
+    
+    // Add the spinner
+    layout.addView(mSpinner,
+            new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.FILL_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+
+    // Create help text
+    mInstructionsText = new TextView(this);
+    mInstructionsText.setText(getResources().getString(
+            R.string.menu_from_xml_instructions_press_menu));
+     
+    // Add the help, make it look decent
+    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.FILL_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT);
+    lp.setMargins(10, 10, 10, 10);
+    layout.addView(mInstructionsText, lp);
+     
+    // Set the layout as our content view
+    setContentView(layout);
+}
+</pre>
+
+<h3 id="toc_1.3.5">在View中獲取子视图</h3>
+<ul>
+<li>
+重写onFinishInflate()方法,此方法在完成视图的创建時回調
+</li>
+<li>
+getLayoutInflater()获取解析XML文件的对象，并通过该对象加载子视图
+</li>
+</ul>
+
+<pre class="brush:java">
+protected void onFinishInflate() {
+    super.onFinishInflate();
+    
+    mInflater = ((Activity)this.getContext()).getLayoutInflater();
+    mContentLayout = (LinearLayout) this.findViewById(R.id.content_layout); 
+    
+    // write your code to set view
+    setDefaultLayout();
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

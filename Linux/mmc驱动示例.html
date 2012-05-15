@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>mmc驱动示例</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">mmc驱动示例</h1>
+<p>
+<em>该示例以mmc驱动的实现为线索，描述了如何支持sysfs特性。</em>
+</p>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">mmc驱动示例</a></li>
+<ul>
+<li><a href="#toc_1.1">数据结构定义</a></li>
+<ul>
+<li><a href="#toc_1.1.1">struct mmc_card</a></li>
+</ul>
+<li><a href="#toc_1.2">初始化device_type</a></li>
+<ul>
+<li><a href="#toc_1.2.1">MMC_DEV_ATTR定义</a></li>
+<li><a href="#toc_1.2.2">MMC_DEV_ATTR实现</a></li>
+<li><a href="#toc_1.2.3">初始化attribute和attribute_group</a></li>
+</ul>
+<li><a href="#toc_1.3">创建并初始化MMC</a></li>
+<ul>
+<li><a href="#toc_1.3.1">mmc_init_card</a></li>
+<li><a href="#toc_1.3.2">mmc_alloc_card</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">数据结构定义</h2>
+<h3 id="toc_1.1.1">struct mmc_card</h3>
+<ul>
+<li>
+定义mmc的抽象数据结构，并包含一个struct device结构指针，该指针会在注册时初始化。
+</li>
+<li>
+在device结构中会包含device_type的指针，实际上我们通过初始化device作为入口，最终初始化*_attribute的属性。
+</li>
+</ul>
+
+<pre class="brush:c">
+struct mmc_card {
+    ......
+	struct device		dev;		/* the device */
+};
+</pre>
+
+<h2 id="toc_1.2">初始化device_type</h2>
+<h3 id="toc_1.2.1">MMC_DEV_ATTR定义</h3>
+<ul>
+<li>
+该宏是对DEVICE_ATTR的进一步封装，目的是通过sysfs为用户层提供读方法来获取mmc的属性。
+</li>
+</ul>
+
+<pre class="brush:c">
+#define MMC_DEV_ATTR(name, fmt, args...)					                \
+static ssize_t mmc_##name##_show (struct device *dev,                       \
+                                  struct device_attribute *attr, char *buf)	\
+{										                                    \
+	struct mmc_card *card = container_of(dev, struct mmc_card, dev);	    \
+	return sprintf(buf, fmt, args);						                    \
+}										                                    \
+static DEVICE_ATTR(name, S_IRUGO, mmc_##name##_show, NULL)
+</pre>
+
+<h3 id="toc_1.2.2">MMC_DEV_ATTR实现</h3>
+<ul>
+<li>
+这组宏的使用实际上是声明了一组device_attribute的变量。
+</li>
+</ul>
+
+<pre class="brush:c">
+MMC_DEV_ATTR(cid, "%08x%08x%08x%08x\n", card-&gt;raw_cid[0], card-&gt;raw_cid[1],
+	card-&gt;raw_cid[2], card-&gt;raw_cid[3]);
+MMC_DEV_ATTR(csd, "%08x%08x%08x%08x\n", card-&gt;raw_csd[0], card-&gt;raw_csd[1],
+	card-&gt;raw_csd[2], card-&gt;raw_csd[3]);
+MMC_DEV_ATTR(date, "%02d/%04d\n", card-&gt;cid.month, card-&gt;cid.year);
+MMC_DEV_ATTR(fwrev, "0x%x\n", card-&gt;cid.fwrev);
+MMC_DEV_ATTR(hwrev, "0x%x\n", card-&gt;cid.hwrev);
+MMC_DEV_ATTR(manfid, "0x%06x\n", card-&gt;cid.manfid);
+MMC_DEV_ATTR(name, "%s\n", card-&gt;cid.prod_name);
+MMC_DEV_ATTR(oemid, "0x%04x\n", card-&gt;cid.oemid);
+MMC_DEV_ATTR(serial, "0x%08x\n", card-&gt;cid.serial);
+</pre>
+
+<h3 id="toc_1.2.3">初始化attribute和attribute_group</h3>
+<ul>
+<li>
+创建一组attribute的结构指针，而这些指针是通过上面的MMC_DEV_ATTR宏所定义的。
+</li>
+<li>
+之后将这组attribute指针再封装进attribute_group结构中，最终用来初始化device_type结构。
+</li>
+</ul>
+
+<pre class="brush:c">
+// 将DEVICE_ATTR宏分解后得到以下的结构体变量
+static struct attribute *mmc_std_attrs[] = {
+	&amp;dev_attr_cid.attr,
+	&amp;dev_attr_csd.attr,
+	&amp;dev_attr_date.attr,
+	&amp;dev_attr_fwrev.attr,
+	&amp;dev_attr_hwrev.attr,
+	&amp;dev_attr_manfid.attr,
+	&amp;dev_attr_name.attr,
+	&amp;dev_attr_oemid.attr,
+	&amp;dev_attr_serial.attr,
+	NULL,
+};
+
+// 封装进attribute_group结构
+static struct attribute_group mmc_std_attr_group = {
+	.attrs = mmc_std_attrs,
+};
+
+static struct attribute_group *mmc_attr_groups[] = {
+	&amp;mmc_std_attr_group,
+	NULL,
+};
+
+// 最终初始化device_type结构
+static struct device_type mmc_type = {
+	.groups = mmc_attr_groups,
+};
+</pre>
+
+<h2 id="toc_1.3">创建并初始化MMC</h2>
+<ul>
+<li>
+初始化mmc_card结构时会传入上面创建的mmc_type作为参数，最终这个device_type指针会用于初始化struct device。
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">mmc_init_card</h3>
+<pre class="brush:c">
+static int mmc_init_card(struct mmc_host *host, u32 ocr,
+	struct mmc_card *oldcard)
+{
+	struct mmc_card *card;
+    ......
+    
+    /*
+     * Allocate card structure.
+     */
+    card = mmc_alloc_card(host, &amp;mmc_type);
+    if (IS_ERR(card)) {
+        err = PTR_ERR(card);
+        goto err;
+    }
+
+    ......
+}
+</pre>
+
+<h3 id="toc_1.3.2">mmc_alloc_card</h3>
+<pre class="brush:c">
+struct mmc_card *mmc_alloc_card(struct mmc_host *host, struct device_type *type)
+{
+	struct mmc_card *card;
+
+	card = kzalloc(sizeof(struct mmc_card), GFP_KERNEL);
+	if (!card)
+		return ERR_PTR(-ENOMEM);
+
+	card-&gt;host = host;
+
+	device_initialize(&amp;card-&gt;dev);
+
+	card-&gt;dev.parent = mmc_classdev(host);
+	card-&gt;dev.bus = &amp;mmc_bus_type;
+	card-&gt;dev.release = mmc_release_card;
+	// 初始化device中的device_type
+	card-&gt;dev.type = type;
+
+	return card;
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

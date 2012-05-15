@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Activity关键方法集合</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">Activity关键方法集合</h1>
+
+<h3 id="toc_1.0.1">公用方法</h3>
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>void</td>
+<td>addContentView(View view, ViewGroup.LayoutParams params)</td>
+<td>添加一个View</td>
+</tr>
+<tr>
+<td>PendingIntent</td>
+<td>createPendingResult(int requestCode, Intent data, int flags)</td>
+<td>创建一个延迟的Intent，并通过onActivityResult(int, int, Intent)回调返回结果</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>dismissDialog(int id)</td>
+<td>取消一个之前通过showDialog(int)创建的对话框</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>dispatchKeyEvent(KeyEvent event)</td>
+<td>分发按键事件</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>dispatchTouchEvent(MotionEvent ev)</td>
+<td>分发触摸事件</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>dispatchTrackballEvent(MotionEvent ev)</td>
+<td>分发轨迹球事件</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finishActivity(int requestCode)</td>
+<td>强制关闭由startActivityForResult(Intent, int)启动的Activity</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finishActivityFromChild(Activity child, int requestCode)</td>
+<td>当子Activity调用finishActivity()方法时，调用该方法</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finishFromChild(Activity child)</td>
+<td>当子Activity调用finish()方法时，调用该方法</td>
+</tr>
+<tr>
+<td>ComponentName</td>
+<td>getCallingActivity()</td>
+<td>返回调用此Activity的组件名</td>
+</tr>
+<tr>
+<td>View</td>
+<td>getCurrentFocus()</td>
+<td>获取当前焦点的View</td>
+</tr>
+<tr>
+<td>LayoutInflater</td>
+<td>getLayoutInflater()</td>
+<td>获取LayoutInflater</td>
+</tr>
+<tr>
+<td>MenuInflater</td>
+<td>getMenuInflater()</td>
+<td>获取MenuInflater</td>
+</tr>
+<tr>
+<td>Object</td>
+<td>getSystemService  (String name)</td>
+<td>根据名称获取系统服务</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getTaskId()</td>
+<td>获取该Activity的ID标识</td>
+</tr>
+<tr>
+<td>Window</td>
+<td>getWindow()</td>
+<td>获取Window</td>
+</tr>
+<tr>
+<td>WindowManager</td>
+<td>getWindowManager()</td>
+<td>获取WindowManager</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>hasWindowFocus()</td>
+<td>是否有Window焦点</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isFinishing()</td>
+<td>判断是pause还是finish</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isTaskRoot()</td>
+<td>是否为Task的根</td>
+</tr>
+<tr>
+<td>final Cursor</td>
+<td>managedQuery(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)</td>
+<td>管理数据库光标</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>moveTaskToBack(boolean nonRoot)</td>
+<td>将Task移动到任务堆栈后</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onBackPressed()</td>
+<td>按下Back键</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onConfigurationChanged(Configuration newConfig)</td>
+<td>配置信息发生变化</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onContentChanged()</td>
+<td>当前视图发生变化后的回调</td>
+</tr>
+<tr>
+<td>View</td>
+<td>onCreateView(String name, Context context, AttributeSet attrs)</td>
+<td>LayoutInflater装载视图时回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onLowMemory()</td>
+<td>内存低时回调</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>onSearchRequested()</td>
+<td>开始搜索时回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onUserInteraction()</td>
+<td>当用户产生交互时调用</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>requestWindowFeature(int featureId)</td>
+<td>设置窗口属性</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>runOnUiThread(Runnable action)</td>
+<td>Post一个线程到UI线程中</td>
+</tr>
+<tr>
+<td>final boolean</td>
+<td>showDialog(int id, Bundle args)</td>
+<td>显示对话框回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>startActivityFromChild(Activity child, Intent intent, int requestCode)</td>
+<td>当子Activity调用startActivity(Intent)时，调用该回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>startManagingCursor(Cursor c)</td>
+<td>开始管理数据库光标</td>
+</tr>
+<tr>
+<td>void</td>
+<td>stopManagingCursor(Cursor c)</td>
+<td>停止管理数据库光标</td>
+</tr>
+<tr>
+<td>void</td>
+<td>takeKeyEvents(boolean get)</td>
+<td>获取Key事件，当没有View具有焦点时</td>
+</tr>
+</table>
+
+<h3 id="toc_1.0.2">保护方法</h3>
+<table>
+<tr>
+<th>返回值</th>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+<tr>
+<td>void</td>
+<td>onApplyThemeResource(Resources.Theme theme, int resid, boolean first)</td>
+<td>应用主题资源时回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onChildTitleChanged(Activity childActivity, CharSequence title)</td>
+<td>子Activity标题改变时回调</td>
+</tr>
+<tr>
+<td>Dialog</td>
+<td>onCreateDialog(int id, Bundle args)</td>
+<td>创建对话框时回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onPostResume()</td>
+<td>当onResume()调用完成后调用</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onRestart()</td>
+<td>从HOME键返回该Activity</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onUserLeaveHint()</td>
+<td>当用户离开交互时回调</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onNewIntent(Intent intent)</td>
+<td>当launchMode被设置成"singleTop"模式，该Activity被re-launch时调用该方法</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onActivityResult(int requestCode, int resultCode, Intent data)</td>
+<td>将该Activity的启动结果返回给调用它的Activity</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onRestoreInstanceState(Bundle savedInstanceState)</td>
+<td>onStart()之后被调用以用来恢复保存的状态数据</td>
+</tr>
+<tr>
+<td>void</td>
+<td>onSaveInstanceState(Bundle outState)</td>
+<td>保存任务堆栈状态</td>
+</tr>
+</table>
+
+<h3 id="toc_1.0.3">继承父类</h3>
+<pre class="brush:java">
+android.content.Context
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>线程同步</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">如何实现线程同步</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">如何实现线程同步</a></li>
+<ul>
+<li><a href="#toc_1.1">synchronized声明</a></li>
+<ul>
+<li><a href="#toc_1.1.1">临界区</a></li>
+</ul>
+<li><a href="#toc_1.2">线程状态</a></li>
+<ul>
+<li><a href="#toc_1.2.1">4种状态</a></li>
+<li><a href="#toc_1.2.2">等待与通知</a></li>
+</ul>
+<li><a href="#toc_1.3">管道通信</a></li>
+<li><a href="#toc_1.4">死锁</a></li>
+<li><a href="#toc_1.5">正确退出线程</a></li>
+<ul>
+<li><a href="#toc_1.5.1">中断线程</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">synchronized声明</h2>
+<ul>
+<li>
+一旦某个线程处于标记为synchronized的方法中，那么在这个线程从该方法返回之前，其他要调用类中任何标记为synchronized方法的线程都会被阻塞
+</li>
+<li>
+每个类的对象有一个锁，初始计数为0,每次调用synchronized方法会使计数加1,离开此方法即减1
+</li>
+<li>
+每个类也有一个锁，synchronized static方法可以防止在类的范围内对静态数据的并发访问
+</li>
+</ul>
+
+<pre class="brush:java">
+// 对象的锁
+synchronized void f(){ /* ... */ }
+synchronized void g(){ /* ... */ }
+
+// 类的锁
+synchronized static h(){ /* ... */ }
+</pre>
+
+<ul>
+<li>
+最安全的使用方针
+</li>
+<ol>
+<li>
+如果你要对类中的某个方法进行同步控制,最好同步所有方法
+</li>
+<li>
+当去除方法的同步控制时,要非常小心
+</li>
+</ol>
+</ul>
+
+<h3 id="toc_1.1.1">临界区</h3>
+<ul>
+<li>
+临界区用来控制对一段代码块进行同步，而不是对整个方法同步
+</li>
+</ul>
+
+<pre class="brush:java">
+// 花括号内为同步的代码
+synchronized(syncObject) {
+    // do something 
+}
+</pre>
+
+<h2 id="toc_1.2">线程状态</h2>
+
+<h3 id="toc_1.2.1">4种状态</h3>
+<ol>
+<li>
+new：线程对象已经建立，但没有启动，所以不能运行
+</li>
+<li>
+Runnable：在任意时刻，等待时间片的分配后运行
+</li>
+<li>
+Dead：线程终止运行
+</li>
+<li>
+Blocked：线程处于阻塞状态，不会得到处理器时间
+</li>
+</ol>
+
+<h3 id="toc_1.2.2">等待与通知</h3>
+<ul>
+<li>
+wait()、notify()和notifyAll()都是继承自Object的方法，wait用来挂起，并等待触发条件继续执行；notify和notifyAll用来唤醒等待的线程
+</li>
+</ul>
+
+<pre class="brush:java">
+// 安全的使用wait
+while (conditionIsNotMet) {
+    wait();
+}
+</pre>
+    
+<h2 id="toc_1.3">管道通信</h2>
+<ul>
+<li>
+线程间可以通过管道方式进行输入/输出
+</li>
+</ul>
+
+<pre class="brush:java">
+class Sender extends Thread {
+    private PipedWriter out = new PipedWriter();
+    
+    public PipedWriter getPipedWriter() { 
+        return out; 
+    }
+    
+    public void run() {
+        while(true) {
+           // do something 
+        }
+    }
+}
+
+class Receiver extends Thread {
+    private PipedReader in;
+    
+    public Receiver(Sender sender) throws IOException {
+        in = new PipedReader(sender.getPipedWriter());
+    }
+    
+    public void run() {
+        // do something
+    }
+}
+
+public class PipedIO {
+    public static void main(String[] args) throws Exception {
+        Sender sender = new Sender();
+        Receiver receiver = new Receiver(sender);
+        
+        sender.start();
+        receiver.start();
+    }
+}
+</pre>
+
+<h2 id="toc_1.4">死锁</h2>
+<ul>
+<li>
+满足死锁的4个条件
+</li>
+</ul>
+
+<pre class="brush:text">
+1.互斥条件:线程使用的资源中至少有一个是不能共享的。
+
+2.至少有一个进程持有一个资源,并且它在等待获取一个当前被别的进程持有的资源，也就是说持锁持者第二次请求锁。
+
+3.资源不能被进程抢占。所有的进程必须把资源释放作为普通事件。
+
+4.必须有循环等待,这时,一个进程等待其它进程持有的资源,后者又在等待另一个进程持有的资源, 这样一直下去,直到有一个进程在等待第一个进程持有的资源,使得大家都被锁住。
+</pre>
+
+<h2 id="toc_1.5">正确退出线程</h2>
+<ul>
+<li>
+通过设置标志来安全退出线程
+</li>
+</ul>
+
+<pre class="brush:java">
+class CanStop extends Thread {
+    // 必须是volatile，避免读取本地缓存
+    private volatile boolean stop = false;
+    private int counter = 0;
+    
+    public void run() {
+        while(!stop &amp;&amp; counter &lt; 10000) {
+            System.out.println(counter++);
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.5.1">中断线程</h3>
+<ul>
+<li>
+通过Interrupt()方法中断线程的执行，并将线程对象置为null，以便垃圾回收
+</li>
+</ul>
+
+<pre class="brush:java">
+blockedThread.interrupt();
+blockedThread = null;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

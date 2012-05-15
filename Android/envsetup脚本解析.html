@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>envsetup脚本解析</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">envsetup脚本解析</h1>
+<p>
+<em>envsetup.sh是Android提供的脚本工具，包含了很多实用的命令。</em>
+</p>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">envsetup脚本解析</a></li>
+<ul>
+<li><a href="#toc_1.1">设置环境</a></li>
+<li><a href="#toc_1.2">实用命令列表</a></li>
+<ul>
+<li><a href="#toc_1.2.1">编译源码</a></li>
+<li><a href="#toc_1.2.2">查找文件</a></li>
+<li><a href="#toc_1.2.3">设置编译选项</a></li>
+<li><a href="#toc_1.2.4">查询系统信息</a></li>
+<li><a href="#toc_1.2.5">gdb调试</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">设置环境</h2>
+<ul>
+<li>
+要使用envsetup.sh中定义的命令，需要在bash下切换到源码根目录，并输入以下命令：
+</li>
+</ul>
+
+<pre class="brush:bash">
+$ . build/envsetup.sh
+</pre>
+
+<ul>
+<li>
+设置好脚本后，使用help即可获得帮助信息：
+</li>
+</ul>
+
+<pre class="brush:bash">
+$ help
+Invoke ". build/envsetup.sh" from your shell to add the following functions to your environment:
+- croot:   Changes directory to the top of the tree.
+- m:       Makes from the top of the tree.
+- mm:      Builds all of the modules in the current directory.
+- mmm:     Builds all of the modules in the supplied directories.
+- cgrep:   Greps on all local C/C++ files.
+- jgrep:   Greps on all local Java files.
+- resgrep: Greps on all local res/*.xml files.
+- godir:   Go to the directory containing a file.
+
+Look at the source to view more functions. The complete list is:
+add_lunch_combo cgrep check_product check_variant choosecombo chooseproduct choosetype choosevariant cproj croot findmakefile gdbclient get_abs_build_var getbugreports get_build_var getprebuilt gettop godir help isviewserverstarted jgrep lunch m mm mmm pid printconfig print_lunch_menu resgrep runhat runtest set_java_home setpaths set_sequence_number set_stuff_for_environment settitle smoketest startviewserver stopviewserver systemstack tapas tracedmdump
+</pre>
+
+<h2 id="toc_1.2">实用命令列表</h2>
+<h3 id="toc_1.2.1">编译源码</h3>
+<pre class="brush:bash">
+# 从根目录编译
+$ m
+
+# 从当前目录编译
+$ mm
+
+# 指定目录编译
+$ mmm packages/apps/Browser/
+</pre>
+
+<h3 id="toc_1.2.2">查找文件</h3>
+<pre class="brush:bash">
+# 查找当前目录及子目录中所有.c，.h，.cpp，.S，.java，.mk，.xml，.sh文件，
+# 即源码文件中包含特定单词的行，并颜色显示输出。
+# Usage：
+#      sgrep &lt;YourWord&gt;
+$ sgrep Calendar
+
+# 从当前目录递归查找符合指定内容的C/C++文件
+# 用法同上
+$ cgrep InputManager
+
+# 从当前目录递归查找符合指定内容的java文件
+# 用法同上
+$ jgrep Activity
+
+# 从当前目录递归查找符合指定内容的res/*.xml文件
+# 用法同上
+$ resgrep AndroidManifest.xml
+</pre>
+
+<h3 id="toc_1.2.3">设置编译选项</h3>
+<pre class="brush:bash">
+# 加入自定义的配置到选项中，默认会加入generic-eng
+$ add_lunch_combo LePad_A1_07-user
+
+# 菜单模式设置环境变量
+# Usage：
+#       lunch [&lt;YourProduct&gt;-&lt;YourBuildVariant&gt;]
+$ lunch
+You're building on Linux
+
+Lunch menu... pick a combo:
+     1. generic-eng
+     2. simulator
+     3. LePad_A1_07-user
+     4. full_passion-userdebug
+     5. full_crespo4g-userdebug
+     6. full_crespo-userdebug
+     7. blaze-eng
+     8. pandaboard-eng
+     9. zoom2-eng
+
+Which would you like? [generic-eng]
+
+# 自定义编译选项，根据提问，选择相应的选项
+$ choosecombo
+Build for the simulator or the device?
+     1. Device
+     2. Simulator
+
+Which would you like? [1]
+
+Build type choices are:
+     1. release
+     2. debug
+</pre>
+
+<h3 id="toc_1.2.4">查询系统信息</h3>
+<ul>
+<li>
+需要通过usb连接到device上，并保证adb shell可用
+</li>
+</ul>
+
+<pre class="brush:bash">
+# 查询指定进程的pid
+$ pid servicemanager
+
+# dump系统信息
+$ systemstack
+</pre>
+
+<h3 id="toc_1.2.5">gdb调试</h3>
+<ul>
+<li>
+需要通过usb连接到device上，并保证adb shell可用
+</li>
+<li>
+在启动调试前先设置对于device的环境变量
+</li>
+</ul>
+
+<pre class="brush:bash">
+# lunch设置device环境变量
+$ lunch
+Lunch menu... pick a combo:
+     1. generic-eng
+     2. simulator
+     3. LePad_A1_07-user
+     4. full_passion-userdebug
+     5. full_crespo4g-userdebug
+     6. full_crespo-userdebug
+     7. blaze-eng
+     8. pandaboard-eng
+     9. zoom2-eng
+
+Which would you like? [generic-eng] 3
+
+# 需要先adb shell启动gdbserver
+$ adb shell gdbserver 5039 /system/bin/servicemanager
+
+# 使用gdbclient进入调试状态
+# Usage：
+#      gdbclient &lt;EXE&gt; &lt;PORT&gt; &lt;AppName&gt;
+# EXE: AppName的执行名。
+# PORT：gdbserver的端口，例如, 192.168.2.102:5039
+# AppName：手机中ps列出的app名字，据此查pid
+$ gdbclient servicemanager 5039 servicemanager
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>
