@@ -1,4 +1,0 @@
-= vim插件管理 =
-
-- 删除plugin/ShowFunc.vim
-- 修改vim.rc

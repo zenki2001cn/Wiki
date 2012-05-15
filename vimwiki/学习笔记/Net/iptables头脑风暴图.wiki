@@ -1,3 +1,0 @@
-= iptables头脑风暴图 =
-
-[pic/iptables_freemind.png]

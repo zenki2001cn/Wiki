@@ -1,6 +1,0 @@
-=== 备份备忘 ===
-1. .vim
-2. mySITE
-    ----index.html
-    ----android
-3. Wiki
