@@ -54,14 +54,48 @@
 <ul>
 <li><a href="#toc_1">方法对象</a></li>
 <ul>
-<li><a href="#toc_1.1">可选参数和命名参数</a></li>
-<li><a href="#toc_1.2">内嵌方法定义</a></li>
-<li><a href="#toc_1.3">闭包引起的问题</a></li>
+<li><a href="#toc_1.1">Generator函数和yield</a></li>
+<li><a href="#toc_1.2">可选参数和命名参数</a></li>
+<li><a href="#toc_1.3">内嵌方法定义</a></li>
+<li><a href="#toc_1.4">闭包引起的问题</a></li>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">可选参数和命名参数</h2>
+<h2 id="toc_1.1">Generator函数和yield</h2>
+<ul>
+<li>
+<code>yield</code>用来生成Generator函数，该函数和普通函数有很大区别。一旦声明成Generator函数，需要调用next()方法来控制Generator函数的运行。
+</li>
+<li>
+每次调用next()方法会返回yield表达式的值。
+</li>
+<li>
+可通过for循环自动执行一个Generator函数的next()方法。
+</li>
+<li>
+当循环结束时，next()方法会返回None。
+</li>
+</ul>
+
+<pre class="brush:python">
+def generator():
+    rtn = yield "here"
+
+# 手动调用next()方法
+&gt;&gt;&gt; func = generator()
+&gt;&gt;&gt; func.next()
+here
+
+# 通过循环调用next()方法
+&gt;&gt;&gt; for i in func:
+...     print i
+
+here
+None
+</pre>
+
+<h2 id="toc_1.2">可选参数和命名参数</h2>
 <ul>
 <li>
 在函数定义时可以对该函数的参数赋予默认的值，在调用时没有传递的参数将被赋予默认值。
@@ -77,7 +111,7 @@ def info(object, spacing=10, collapse=1):
 &gt;&gt;&gt; info(a, 40, 50)
 </pre>
 
-<h2 id="toc_1.2">内嵌方法定义</h2>
+<h2 id="toc_1.3">内嵌方法定义</h2>
 <ul>
 <li>
 Python支持在方法内部定义另一个方法，而内嵌方法只能被外部方法调用。
@@ -97,7 +131,7 @@ def foo():
 foo()
 </pre>
 
-<h2 id="toc_1.3">闭包引起的问题</h2>
+<h2 id="toc_1.4">闭包引起的问题</h2>
 <ul>
 <li>
 闭包是在内嵌方法定义的时候产生，在内嵌方法中引用了外部方法定义的局部变量，见下面示例。

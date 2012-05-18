@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>包，类和对象</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">包、类和对象</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">包、类和对象</a></li>
+<ul>
+<li><a href="#toc_1.1">包的定义</a></li>
+<li><a href="#toc_1.2">类的定义</a></li>
+<li><a href="#toc_1.3">类成员和对象成员</a></li>
+<li><a href="#toc_1.4">私有成员和公有成员</a></li>
+<li><a href="#toc_1.5">类的继承</a></li>
+<li><a href="#toc_1.6">类的初始化</a></li>
+<li><a href="#toc_1.7">类的实例化</a></li>
+<li><a href="#toc_1.8">获取和设置成员数据</a></li>
+<ul>
+<li><a href="#toc_1.8.1">__<em>getitem</em>__</a></li>
+<li><a href="#toc_1.8.2">__<em>setitem</em>__</a></li>
+</ul>
+<li><a href="#toc_1.9">返回字符串值</a></li>
+<ul>
+<li><a href="#toc_1.9.1">__<em>repr</em>__</a></li>
+</ul>
+<li><a href="#toc_1.10">对象比较</a></li>
+<ul>
+<li><a href="#toc_1.10.1">__<em>cmp</em>__</a></li>
+</ul>
+<li><a href="#toc_1.11">返回对象长度</a></li>
+<ul>
+<li><a href="#toc_1.11.1">__<em>len</em>__</a></li>
+</ul>
+<li><a href="#toc_1.12">删除成员数据</a></li>
+<ul>
+<li><a href="#toc_1.12.1">__<em>delitem</em>__</a></li>
+</ul>
+<li><a href="#toc_1.13">模块名称</a></li>
+<ul>
+<li><a href="#toc_1.13.1">__<em>module</em>__</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">包的定义</h2>
+<ul>
+<li>
+一个包是一个其中带有特殊文件_<em>init</em>_.py的目录。 _<em>init</em>_.py 文件定义了包的属性和方法。其实它可以什么也不定义；可以只是一个空文件，但是必须要存在。如果 _<em>init</em>_.py 不存在，这个目录就仅仅是一个目录，而不是一个包，它就不能被导入或者包含其它的模块和嵌套包。
+</li>
+</ul>
+
+<pre class="brush:text">
+# 包结构的示例
+Python21/               Python安装根目录(可执行文件的所在地)
+|
++--lib/                 库目录(标准库模块的所在地)
+    |
+    +-- xml/            xml包(实际上目录中还有其它东西)
+        |
+        +--sax/         xml.sax包(也只是一个目录)
+        |
+        +--dom/         xml.dom包(包含 minidom.py)
+        |
+        +--parsers/     xml.parsers包(内部使用)
+</pre>
+
+<ul>
+<li>
+_<em>init</em>_.py中还可以包含变量 _<em>all</em>_，该变量指定了<code>from package import *</code>语法所导入进来的模块名。
+</li>
+</ul>
+
+<pre class="brush:python">
+# __init__.py
+__all__ = ['Module1', 'Module2', 'Package2']
+</pre>
+
+<h2 id="toc_1.2">类的定义</h2>
+<pre class="brush:python">
+class UserDict:
+    pass
+</pre>
+
+<h2 id="toc_1.3">类成员和对象成员</h2>
+<ul>
+<li>
+在Java中，静态变量(在Python中叫类成员)和实例变量(在Python中叫对象成员)两者都是紧跟在类定义之后定义的(一个有static关键字，一个没有)。在Python 中，只有类成员可以定义在这里，对象成员定义在_<em>init</em>_方法中。
+</li>
+</ul>
+
+<pre class="brush:python">
+class MP3FileInfo(FileInfo):
+    ''' tagDataMap是类成员 '''
+    tagDataMap = {"title"   : (  3,  33, stripnulls),
+                    "artist"  : ( 33,  63, stripnulls),
+                    "album"   : ( 63,  93, stripnulls),
+                    "year"    : ( 93,  97, stripnulls),
+                    "comment" : ( 97, 126, stripnulls),
+                    "genre"   : (127, 128, ord)}
+                    
+    def __init__(self):
+        ''' filename是对象成员 '''
+        self.filename = ""
+</pre>
+
+<h2 id="toc_1.4">私有成员和公有成员</h2>
+<ul>
+<li>
+与大多数语言一样，Python 也有私有的概念：
+</li>
+<ul>
+<li>
+私有函数不可以从它们的模块外面被调用
+</li>
+<li>
+私有类方法不能够从它们的类外面被调用
+</li>
+<li>
+私有属性不能够从它们的类外面被访问
+</li>
+</ul>
+</ul>
+
+<pre class="brush:text">
+    如果一个Python函数，类方法，或属性的名字以两个下划线开始(但不是结束)，它是私有的；其它所有的都是公有的。
+Python没有类方法保护的概念(只能用于它们自已的类和子类中)。类方法或者是私有(只能在它们自已的类中使用)或者是
+公有(任何地方都可使用)。
+</pre>
+
+<h2 id="toc_1.5">类的继承</h2>
+<pre class="brush:python">
+class FileInfo(UserDict):
+    pass
+</pre>
+
+<h2 id="toc_1.6">类的初始化</h2>
+<ul>
+<li>
+_init_方法是可选的，但是如果定义了该方法，就必须调用基类的_init_。
+</li>
+<li>
+类成员方法的第一个参数必须为self，包括_init_方法。
+</li>
+</ul>
+
+<pre class="brush:python">
+class FileInfo(UserDict):
+    "store file metadata"
+    def __init__(self, filename=None): 
+        # 调用基类的构造方法
+        UserDict.__init__(self)
+        self["name"] = filename
+</pre>
+
+<h2 id="toc_1.7">类的实例化</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; import fileinfo
+# 实例化FileInfo类
+&gt;&gt;&gt; f = fileinfo.FileInfo("/music/_singles/kairo.mp3")
+# 查看class信息
+&gt;&gt;&gt; f.__class__                                       
+&lt;class fileinfo.FileInfo at 010EC204&gt;
+# 查看doc信息
+&gt;&gt;&gt; f.__doc__
+'store file metadata'
+&gt;&gt;&gt; f
+{'name': '/music/_singles/kairo.mp3'}
+</pre>
+
+<h2 id="toc_1.8">获取和设置成员数据</h2>
+<h3 id="toc_1.8.1">__<em>getitem</em>__</h3>
+<pre class="brush:python">
+"""
+def __getitem__(self, key): return self.data[key]
+"""
+
+# 实现了__getitem__方法后，可以通过[]下标形式访问类成员
+&gt;&gt;&gt; f = fileinfo.FileInfo("/music/_singles/kairo.mp3")
+&gt;&gt;&gt; f
+{'name':'/music/_singles/kairo.mp3'}
+&gt;&gt;&gt; f.__getitem__("name")
+'/music/_singles/kairo.mp3'
+&gt;&gt;&gt; f["name"]
+'/music/_singles/kairo.mp3'
+</pre>
+
+<h3 id="toc_1.8.2">__<em>setitem</em>__</h3>
+<pre class="brush:python">
+"""
+def __setitem__(self, key, item): self.data[key] = item
+"""
+# 实现了__setitem__方法后，可以通过[]下标形式访问类成员
+&gt;&gt;&gt; f
+{'name':'/music/_singles/kairo.mp3'}
+&gt;&gt;&gt; f.__setitem__("genre", 31)
+&gt;&gt;&gt; f
+{'name':'/music/_singles/kairo.mp3', 'genre':31}
+&gt;&gt;&gt; f["genre"] = 32
+&gt;&gt;&gt; f
+{'name':'/music/_singles/kairo.mp3', 'genre':32}
+</pre>
+
+<h2 id="toc_1.9">返回字符串值</h2>
+<h3 id="toc_1.9.1">__<em>repr</em>__</h3>
+<ul>
+<li>
+_<em>repr</em>_ 是一个专用的方法，在当调用repr(instance)时被调用。repr函数是一个内置函数，它返回一个对象的字符串表示。它可以用在任何对象上，不仅仅是类的实例。
+</li>
+</ul>
+
+<pre class="brush:python">
+def __repr__(self): 
+    return repr(self.data) 
+</pre>
+
+<h2 id="toc_1.10">对象比较</h2>
+<h3 id="toc_1.10.1">__<em>cmp</em>__</h3>
+<ul>
+<li>
+_<em>cmp</em>_ 在比较类实例时被调用。通常，你可以通过使用“==”比较任意两个Python对象，不只是类实例。
+</li>
+</ul>
+
+<pre class="brush:python">
+def __cmp__(self, dict):
+    if isinstance(dict, UserDict):            
+        return cmp(self.data, dict.data)
+</pre>
+
+<h2 id="toc_1.11">返回对象长度</h2>
+<h3 id="toc_1.11.1">__<em>len</em>__</h3>
+<ul>
+<li>
+_<em>len</em>_ 在调用len(instance)时被调用。len是一个内置函数，可以返回一个对象的长度。它可以用于任何被认为理应有长度的对象。对于类实例，定义_<em>len</em>_ 方法，接着自已编写长度的计算，然后调用len(instance)，Python将替你调用你的_<em>len</em>_专用方法。
+</li>
+</ul>
+
+<pre class="brush:python">
+def __len__(self): 
+    return len(self.data)
+</pre>
+
+<h2 id="toc_1.12">删除成员数据</h2>
+<h3 id="toc_1.12.1">__<em>delitem</em>__</h3>
+<ul>
+<li>
+当你在类实例中使用del时，Python替你调用_<em>delitem</em>_专用方法。
+</li>
+</ul>
+
+<pre class="brush:python">
+def __delitem__(self, key): 
+    del self.data[key]
+</pre>
+
+<h2 id="toc_1.13">模块名称</h2>
+<h3 id="toc_1.13.1">__<em>module</em>__</h3>
+<ul>
+<li>
+每个Python类都拥有一个内置的类属性_<em>module</em>_，它定义了这个类的模块的名字。
+</li>
+<li>
+将它与sys.modules字典复合使用，你可以得到定义了某个类的模块的引用。
+</li>
+</ul>
+
+<pre class="brush:python">
+# 从类的__module__方法中得到该类从属的模块
+&gt;&gt;&gt; from fileinfo import MP3FileInfo
+&gt;&gt;&gt; MP3FileInfo.__module__
+'fileinfo'
+
+# 配合sys.modules得到该模块的引用
+&gt;&gt;&gt; sys.modules[MP3FileInfo.__module__]
+&lt;module 'fileinfo' from 'fileinfo.pyc'&gt;
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>

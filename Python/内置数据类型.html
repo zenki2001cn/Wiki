@@ -67,6 +67,13 @@
 <li><a href="#toc_1.2.3">字符串连接</a></li>
 <li><a href="#toc_1.2.4">字符串分割</a></li>
 </ul>
+<li><a href="#toc_1.3">Dictionary使用</a></li>
+<ul>
+<li><a href="#toc_1.3.1">声明字典变量</a></li>
+<li><a href="#toc_1.3.2">修改字典成员</a></li>
+<li><a href="#toc_1.3.3">删除字典成员</a></li>
+<li><a href="#toc_1.3.4">遍历字典</a></li>
+</ul>
 </ul>
 </ul>
 </div>
@@ -197,6 +204,40 @@ append用来在List后追加数据，并且追加的数据可以是其他类型�
 ['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']
 &gt;&gt;&gt; s.split(";", 1) 2
 ['server=mpilgrim', 'uid=sa;database=master;pwd=secret']
+</pre>
+
+<h2 id="toc_1.3">Dictionary使用</h2>
+<ul>
+<li>
+Dictionary类似于Perl中的hash，称为字典。格式为<code>{key:value...}</code>。
+</li>
+</ul>
+
+<h3 id="toc_1.3.1">声明字典变量</h3>
+<pre class="brush:python">
+&gt;&gt;&gt; d = {"server":"mpilgrim", "database":"master"}
+&gt;&gt;&gt; d
+{'server': 'mpilgrim', 'database': 'master'}
+</pre>
+
+<h3 id="toc_1.3.2">修改字典成员</h3>
+<pre class="brush:python">
+&gt;&gt;&gt; d["database"] = "pubs"
+&gt;&gt;&gt; d
+{'server': 'mpilgrim', 'database': 'pubs'}
+</pre>
+
+<h3 id="toc_1.3.3">删除字典成员</h3>
+<pre class="brush:python">
+&gt;&gt;&gt; del d["database"]
+&gt;&gt;&gt; d
+{'server': 'mpilgrim'}
+</pre>
+
+<h3 id="toc_1.3.4">遍历字典</h3>
+<pre class="brush:python">
+&gt;&gt;&gt; for k, v in os.environ.items():
+...     print "%s=%s" % (k, v)
 </pre>
 <footer>
     <a href="index.html" id="back-home">首页</a>

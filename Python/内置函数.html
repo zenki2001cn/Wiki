@@ -64,9 +64,9 @@
 <li><a href="#toc_1.8">getattr（获取对象的方法引用）</a></li>
 <li><a href="#toc_1.9">lambda（匿名函数）</a></li>
 <li><a href="#toc_1.10">__<em>import</em>__（动态导入模块）</a></li>
-<li><a href="#toc_1.11">map（方法的批量调用）</a></li>
-<li><a href="#toc_1.12">filter（列表过滤器）</a></li>
-<li><a href="#toc_1.13">reduce（列表递减调用）</a></li>
+<li><a href="#toc_1.11">map（列表数据的批量处理）</a></li>
+<li><a href="#toc_1.12">filter（列表数据过滤处理）</a></li>
+<li><a href="#toc_1.13">reduce（列表数据递减处理）</a></li>
 </ul>
 </ul>
 </div>
@@ -309,7 +309,7 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 &gt;&gt;&gt; &lt;module 'os' from '/usr/local/lib/python2.2/os.pyc'&gt;
 </pre>
 
-<h2 id="toc_1.11">map（方法的批量调用）</h2>
+<h2 id="toc_1.11">map（列表数据的批量处理）</h2>
 <ul>
 <li>
 将一组参数列表传入到给定的函数中，并依次调用该函数，最后将函数的执行结果传入到列表中并返回。
@@ -333,7 +333,7 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 '2.2.2 (#37, Nov 26 2002, 10:24:37) [MSC 32 bit (Intel)]'
 </pre>
 
-<h2 id="toc_1.12">filter（列表过滤器）</h2>
+<h2 id="toc_1.12">filter（列表数据过滤处理）</h2>
 <ul>
 <li>
 将一组参数列表传入给定的函数中，该函数返回bool类型。如果函数调用结果为真，则该结果会出现在结果的列表中，结果为假，则被过滤掉。调用的过程同map一样。
@@ -344,9 +344,14 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 # 定义一个取模的lambda方法，并应用于一组列表[1, 2, 3, 4, 5]
 &gt;&gt;&gt; filter(lambda x : x % 2 == 0, [1, 2, 3, 4, 5])
 [2, 4]
+
+# 该方法同样可用映射List的方式实现
+&gt;&gt;&gt; list_a = [1, 2, 3, 4, 5]
+&gt;&gt;&gt; [x for x in list_a if x % 2 == 0]
+[2, 4]
 </pre>
 
-<h2 id="toc_1.13">reduce（列表递减调用）</h2>
+<h2 id="toc_1.13">reduce（列表数据递减处理）</h2>
 <ul>
 <li>
 将一组参数列表的前两个数作为参数传给指定的函数，并将结果置为列表顶端，同时删除前两个数，依次执行这个过程，返回最终的数。

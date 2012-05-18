@@ -50,6 +50,40 @@
 
 <h1 id="toc_1">本地Service</h1>
 
+<div class="toc">
+<ul>
+<li><a href="#toc_1">本地Service</a></li>
+<ul>
+<li><a href="#toc_1.1">Binding Service</a></li>
+<ul>
+<li><a href="#toc_1.1.1">client端</a></li>
+<ul>
+<li><a href="#toc_1.1.1.1">ServiceConnection</a></li>
+<li><a href="#toc_1.1.1.2">bindService和unbindService</a></li>
+</ul>
+<li><a href="#toc_1.1.2">Service端</a></li>
+<ul>
+<li><a href="#toc_1.1.2.1">自定义接口</a></li>
+<li><a href="#toc_1.1.2.2">Service</a></li>
+</ul>
+</ul>
+<li><a href="#toc_1.2">Start Service</a></li>
+<ul>
+<li><a href="#toc_1.2.1">client端</a></li>
+<ul>
+<li><a href="#toc_1.2.1.1">startService</a></li>
+</ul>
+<li><a href="#toc_1.2.2">Service端</a></li>
+<ul>
+<li><a href="#toc_1.2.2.1">onStart</a></li>
+<li><a href="#toc_1.2.2.2">onStartCommand</a></li>
+</ul>
+</ul>
+<li><a href="#toc_1.3">Manifest</a></li>
+</ul>
+</ul>
+</div>
+
 <h2 id="toc_1.1">Binding Service</h2>
 
 <h3 id="toc_1.1.1">client端</h3>
@@ -66,9 +100,7 @@
 </li>
 </ul>
 
-<p>
-例程源码(JAVA) --- ServiceConnection
-</p>
+<h4 id="toc_1.1.1.1">ServiceConnection</h4>
 <pre class="brush:java">
 private ILocalService mBoundService;
 
@@ -85,9 +117,7 @@ private ServiceConnection mConnection = new ServiceConnection() {
 };
 </pre>
 
-<p>
-例程源码(JAVA) --- bindService和unbindService
-</p>
+<h4 id="toc_1.1.1.2">bindService和unbindService</h4>
 <pre class="brush:java">
 bindService(new Intent(LocalServiceBinding.this, 
             LocalService.class), mConnection, Context.BIND_AUTO_CREATE);
@@ -115,17 +145,14 @@ onBind在onCreate之后调用，将会返回给客户端一个IBinder接口，�
 </li>
 </ul>
 
-<p>
-例程源码(JAVA) --- 自定义接口
-</p>
+<h4 id="toc_1.1.2.1">自定义接口</h4>
 <pre class="brush:java">
 interface ILocalService {
     int getCount();
 }
 </pre>
-<p>
-例程源码(JAVA) --- Service
-</p>
+
+<h4 id="toc_1.1.2.2">Service</h4>
 <pre class="brush:java">
 private NotificationManager mNM;
 
@@ -173,9 +200,7 @@ stopService用来停止一个Service
 </li>
 </ul>
 
-<p>
-例程源码(JAVA)
-</p>
+<h4 id="toc_1.2.1.1">startService</h4>
 <pre class="brush:java">
 startService(new Intent(LocalServiceController.this, LocalService.class));
 
@@ -193,15 +218,16 @@ stopService(new Intent(LocalServiceController.this, LocalService.class));
 </li>
 </ul>
 
-<p>
-例程源码(JAVA)
-</p>
+<h4 id="toc_1.2.2.1">onStart</h4>
 <pre class="brush:java">
 @Override
 public void onStart(Intent intent, int startId) {
     handleCommand(intent);
 }
+</pre>
 
+<h4 id="toc_1.2.2.2">onStartCommand</h4>
+<pre class="brush:java">
 @Override
 public int onStartCommand(Intent intent, int flags, int startId) {
     handleCommand(intent);

@@ -50,6 +50,43 @@
 
 <h1 id="toc_1">远程Service</h1>
 
+<div class="toc">
+<ul>
+<li><a href="#toc_1">远程Service</a></li>
+<ul>
+<li><a href="#toc_1.1">Binding Service</a></li>
+<ul>
+<li><a href="#toc_1.1.1">client端</a></li>
+<li><a href="#toc_1.1.2">示例代码</a></li>
+<ul>
+<li><a href="#toc_1.1.2.1">ServiceConnection</a></li>
+<li><a href="#toc_1.1.2.2">bindService和unbindService</a></li>
+<li><a href="#toc_1.1.2.3">调用service方法</a></li>
+</ul>
+<li><a href="#toc_1.1.3">Service端</a></li>
+<li><a href="#toc_1.1.4">示例代码</a></li>
+<ul>
+<li><a href="#toc_1.1.4.1">AIDL文件</a></li>
+<li><a href="#toc_1.1.4.2">Stub接口</a></li>
+<li><a href="#toc_1.1.4.3">Services实现</a></li>
+</ul>
+</ul>
+<li><a href="#toc_1.2">Start Service</a></li>
+<ul>
+<li><a href="#toc_1.2.1">Client端</a></li>
+<li><a href="#toc_1.2.2">Service端</a></li>
+</ul>
+<li><a href="#toc_1.3">Manifest</a></li>
+<ul>
+<li><a href="#toc_1.3.1">示例代码</a></li>
+<ul>
+<li><a href="#toc_1.3.1.1">服务端XML</a></li>
+</ul>
+</ul>
+</ul>
+</ul>
+</div>
+
 <h2 id="toc_1.1">Binding Service</h2>
 
 <h3 id="toc_1.1.1">client端</h3>
@@ -73,9 +110,8 @@
 </ul>
 
 <h3 id="toc_1.1.2">示例代码</h3>
-<p>
-例程源码(JAVA) --- ServiceConnection
-</p>
+<h4 id="toc_1.1.2.1">ServiceConnection</h4>
+
 <pre class="brush:java">
 IRemoteService mService = null;
 
@@ -102,9 +138,7 @@ private ServiceConnection mConnection = new ServiceConnection() {
 };
 </pre>
 
-<p>
-例程源码(JAVA) --- bindService和unbindService
-</p>
+<h4 id="toc_1.1.2.2">bindService和unbindService</h4>
 <pre class="brush:java">
 // 方法一
 bindService(new Intent(IRemoteService.class.getName()),
@@ -116,9 +150,7 @@ bindService(new Intent("com.example.android.apis.app.IRemoteService"));
 unbindService(mConnection);
 </pre>
 
-<p>
-例程源码(JAVA) --- 调用service方法
-</p>
+<h4 id="toc_1.1.2.3">调用service方法</h4>
 <pre class="brush:java">
 private boolean func1(){
     byte val = 0;
@@ -166,9 +198,8 @@ private boolean func1(){
 </ul>
 
 <h3 id="toc_1.1.4">示例代码</h3>
-<p>
-例程源码(java) --- AIDL文件
-</p>
+<h4 id="toc_1.1.4.1">AIDL文件</h4>
+
 <pre class="brush:java">
 package com.example.android.apis.app;
 
@@ -189,9 +220,7 @@ interface IRemoteService {
 }
 </pre>
 
-<p>
-例程源码(JAVA) --- Stub接口
-</p>
+<h4 id="toc_1.1.4.2">Stub接口</h4>
 <pre class="brush:java">
 // IDL定义的接口
 private final IRemoteService.Stub mBinder = new IRemoteService.Stub() {
@@ -207,9 +236,7 @@ private final IRemoteService.Stub mBinder = new IRemoteService.Stub() {
 };
 </pre>
 
-<p>
-例程源码(JAVA) --- Service
-</p>
+<h4 id="toc_1.1.4.3">Services实现</h4>
 <pre class="brush:java">
 @Override
 public void onCreate() {
@@ -272,9 +299,8 @@ stopService(new Intent(IRemoteService.class.getName()));
 </ul>
 
 <h3 id="toc_1.3.1">示例代码</h3>
-<p>
-例程源码(XML) --- 服务端
-</p>
+<h4 id="toc_1.3.1.1">服务端XML</h4>
+
 <pre class="brush:xml">
 &lt;service android:name=".app.RemoteService" android:process=":remote"&gt;
     &lt;intent-filter&gt;
