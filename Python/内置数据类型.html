@@ -66,6 +66,7 @@
 <li><a href="#toc_1.2.2">Dict格式化字符串</a></li>
 <li><a href="#toc_1.2.3">字符串连接</a></li>
 <li><a href="#toc_1.2.4">字符串分割</a></li>
+<li><a href="#toc_1.2.5">字符矩阵转换</a></li>
 </ul>
 <li><a href="#toc_1.3">Dictionary使用</a></li>
 <ul>
@@ -204,6 +205,29 @@ append用来在List后追加数据，并且追加的数据可以是其他类型�
 ['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']
 &gt;&gt;&gt; s.split(";", 1) 2
 ['server=mpilgrim', 'uid=sa;database=master;pwd=secret']
+</pre>
+
+<h3 id="toc_1.2.5">字符矩阵转换</h3>
+<ul>
+<li>
+通过string.maketrans方法创建一个对应的转换矩阵对象，<code>两个参数的长度必须一样</code>。
+</li>
+<li>
+再通过string.translate方法根据这个矩阵对象转换任意的字符串。
+</li>
+</ul>
+
+<pre class="brush:python">
+# 做如下转换矩阵
+# a =&gt; 1
+# b =&gt; 2
+# c =&gt; 3
+&gt;&gt;&gt; t = string.maketrans('abc', '123')
+
+# 转换字符串'abcbabc'
+&gt;&gt;&gt; s = 'abcbabc'
+&gt;&gt;&gt; s.translate(t)
+'1232123'
 </pre>
 
 <h2 id="toc_1.3">Dictionary使用</h2>

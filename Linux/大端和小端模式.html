@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Python学习笔记</title>
+    <title>大端和小端模式</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -48,38 +48,65 @@
 <article>
 
 
-<h1 id="toc_1">Python学习笔记</h1>
+<h1 id="toc_1">大端和小端模式</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Python学习笔记</a></li>
+<li><a href="#toc_1">大端和小端模式</a></li>
 <ul>
-<li><a href="#toc_1.1">基本语法和技巧</a></li>
-<li><a href="#toc_1.2">代码片段</a></li>
+<li><a href="#toc_1.1">端模式的由来</a></li>
+<li><a href="#toc_1.2">大端和小端示例</a></li>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">基本语法和技巧</h2>
+<h2 id="toc_1.1">端模式的由来</h2>
+<pre class="brush:text">
+    端模式（Endian）的这个词出自Jonathan Swift书写的《格列佛游记》。这本书根据将鸡蛋敲开的方法
+不同将所有的人分为两类，从圆头开始将鸡蛋敲开的人被归为Big Endian，从尖头开始将鸡蛋敲开的人被归
+为Littile Endian。小人国的内战就源于吃鸡蛋时是究竟从大头（Big-Endian）敲开还是从小头（Little-Endian）
+敲开。
+    在计算机业Big Endian和Little Endian也几乎引起一场战争。在计算机业界，Endian表示数据在存储器中的存放顺序。
+</pre>
+
+<h2 id="toc_1.2">大端和小端示例</h2>
 <ul>
 <li>
-<a href="内置数据类型.html">内置数据类型</a>
+如果将一个32位的整数0x12345678存放到一个整型变量（int）中，这个整型在内存中的存储分布情况分为大端(Big-Endian)和小端(Little-Endian)。
 </li>
 <li>
-<a href="方法对象.html">方法对象</a>
+<code>小端</code>模式更符合人的习惯，通常<code>高位的字节存放在内存的高位，低位的字节存放在内存的低位</code>。通常我们遇到的端模式属于小端模式。
 </li>
 <li>
-<a href="内置函数.html">内置函数</a>
-</li>
-<li>
-<a href="包，类和对象.html">包，类和对象</a>
-</li>
-<li>
-<a href="正则表达式.html">正则表达式</a>
+<code>大端</code>模式将<code>高位字节存放在内存的低位，低位字节存放在内存的高位</code>，有利于内存地址从左到右按照由低到高的顺序输出。
 </li>
 </ul>
-
-<h2 id="toc_1.2">代码片段</h2>
+<table>
+<tr>
+<th>&nbsp;</th>
+<th>内存0x00</th>
+<th>内存0x01</th>
+<th>内存0x02</th>
+<th>内存0x03</th>
+<th>内存低位...内存高位</th>
+</tr>
+<tr>
+<td>小端模式</td>
+<td>0x78</td>
+<td>0x56</td>
+<td>0x34</td>
+<td>0x12</td>
+<td>符合人的习惯</td>
+</tr>
+<tr>
+<td>大端模式</td>
+<td>0x12</td>
+<td>0x34</td>
+<td>0x56</td>
+<td>0x78</td>
+<td>有利于内存地址输出</td>
+</tr>
+</table>
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
