@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ICS 4.0无法解锁</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+
+<h1 id="toc_1">ICS 4.0无法解锁</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">ICS 4.0无法解锁</a></li>
+<ul>
+<li><a href="#toc_1.1">相关文件</a></li>
+<li><a href="#toc_1.2">原因分析</a></li>
+<li><a href="#toc_1.3">添加清除记录的方法</a></li>
+<ul>
+<li><a href="#toc_1.3.1">InputReader::resetTouchSolt</a></li>
+<li><a href="#toc_1.3.2">MultiTouchMotionAccumulator::Slot::clear</a></li>
+<li><a href="#toc_1.3.3">MultiTouchInputMapper::syncTouch</a></li>
+</ul>
+<li><a href="#toc_1.4">按下Power键时调用清除记录的方法</a></li>
+<ul>
+<li><a href="#toc_1.4.1">NativeInputManager::interceptKeyBeforeQueueing</a></li>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:text">
+frameworks/base/services/jni/com_android_server_InputManager.cpp
+frameworks/base/services/input/InputReader.cpp
+</pre>
+
+<h2 id="toc_1.2">原因分析</h2>
+<pre class="brush:text">
+    无法解锁是因为ICS中记录了多点触摸按下的记录。当系统休眠时，如果手指仍处于触摸状态，
+那么这个记录状态就不会更新，从而导致系统唤醒时，系统仍然认为屏幕处于多点触摸状态。
+    处理方法是在系统唤醒时，将这个记录状态清除。
+</pre>
+
+<h2 id="toc_1.3">添加清除记录的方法</h2>
+<h3 id="toc_1.3.1">InputReader::resetTouchSolt</h3>
+<ul>
+<li>
+在InputReader.cpp中加入InputReader::resetTouchSolt方法，该方法会最终调用MultiTouchMotionAccumulator::Slot::clear方法。
+</li>
+<li>
+在InputReader.h中也要加入相应的方法声明(InputReader和InputReaderInterface)。
+</li>
+</ul>
+
+<pre class="brush:c++">
+void InputReader::resetTouchSolt() {
+    for (size_t i = 0; i &lt; mDevices.size(); i++) {
+        InputDevice* device = mDevices.valueAt(i);
+        uint32_t classes = device-&gt;getClasses();
+        if (classes &amp; INPUT_DEVICE_CLASS_TOUCH_MT ) {
+            device-&gt;reset(0); 
+        }
+    }
+}
+</pre>
+
+<h3 id="toc_1.3.2">MultiTouchMotionAccumulator::Slot::clear</h3>
+<ul>
+<li>
+该方法会将mInUse变量置为false，这样在多点触摸的syncTouch方法时，会根据该变量作相应的处理。
+</li>
+</ul>
+
+<pre class="brush:c++">
+void MultiTouchMotionAccumulator::Slot::clear() {
+    mInUse = false;     // 记录touch的关键标志
+    mHaveAbsMTTouchMinor = false;
+    mHaveAbsMTWidthMinor = false;
+    mHaveAbsMTToolType = false;
+    mAbsMTPositionX = 0;
+    mAbsMTPositionY = 0;
+    mAbsMTTouchMajor = 0;
+    mAbsMTTouchMinor = 0;
+    mAbsMTWidthMajor = 0;
+    mAbsMTWidthMinor = 0;
+    mAbsMTOrientation = 0;
+    mAbsMTTrackingId = -1;
+    mAbsMTPressure = 0;
+    mAbsMTDistance = 0;
+    mAbsMTToolType = 0;
+}
+</pre>
+
+<h3 id="toc_1.3.3">MultiTouchInputMapper::syncTouch</h3>
+<ul>
+<li>
+syncTouch用来同步Touch事件的处理。
+</li>
+</ul>
+
+<pre class="brush:c++">
+void MultiTouchInputMapper::syncTouch(nsecs_t when, bool* outHavePointerIds) {
+    ......
+
+    for (size_t inIndex = 0; inIndex &lt; inCount; inIndex++) {
+        const MultiTouchMotionAccumulator::Slot* inSlot =
+                mMultiTouchMotionAccumulator.getSlot(inIndex);
+        // 记录当前的touch pointer是否被使用
+        if (!inSlot-&gt;isInUse()) {
+            continue;
+        }
+        ......
+    }
+    ......
+}
+</pre>
+
+<h2 id="toc_1.4">按下Power键时调用清除记录的方法</h2>
+
+<h3 id="toc_1.4.1">NativeInputManager::interceptKeyBeforeQueueing</h3>
+<pre class="brush:c++">
+void NativeInputManager::interceptKeyBeforeQueueing(const KeyEvent* keyEvent,
+        uint32_t&amp; policyFlags) {
+    if ((policyFlags &amp; POLICY_FLAG_TRUSTED)) {
+        nsecs_t when = keyEvent-&gt;getEventTime();
+        bool isScreenOn = this-&gt;isScreenOn();
+        bool isScreenBright = this-&gt;isScreenBright();
+
+        ......
+        // isScreenOn为false时，表示唤醒，此时调用清除记录的方法
+        if (!isScreenOn) {
+            mInputManager-&gt;getReader()-&gt;resetTouchSolt();
+        }
+    } else {
+        policyFlags |= POLICY_FLAG_PASS_TO_USER;
+    }
+}
+</pre>
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} catch(err) {}-->
+<!--</script>-->
+
+</body>
+</html>
