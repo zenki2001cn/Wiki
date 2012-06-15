@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>WifiController</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,28 +47,29 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">WifiController</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">WifiController</a></li>
+<li><a href="#toc_1">WifiController</a>
 <ul>
-<li><a href="#toc_1.1">相关类</a></li>
-<li><a href="#toc_1.2">基本流程</a></li>
-<li><a href="#toc_1.3">主要类说明</a></li>
+<li><a href="#toc_1.1">相关类</a>
+<li><a href="#toc_1.2">基本流程</a>
+<li><a href="#toc_1.3">主要类说明</a>
 <ul>
-<li><a href="#toc_1.3.1">ScanResult --- 扫描结果</a></li>
-<li><a href="#toc_1.3.2">WifiConfiguration --- 连接配置</a></li>
-<li><a href="#toc_1.3.3">SupplicantState --- Supplicant状态</a></li>
+<li><a href="#toc_1.3.1">ScanResult --- 扫描结果</a>
+<li><a href="#toc_1.3.2">WifiConfiguration --- 连接配置</a>
+<li><a href="#toc_1.3.3">SupplicantState --- Supplicant状态</a>
 </ul>
-<li><a href="#toc_1.4">示例代码</a></li>
+<li><a href="#toc_1.4">示例代码</a>
 <ul>
-<li><a href="#toc_1.4.1">扫描热点</a></li>
-<li><a href="#toc_1.4.2">配置连接</a></li>
-<li><a href="#toc_1.4.3">连接Wifi</a></li>
-<li><a href="#toc_1.4.4">断开Wifi</a></li>
-<li><a href="#toc_1.4.5">获取Wifi连接信息</a></li>
+<li><a href="#toc_1.4.1">扫描热点</a>
+<li><a href="#toc_1.4.2">配置连接</a>
+<li><a href="#toc_1.4.3">连接Wifi</a>
+<li><a href="#toc_1.4.4">断开Wifi</a>
+<li><a href="#toc_1.4.5">获取Wifi连接信息</a>
 </ul>
 </ul>
 </ul>
@@ -92,188 +93,380 @@ import android.net.DhcpInfo;
 <ul>
 <li>
 <code>WifiManager.isWifiEnabled()</code>判断本地Wifi功能是否启用，<code>WifiManager.setWifiEnabled()</code>方法开启本地Wifi功能
-</li>
+
 <li>
 通过<code>WifiManager.startScan()</code>方法来扫描热点，并返回<code>ScanResult</code>的列表
-</li>
+
 <li>
 配置<code>WifiConfiguration</code>对象，通过<code>WifiManager.addNetwork()</code>方法添加网络连接，<code>WifiManager.enableNetwork()</code>方法开启网络连接，在网络连接成功后记录当前连接状态
-</li>
+
 <li>
 通过<code>WifiManager.removeNetwork()</code>移除网络连接，<code>WifiManager.disableNetwork()</code>方法禁用网络连接
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">主要类说明</h2>
 <h3 id="toc_1.3.1">ScanResult --- 扫描结果</h3>
 <table>
 <tr>
-<th>类型</th>
-<th>标识</th>
-<th>描述</th>
+<th>
+类型
+</th>
+<th>
+标识
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>String</td>
-<td>BSSID</td>
-<td>进入点的地址</td>
+<td>
+String
+</td>
+<td>
+BSSID
+</td>
+<td>
+进入点的地址
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>SSID</td>
-<td>网络名称</td>
+<td>
+String
+</td>
+<td>
+SSID
+</td>
+<td>
+网络名称
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>capabilities</td>
-<td>描述进入点的权限、安全类型</td>
+<td>
+String
+</td>
+<td>
+capabilities
+</td>
+<td>
+描述进入点的权限、安全类型
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>frequency</td>
-<td>与热点连接的速率，单位MHz</td>
+<td>
+int
+</td>
+<td>
+frequency
+</td>
+<td>
+与热点连接的速率，单位MHz
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>level</td>
-<td>信号等级</td>
+<td>
+int
+</td>
+<td>
+level
+</td>
+<td>
+信号等级
+</td>
 </tr>
 </table>
 
 <h3 id="toc_1.3.2">WifiConfiguration --- 连接配置</h3>
 <table>
 <tr>
-<th>类型</th>
-<th>标识</th>
-<th>描述</th>
+<th>
+类型
+</th>
+<th>
+标识
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>String</td>
-<td>BSSID</td>
-<td>根据特定的AP地址</td>
+<td>
+String
+</td>
+<td>
+BSSID
+</td>
+<td>
+根据特定的AP地址
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>SSID</td>
-<td>网络名称</td>
+<td>
+String
+</td>
+<td>
+SSID
+</td>
+<td>
+网络名称
+</td>
 </tr>
 <tr>
-<td>BitSet</td>
-<td>allowedAuthAlgorithms</td>
-<td>IEEE 802.11认证支持</td>
+<td>
+BitSet
+</td>
+<td>
+allowedAuthAlgorithms
+</td>
+<td>
+IEEE 802.11认证支持
+</td>
 </tr>
 <tr>
-<td>BitSet</td>
-<td>allowedGroupCiphers</td>
-<td>SSL支持</td>
+<td>
+BitSet
+</td>
+<td>
+allowedGroupCiphers
+</td>
+<td>
+SSL支持
+</td>
 </tr>
 <tr>
-<td>BitSet</td>
-<td>allowedKeyManagement</td>
-<td>Key管理协议</td>
+<td>
+BitSet
+</td>
+<td>
+allowedKeyManagement
+</td>
+<td>
+Key管理协议
+</td>
 </tr>
 <tr>
-<td>BitSet</td>
-<td>allowedPairwiseCiphers</td>
-<td>WPA支持</td>
+<td>
+BitSet
+</td>
+<td>
+allowedPairwiseCiphers
+</td>
+<td>
+WPA支持
+</td>
 </tr>
 <tr>
-<td>boolean</td>
-<td>hiddenSSID</td>
-<td>隐藏SSID</td>
+<td>
+boolean
+</td>
+<td>
+hiddenSSID
+</td>
+<td>
+隐藏SSID
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>networkId</td>
-<td>网络ID</td>
+<td>
+int
+</td>
+<td>
+networkId
+</td>
+<td>
+网络ID
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>preSharedKey</td>
-<td>验证密码</td>
+<td>
+String
+</td>
+<td>
+preSharedKey
+</td>
+<td>
+验证密码
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>priority</td>
-<td>连接优先等级</td>
+<td>
+int
+</td>
+<td>
+priority
+</td>
+<td>
+连接优先等级
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>status</td>
-<td>连接状态</td>
+<td>
+int
+</td>
+<td>
+status
+</td>
+<td>
+连接状态
+</td>
 </tr>
 <tr>
-<td>String[]</td>
-<td>wepKeys</td>
-<td>WEP密码</td>
+<td>
+String[]
+</td>
+<td>
+wepKeys
+</td>
+<td>
+WEP密码
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>wepTxKeyIndex</td>
-<td>默认WEP密码序号，0至3</td>
+<td>
+int
+</td>
+<td>
+wepTxKeyIndex
+</td>
+<td>
+默认WEP密码序号，0至3
+</td>
 </tr>
 </table>
 
 <h3 id="toc_1.3.3">SupplicantState --- Supplicant状态</h3>
 <table>
 <tr>
-<th>类型</th>
-<th>标识</th>
-<th>描述</th>
+<th>
+类型
+</th>
+<th>
+标识
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>ASSOCIATED</td>
-<td>关联完成</td>
+<td>
+SupplicantState
+</td>
+<td>
+ASSOCIATED
+</td>
+<td>
+关联完成
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>ASSOCIATING</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+ASSOCIATING
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>COMPLETED</td>
-<td>验证完成</td>
+<td>
+SupplicantState
+</td>
+<td>
+COMPLETED
+</td>
+<td>
+验证完成
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>DISCONNECTED</td>
-<td>断开连接</td>
+<td>
+SupplicantState
+</td>
+<td>
+DISCONNECTED
+</td>
+<td>
+断开连接
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>DORMANT</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+DORMANT
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>FOUR_WAY_HANDSHAKE</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+FOUR_WAY_HANDSHAKE
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>GROUP_HANDSHAKE</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+GROUP_HANDSHAKE
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>INACTIVE</td>
-<td>未激活状态</td>
+<td>
+SupplicantState
+</td>
+<td>
+INACTIVE
+</td>
+<td>
+未激活状态
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>INVALID</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+INVALID
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>SCANNING</td>
-<td>正在扫描网络</td>
+<td>
+SupplicantState
+</td>
+<td>
+SCANNING
+</td>
+<td>
+正在扫描网络
+</td>
 </tr>
 <tr>
-<td>SupplicantState</td>
-<td>UNINITIALIZED</td>
-<td>&nbsp;</td>
+<td>
+SupplicantState
+</td>
+<td>
+UNINITIALIZED
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -415,6 +608,8 @@ public boolean updateConnectedWifiInfo(AccessPointState ap) {
     return false;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -423,17 +618,6 @@ public boolean updateConnectedWifiInfo(AccessPointState ap) {
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

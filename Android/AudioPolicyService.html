@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>AudioPolicyService</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,42 +47,43 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">AudioPolicyService</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">AudioPolicyService</a></li>
+<li><a href="#toc_1">AudioPolicyService</a>
 <ul>
-<li><a href="#toc_1.1">概述</a></li>
-<li><a href="#toc_1.2">接口描述</a></li>
-<li><a href="#toc_1.3">实现AudioPolicyInterface</a></li>
+<li><a href="#toc_1.1">概述</a>
+<li><a href="#toc_1.2">接口描述</a>
+<li><a href="#toc_1.3">实现AudioPolicyInterface</a>
 <ul>
-<li><a href="#toc_1.3.1">输入输出设备管理</a></li>
-<li><a href="#toc_1.3.2">audio_io_handle_t</a></li>
+<li><a href="#toc_1.3.1">输入输出设备管理</a>
+<li><a href="#toc_1.3.2">audio_io_handle_t</a>
 <ul>
-<li><a href="#toc_1.3.2.1">相关方法列表</a></li>
-<li><a href="#toc_1.3.2.2">AudioPolicyManagerBase</a></li>
+<li><a href="#toc_1.3.2.1">相关方法列表</a>
+<li><a href="#toc_1.3.2.2">AudioPolicyManagerBase</a>
 </ul>
 </ul>
-<li><a href="#toc_1.4">音量管理</a></li>
+<li><a href="#toc_1.4">音量管理</a>
 <ul>
-<li><a href="#toc_1.4.1">音量值的定义</a></li>
+<li><a href="#toc_1.4.1">音量值的定义</a>
 </ul>
-<li><a href="#toc_1.5">音频策略管理</a></li>
+<li><a href="#toc_1.5">音频策略管理</a>
 <ul>
-<li><a href="#toc_1.5.1">AudioSystem::stream_type</a></li>
-<li><a href="#toc_1.5.2">AudioSystem::audio_devices</a></li>
-<li><a href="#toc_1.5.3">AudioPolicyManagerBase::routing_strategy</a></li>
-<li><a href="#toc_1.5.4">AudioPolicyManagerBase::getStrategy</a></li>
-<li><a href="#toc_1.5.5">AudioPolicyManagerBase::getDeviceForStrategy</a></li>
+<li><a href="#toc_1.5.1">AudioSystem::stream_type</a>
+<li><a href="#toc_1.5.2">AudioSystem::audio_devices</a>
+<li><a href="#toc_1.5.3">AudioPolicyManagerBase::routing_strategy</a>
+<li><a href="#toc_1.5.4">AudioPolicyManagerBase::getStrategy</a>
+<li><a href="#toc_1.5.5">AudioPolicyManagerBase::getDeviceForStrategy</a>
 </ul>
-<li><a href="#toc_1.6">音频控制线程(AudioCommandThread)</a></li>
+<li><a href="#toc_1.6">音频控制线程(AudioCommandThread)</a>
 <ul>
-<li><a href="#toc_1.6.1">命令标识</a></li>
-<li><a href="#toc_1.6.2">命令对应的数据结构</a></li>
-<li><a href="#toc_1.6.3">AudioCommandThread::Command</a></li>
-<li><a href="#toc_1.6.4">AudioCommandThread::threadLoop</a></li>
+<li><a href="#toc_1.6.1">命令标识</a>
+<li><a href="#toc_1.6.2">命令对应的数据结构</a>
+<li><a href="#toc_1.6.3">AudioCommandThread::Command</a>
+<li><a href="#toc_1.6.4">AudioCommandThread::threadLoop</a>
 </ul>
 </ul>
 </ul>
@@ -92,20 +93,20 @@
 <ul>
 <li>
 AudioPolicyService主要完成以下任务：
-</li>
+
 <ul>
 <li>
 JAVA应用层通过JNI，经由IAudioPolicyService接口，访问AudioPolicyService提供的服务
-</li>
+
 <li>
 输入输出设备的连接状态
-</li>
+
 <li>
 系统的音频策略（strategy）的切换
-</li>
+
 <li>
 音量/音频参数的设置
-</li>
+
 </ul>
 </ul>
 
@@ -113,47 +114,47 @@ JAVA应用层通过JNI，经由IAudioPolicyService接口，访问AudioPolicyServ
 <ul>
 <li>
 AudioPolicyService继承了IAudioPolicyService接口，这样AudioPolicyService就可以基于 Android的Binder机制，向外部提供服务；
-</li>
+
 <li>
 AudioPolicyService同时也继承了AudioPolicyClientInterface类，他有一个 AudioPolicyInterface类的成员指针mpPolicyManager，实际上就是指向了AudioPolicyManagerBase(Android 2.3中为AudioPolicyManagerBase类)；
-</li>
+
 <li>
 AudioPolicyManagerBase类继承了AudioPolicyInterface类以便向AudioPolicyService提供服务，反过来同时还有一个AudioPolicyClientInterface指针，该指针在构造函数中被初始化，指向了AudioPolicyService，实际上，AudioPolicyService是通过成员指针mpPolicyManager访问AudioPolicyManagerBase，而 AudioPolicyManagerBase则通过AudioPolicyClientInterface（mpClientInterface）访问 AudioPolicyService；
-</li>
+
 <li>
 AudioPolicyService有一个内部线程类AudioCommandThread，顾名思义，所有的命令（音量控制，输入、输出的切换等）最终都会在该线程中排队执行；
-</li>
+
 </ul>
 
 <p>
-<a href="pic/audio_policy_service.png"><img src="pic/audio_policy_service.png" /></a>
+<a href="pic/audio_policy_service.png.html">pic/audio_policy_service.png</a>
 </p>
 
 <h2 id="toc_1.3">实现AudioPolicyInterface</h2>
 <ul>
 <li>
 AudioPolicyService的很大一部分管理工作都是通过AudioPolicyInterface完成的。包括音量管理，音频策略(strategy)管理，输入输出设备管理。而默认实现该接口的类是AudioPolicyManagerBase。对于特定的硬件，只要重新实现这个接口就可以类。
-</li>
+
 <li>
 AudioPolicyInterface的实现类会通过AudioSystem接口去完成具体的功能实现。
-</li>
+
 <li>
 为什么需要AudioPolicyInterface？实际上AudioPolicyInterface(C++)层和AudioPolicyService(C++层)会相互调用，而AudioPolicyInterface负责获取音频设置，而AudioPolicyService则负责将具体操作向下传递。
-</li>
+
 </ul>
 
 <h3 id="toc_1.3.1">输入输出设备管理</h3>
 <ul>
 <li>
 音频系统为音频设备定义了一个枚举：AudioSystem::audio_devices，例如：DEVICE_OUT_SPEAKER，DEVICE_OUT_WIRED_HEADPHONE，DEVICE_OUT_BLUETOOTH_A2DP，DEVICE_IN_BUILTIN_MIC，DEVICE_IN_VOICE_CALL 等等，每一个枚举值其实对应一个32bit整数的某一个位，所以这些值是可以进行位或操作的。
-</li>
+
 </ul>
 
 <h3 id="toc_1.3.2">audio_io_handle_t</h3>
 <ul>
 <li>
 AudioPolicyManagerBase需要获取称之为句柄的audio_io_handle_t对象，该句柄对应为AudioFlinger中的工作线程，可能是Track，也可能是Record。并且维护一个对应ID的容器对象，可以方便的获取相应句柄。
-</li>
+
 </ul>
 
 <pre class="brush:c++">
@@ -166,44 +167,92 @@ KeyedVector&lt;audio_io_handle_t, AudioInputDescriptor *&gt; mInputs;     // lis
 <h4 id="toc_1.3.2.1">相关方法列表</h4>
 <table>
 <tr>
-<th>方法名</th>
-<th>描述</th>
-<th>备注</th>
+<th>
+方法名
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
 </tr>
 <tr>
-<td>setPhoneState</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+setPhoneState
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>setRingerMode</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+setRingerMode
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>setForceUse</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+setForceUse
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>startOutput</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+startOutput
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>stopOutput</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+stopOutput
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>startInput</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+startInput
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>stopInput</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+stopInput
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -251,28 +300,52 @@ AudioPolicyManagerBase::AudioPolicyManagerBase(AudioPolicyClientInterface *clien
 <ul>
 <li>
 AudioPolicyManagerBase提供了以下几个与音量相关的函数：
-</li>
+
 </ul>
 <table>
 <tr>
-<th>方法名</th>
-<th>描述</th>
-<th>备注</th>
+<th>
+方法名
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
 </tr>
 <tr>
-<td>initStreamVolume</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+initStreamVolume
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>setStreamVolumeIndex</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+setStreamVolumeIndex
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>getStreamVolumeIndex</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>
+getStreamVolumeIndex
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -280,10 +353,10 @@ AudioPolicyManagerBase提供了以下几个与音量相关的函数：
 <ul>
 <li>
 AudioService.java中定义各种类型音量的最大值和最小值。
-</li>
+
 <li>
 电话铃声可以有7个级别的音量，而音乐则可以有15个音量级别，AudioSystem(java层)通过jni，调用AudioSystem(C++层)的 initStreamVolume()，把这个数组的内容传入AudioPolicyService中，最终通过AudioPolicyManagerBase将每种音频流的音量记录到列表中。应用程序可以调用setStreamVolumeIndex设置各个音频流的音量级别，setStreamVolumeIndex会把这个整数的音量级别转化为适合人耳的对数级别，然后通过AudioPolicyService的 AudioCommandThread，最终会将设置应用到AudioFlinger的相应的Track中。
-</li>
+
 </ul>
 
 <pre class="brush:java">
@@ -305,17 +378,17 @@ private int[] MAX_STREAM_VOLUME = new int[] {
 <ul>
 <li>
 首先要搞清楚stream_type，device，strategy三者之间的关系：
-</li>
+
 <ul>
 <li>
 AudioSystem::stream_type：音频流的类型，一共有10种类型
-</li>
+
 <li>
 AudioSystem::audio_devices：音频输入输出设备，每一个bit代表一种设备，见前面的说明
-</li>
+
 <li>
 AudioPolicyManagerBase::routing_strategy：音频路由策略，可以有4种策略
-</li>
+
 </ul>
 </ul>
 
@@ -384,11 +457,11 @@ enum routing_strategy {
 <ul>
 <li>
 AudioPolicyManagerBase.getStrategy根据stream type，返回对应的routing strategy值，AudioPolicyManagerBase.getDeviceForStrategy()则是根据routing strategy，返回可用的device。Android把10种stream type归纳为4种路由策略，然后根据路由策略决定具体的输出设备。
-</li>
+
 </ul>
 
 <p>
-<a href="pic/audio_strategy.png"><img src="pic/audio_strategy.png" /></a>
+<a href="pic/audio_strategy.png.html">pic/audio_strategy.png</a>
 </p>
 
 <h3 id="toc_1.5.4">AudioPolicyManagerBase::getStrategy</h3>
@@ -453,68 +526,128 @@ uint32_t AudioPolicyManagerBase::getDeviceForStrategy(routing_strategy strategy,
 <ul>
 <li>
 这是AudioPolicyService中的一个线程类，主要用于处理音频设置相关的命令。包括以下命令：
-</li>
+
 </ul>
 
 <h3 id="toc_1.6.1">命令标识</h3>
 <table>
 <tr>
-<th>命令标识</th>
-<th>描述</th>
-<th>备注</th>
+<th>
+命令标识
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
 </tr>
 <tr>
-<td>START_TONE</td>
-<td>播放电话系统中常用的特殊音调，如：TONE_DTMF_0，TONE_SUP_BUSY</td>
-<td>&nbsp;</td>
+<td>
+START_TONE
+</td>
+<td>
+播放电话系统中常用的特殊音调，如：TONE_DTMF_0，TONE_SUP_BUSY
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>STOP_TONE</td>
-<td>播放电话系统中常用的特殊音调，如：TONE_DTMF_0，TONE_SUP_BUSY</td>
-<td>&nbsp;</td>
+<td>
+STOP_TONE
+</td>
+<td>
+播放电话系统中常用的特殊音调，如：TONE_DTMF_0，TONE_SUP_BUSY
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SET_VOLUME</td>
-<td>最终会调用AudioFlinger进行音量设置</td>
-<td>&nbsp;</td>
+<td>
+SET_VOLUME
+</td>
+<td>
+最终会调用AudioFlinger进行音量设置
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SET_VOICE_VOLUME</td>
-<td>最终会调用AudioFlinger进行电话音量设置</td>
-<td>&nbsp;</td>
+<td>
+SET_VOICE_VOLUME
+</td>
+<td>
+最终会调用AudioFlinger进行电话音量设置
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>SET_PARAMETERS</td>
-<td>字符串KeyValuePairs通过AudioPolicyService::setParameters()传入</td>
-<td>"channels=2"或"sampling_rate=44100;channels=2"</td>
+<td>
+SET_PARAMETERS
+</td>
+<td>
+字符串KeyValuePairs通过AudioPolicyService::setParameters()传入
+</td>
+<td>
+"channels=2"或"sampling_rate=44100;channels=2"
+</td>
 </tr>
 </table>
 
 <h3 id="toc_1.6.2">命令对应的数据结构</h3>
 <table>
 <tr>
-<th>命令标识</th>
-<th>数据结构</th>
+<th>
+命令标识
+</th>
+<th>
+数据结构
+</th>
 </tr>
 <tr>
-<td>START_TONE</td>
-<td>ToneData</td>
+<td>
+START_TONE
+</td>
+<td>
+ToneData
+</td>
 </tr>
 <tr>
-<td>STOP_TONE</td>
-<td>ToneData</td>
+<td>
+STOP_TONE
+</td>
+<td>
+ToneData
+</td>
 </tr>
 <tr>
-<td>SET_VOLUME</td>
-<td>VolumeData</td>
+<td>
+SET_VOLUME
+</td>
+<td>
+VolumeData
+</td>
 </tr>
 <tr>
-<td>SET_VOICE_VOLUME</td>
-<td>VoiceVolumeData</td>
+<td>
+SET_VOICE_VOLUME
+</td>
+<td>
+VoiceVolumeData
+</td>
 </tr>
 <tr>
-<td>SET_PARAMETERS</td>
-<td>ParametersData</td>
+<td>
+SET_PARAMETERS
+</td>
+<td>
+ParametersData
+</td>
 </tr>
 </table>
 
@@ -602,6 +735,8 @@ bool AudioPolicyService::AudioCommandThread::threadLoop()
     return false;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -610,17 +745,6 @@ bool AudioPolicyService::AudioCommandThread::threadLoop()
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

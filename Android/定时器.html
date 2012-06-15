@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>定时器</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,6 +47,7 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">定时器</h1>
 
@@ -70,73 +71,145 @@ import java.util.Calendar;
 <ul>
 <li>
 <strong>AlarmManager提供客户端的闹铃注册，其通过Binder机制与AlarmManagerService通信，而AlarmManagerService真正提供服务</strong>
-</li>
+
 </ul>
 
 <table>
 <tr>
-<th>返回值</th>
-<th>方法名称</th>
-<th>描述</th>
+<th>
+返回值
+</th>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>void</td>
-<td>cancel(PendingIntent operation)</td>
-<td>取消已注册的闹铃</td>
+<td>
+void
+</td>
+<td>
+cancel(PendingIntent operation)
+</td>
+<td>
+取消已注册的闹铃
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>set(int type, long triggerAtTime, PendingIntent operation)</td>
-<td>注册一个新闹铃</td>
+<td>
+void
+</td>
+<td>
+set(int type, long triggerAtTime, PendingIntent operation)
+</td>
+<td>
+注册一个新闹铃
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setRepeating(int type, long triggerAtTime, long interval, PendingIntent operation)</td>
-<td>注册一个重复的闹铃</td>
+<td>
+void
+</td>
+<td>
+setRepeating(int type, long triggerAtTime, long interval, PendingIntent operation)
+</td>
+<td>
+注册一个重复的闹铃
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setTime(long millis)</td>
-<td>设置系统时钟</td>
+<td>
+void
+</td>
+<td>
+setTime(long millis)
+</td>
+<td>
+设置系统时钟
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setTimeZone(String timeZone)</td>
-<td>设置时区</td>
+<td>
+void
+</td>
+<td>
+setTimeZone(String timeZone)
+</td>
+<td>
+设置时区
+</td>
 </tr>
 </table>
 
 <h2 id="toc_1.3">AlarmManager的闹铃类型</h2>
 <table>
 <tr>
-<th>类型</th>
-<th>标识</th>
-<th>描述</th>
+<th>
+类型
+</th>
+<th>
+标识
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>int</td>
-<td>ELAPSED_REALTIME</td>
-<td>当系统进入睡眠状态时，该闹铃不会唤醒系统，直到系统下次被唤醒才传递它。该闹铃使用相对时间，通过SystemClock.elapsedRealtime()获得</td>
+<td>
+int
+</td>
+<td>
+ELAPSED_REALTIME
+</td>
+<td>
+当系统进入睡眠状态时，该闹铃不会唤醒系统，直到系统下次被唤醒才传递它。该闹铃使用相对时间，通过SystemClock.elapsedRealtime()获得
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>ELAPSED_REALTIME_WAKEUP</td>
-<td>能唤醒系统，用法同ELAPSED_REALTIME</td>
+<td>
+int
+</td>
+<td>
+ELAPSED_REALTIME_WAKEUP
+</td>
+<td>
+能唤醒系统，用法同ELAPSED_REALTIME
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>RTC</td>
-<td>当系统进入睡眠状态时，该闹铃不会唤醒系统，直到系统下次被唤醒才传递它。该闹铃使用绝对时间，通过System.currentTimeMillis()获得</td>
+<td>
+int
+</td>
+<td>
+RTC
+</td>
+<td>
+当系统进入睡眠状态时，该闹铃不会唤醒系统，直到系统下次被唤醒才传递它。该闹铃使用绝对时间，通过System.currentTimeMillis()获得
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>RTC_WAKEUP</td>
-<td>能唤醒系统，用法同RTC</td>
+<td>
+int
+</td>
+<td>
+RTC_WAKEUP
+</td>
+<td>
+能唤醒系统，用法同RTC
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>POWER_OFF_WAKEUP</td>
-<td>能唤醒系统，它是一种关机闹铃，就是说设备在关机状态下也可以唤醒系统，所以我们把它称之为关机闹铃。使用方法同RTC类型</td>
+<td>
+int
+</td>
+<td>
+POWER_OFF_WAKEUP
+</td>
+<td>
+能唤醒系统，它是一种关机闹铃，就是说设备在关机状态下也可以唤醒系统，所以我们把它称之为关机闹铃。使用方法同RTC类型
+</td>
 </tr>
 </table>
 
@@ -144,64 +217,130 @@ import java.util.Calendar;
 <ul>
 <li>
 <strong>PendingIntent可以说是Intent的进一步封装，它既包含了Intent的描述又包含了Intent行为的执行</strong>
-</li>
+
 </ul>
 
 <table>
 <tr>
-<th>返回值</th>
-<th>方法名称</th>
-<th>描述</th>
+<th>
+返回值
+</th>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>static PendingIntent</td>
-<td>getActivity(Context context, int requestCode, Intent intent, int flags)</td>
-<td>获得一个Activity的Intent</td>
+<td>
+static PendingIntent
+</td>
+<td>
+getActivity(Context context, int requestCode, Intent intent, int flags)
+</td>
+<td>
+获得一个Activity的Intent
+</td>
 </tr>
 <tr>
-<td>static PendingIntent</td>
-<td>getBroadcast(Context context, int requestCode, Intent intent, int flags)</td>
-<td>获得一个Broadcast的Intent</td>
+<td>
+static PendingIntent
+</td>
+<td>
+getBroadcast(Context context, int requestCode, Intent intent, int flags)
+</td>
+<td>
+获得一个Broadcast的Intent
+</td>
 </tr>
 <tr>
-<td>static PendingIntent</td>
-<td>getService(Context context, int requestCode, Intent intent, int flags)</td>
-<td>获得一个Service的Intent</td>
+<td>
+static PendingIntent
+</td>
+<td>
+getService(Context context, int requestCode, Intent intent, int flags)
+</td>
+<td>
+获得一个Service的Intent
+</td>
 </tr>
 <tr>
-<td>IntentSender</td>
-<td>getIntentSender()</td>
-<td>获得IntentSender对象</td>
+<td>
+IntentSender
+</td>
+<td>
+getIntentSender()
+</td>
+<td>
+获得IntentSender对象
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>send(int code)</td>
-<td>执行相关的Intent</td>
+<td>
+void
+</td>
+<td>
+send(int code)
+</td>
+<td>
+执行相关的Intent
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>send(Context context, int code, Intent intent)</td>
-<td>执行相关的Intent</td>
+<td>
+void
+</td>
+<td>
+send(Context context, int code, Intent intent)
+</td>
+<td>
+执行相关的Intent
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>send(int code, PendingIntent.OnFinished onFinished, Handler handler)</td>
-<td>执行相关的Intent</td>
+<td>
+void
+</td>
+<td>
+send(int code, PendingIntent.OnFinished onFinished, Handler handler)
+</td>
+<td>
+执行相关的Intent
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>send(Context context, int code, Intent intent, PendingIntent.OnFinished onFinished, Handler handler)</td>
-<td>执行相关的Intent</td>
+<td>
+void
+</td>
+<td>
+send(Context context, int code, Intent intent, PendingIntent.OnFinished onFinished, Handler handler)
+</td>
+<td>
+执行相关的Intent
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>send()</td>
-<td>执行相关的Intent</td>
+<td>
+void
+</td>
+<td>
+send()
+</td>
+<td>
+执行相关的Intent
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>cancel()</td>
-<td>取消当前激活的Intent</td>
+<td>
+void
+</td>
+<td>
+cancel()
+</td>
+<td>
+取消当前激活的Intent
+</td>
 </tr>
 </table>
 
@@ -210,16 +349,16 @@ import java.util.Calendar;
 <ul>
 <li>
 创建一个BroadcastReceiver的派生类,作为接收方,重写onReceive方法
-</li>
+
 <li>
 创建一个PendingIntent的实例作为发送方,使用getBroadcast方法将之与接收方关联
-</li>
+
 <li>
 创建Calendar实例,设置一个时钟,用在将来一个时间点触发
-</li>
+
 <li>
 通过getSystemService获取一个AlarmManager对象实例,进行定时发送
-</li>
+
 </ul>
 
 <h4 id="toc_1.5.1.1">发送方</h4>
@@ -261,19 +400,19 @@ public class OneShotAlarm extends BroadcastReceiver
 <ul>
 <li>
 创建一个BroadcastReceiver的派生类,作为接收方,并重写onReceive方法
-</li>
+
 <li>
 创建一个PendingIntent的实例作为发送方,使用getBroadcast方法将之与接收方关联
-</li>
+
 <li>
 设置第一次报警的时间
-</li>
+
 <li>
 通过getSystemService获取一个AlarmManager对象实例,并通过setRepeting方法设置重复的报警器
-</li>
+
 <li>
 通过cancel方法取消重复报警
-</li>
+
 </ul>
 
 <h4 id="toc_1.5.2.1">发送方</h4>
@@ -319,6 +458,8 @@ public class RepeatingAlarm extends BroadcastReceiver
 AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
 am.cancel(sender);
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -327,17 +468,6 @@ am.cancel(sender);
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

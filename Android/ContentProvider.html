@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ContentProvider</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,30 +47,31 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">ContentProvider使用详解</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">ContentProvider使用详解</a></li>
+<li><a href="#toc_1">ContentProvider使用详解</a>
 <ul>
-<li><a href="#toc_1.1">相关类</a></li>
-<li><a href="#toc_1.2">什么是ContentProvider？</a></li>
-<li><a href="#toc_1.3">什么是Uri</a></li>
+<li><a href="#toc_1.1">相关类</a>
+<li><a href="#toc_1.2">什么是ContentProvider？</a>
+<li><a href="#toc_1.3">什么是Uri</a>
 <ul>
-<li><a href="#toc_1.3.1">Uri的组成和说明</a></li>
+<li><a href="#toc_1.3.1">Uri的组成和说明</a>
 </ul>
-<li><a href="#toc_1.4">辅助类</a></li>
+<li><a href="#toc_1.4">辅助类</a>
 <ul>
-<li><a href="#toc_1.4.1">UriMatcher</a></li>
-<li><a href="#toc_1.4.2">ContentUris</a></li>
-<li><a href="#toc_1.4.3">ContentResolver</a></li>
-<li><a href="#toc_1.4.4">Uri</a></li>
+<li><a href="#toc_1.4.1">UriMatcher</a>
+<li><a href="#toc_1.4.2">ContentUris</a>
+<li><a href="#toc_1.4.3">ContentResolver</a>
+<li><a href="#toc_1.4.4">Uri</a>
 <ul>
-<li><a href="#toc_1.4.4.1">主要方法说明</a></li>
+<li><a href="#toc_1.4.4.1">主要方法说明</a>
 </ul>
 </ul>
-<li><a href="#toc_1.5">示例代码</a></li>
+<li><a href="#toc_1.5">示例代码</a>
 </ul>
 </ul>
 </div>
@@ -99,7 +100,7 @@ Uri表示需要操作的数据，主要包含两部分信息：
 
 <h3 id="toc_1.3.1">Uri的组成和说明</h3>
 <p>
-<img src="pic/uri.jpg" />
+[pic/uri.jpg]
 </p>
 <pre class="brush:text">
 1.scheme：ContentProvider（内容提供者）的scheme由Android规定为：content://。
@@ -115,7 +116,7 @@ Uri表示需要操作的数据，主要包含两部分信息：
 <ul>
 <li>
 用于匹配URI，常用方法如下
-</li>
+
 </ul>
 
 <pre class="brush:java">
@@ -137,7 +138,7 @@ int id = uriMatcher.match(uri);
 <ul>
 <li>
 用于分析URI的ID
-</li>
+
 </ul>
 
 <pre class="brush:java">
@@ -155,49 +156,91 @@ static Uri withAppendedId(Uri contentUri, long id)
 <ul>
 <li>
 外部应用可以使用ContentResolver来对ContentProvider中的数据进行添加、删除、修改和查询操作
-</li>
+
 <li>
 ContentResolver使用insert、delete、update、query方法，来操作数据。
-</li>
+
 </ul>
 
 <h3 id="toc_1.4.4">Uri</h3>
 <h4 id="toc_1.4.4.1">主要方法说明</h4>
 <table>
 <tr>
-<th>返回值</th>
-<th>方法名</th>
-<th>描述</th>
+<th>
+返回值
+</th>
+<th>
+方法名
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>Uri</td>
-<td>fromFile(File file)</td>
-<td>从文件返回Uri</td>
+<td>
+Uri
+</td>
+<td>
+fromFile(File file)
+</td>
+<td>
+从文件返回Uri
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>getLastPathSegment()</td>
-<td>获取Uri最后一个片断</td>
+<td>
+String
+</td>
+<td>
+getLastPathSegment()
+</td>
+<td>
+获取Uri最后一个片断
+</td>
 </tr>
 <tr>
-<td>List&lt;String&gt;</td>
-<td>getPathSegment()</td>
-<td>获取Uri片断列表</td>
+<td>
+List&lt;String&gt;
+</td>
+<td>
+getPathSegment()
+</td>
+<td>
+获取Uri片断列表
+</td>
 </tr>
 <tr>
-<td>String</td>
-<td>getAuthority()</td>
-<td>获取Authority部分</td>
+<td>
+String
+</td>
+<td>
+getAuthority()
+</td>
+<td>
+获取Authority部分
+</td>
 </tr>
 <tr>
-<td>Uri</td>
-<td>parse(String uriString)</td>
-<td>从字符串返回Uri</td>
+<td>
+Uri
+</td>
+<td>
+parse(String uriString)
+</td>
+<td>
+从字符串返回Uri
+</td>
 </tr>
 <tr>
-<td>Uri</td>
-<td>withAppendedPath  (Uri baseUri, String pathSegment)</td>
-<td>添加新的片断组成Uri</td>
+<td>
+Uri
+</td>
+<td>
+withAppendedPath  (Uri baseUri, String pathSegment)
+</td>
+<td>
+添加新的片断组成Uri
+</td>
 </tr>
 </table>
 
@@ -205,11 +248,13 @@ ContentResolver使用insert、delete、update、query方法，来操作数据。
 <ul>
 <li>
 <a href="ContentProvider子类.html">ContentProvider子类</a>
-</li>
+
 <li>
 <a href="BaseColumns子类.html">BaseColumns子类</a>
-</li>
+
 </ul>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -218,17 +263,6 @@ ContentResolver使用insert、delete、update、query方法，来操作数据。
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

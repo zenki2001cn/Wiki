@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Android Init Language</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,26 +47,27 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Android初始化脚本解析</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Android初始化脚本解析</a></li>
+<li><a href="#toc_1">Android初始化脚本解析</a>
 <ul>
-<li><a href="#toc_1.1">Android初始化脚本(init.rc)概述</a></li>
-<li><a href="#toc_1.2">init.rc包含四种类型的声明</a></li>
-<li><a href="#toc_1.3">Actions语法</a></li>
+<li><a href="#toc_1.1">Android初始化脚本(init.rc)概述</a>
+<li><a href="#toc_1.2">init.rc包含四种类型的声明</a>
+<li><a href="#toc_1.3">Actions语法</a>
 <ul>
-<li><a href="#toc_1.3.1">Triggers描述</a></li>
-<li><a href="#toc_1.3.2">Commands描述</a></li>
+<li><a href="#toc_1.3.1">Triggers描述</a>
+<li><a href="#toc_1.3.2">Commands描述</a>
 </ul>
-<li><a href="#toc_1.4">Services语法</a></li>
+<li><a href="#toc_1.4">Services语法</a>
 <ul>
-<li><a href="#toc_1.4.1">Options描述</a></li>
-<li><a href="#toc_1.4.2">Property描述</a></li>
+<li><a href="#toc_1.4.1">Options描述</a>
+<li><a href="#toc_1.4.2">Property描述</a>
 </ul>
-<li><a href="#toc_1.5">init.rc示例</a></li>
+<li><a href="#toc_1.5">init.rc示例</a>
 </ul>
 </ul>
 </div>
@@ -85,26 +86,26 @@
 <ul>
 <li>
 Actions
-</li>
+
 <li>
 Commands
-</li>
+
 <li>
 Services
-</li>
+
 <li>
 Options
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">Actions语法</h2>
 <ul>
 <li>
 Actions包含一序列的Commands(命令)和一个trigger(触发器)，trigger用来决定action的执行时间。当一个符合action触发条件的事件发生时，action会被加入到执行队列的末尾，除非它已经在队列里了。
-</li>
+
 <li>
    队列中的每一个action都被依次提取出，而这个action中的每个command(命令)都将被依次执行。Init在这些命令的执行期间还控制着其他的活动(设备节点的创建和注销、属性的设置、进程的重启)。
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -117,136 +118,264 @@ on &lt;trigger&gt;
 <h3 id="toc_1.3.1">Triggers描述</h3>
 <table>
 <tr>
-<th>关键字</th>
-<th>描述</th>
+<th>
+关键字
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>early-init</td>
-<td>init之前触发的时机，通常用来初始化设备节点</td>
+<td>
+early-init
+</td>
+<td>
+init之前触发的时机，通常用来初始化设备节点
+</td>
 </tr>
 <tr>
-<td>init</td>
-<td>初始化时机，在boot之前触发</td>
+<td>
+init
+</td>
+<td>
+初始化时机，在boot之前触发
+</td>
 </tr>
 <tr>
-<td>early-boot</td>
-<td>boot之前触发的时机</td>
+<td>
+early-boot
+</td>
+<td>
+boot之前触发的时机
+</td>
 </tr>
 <tr>
-<td>boot</td>
-<td>启动的时机</td>
+<td>
+boot
+</td>
+<td>
+启动的时机
+</td>
 </tr>
 <tr>
-<td>&lt;name&gt;=&lt;value&gt;</td>
-<td>属性&lt;name&gt;设置为指定的&lt;value&gt;时触发</td>
+<td>
+&lt;name&gt;=&lt;value&gt;
+</td>
+<td>
+属性&lt;name&gt;设置为指定的&lt;value&gt;时触发
+</td>
 </tr>
 <tr>
-<td>device-added-&lt;path&gt;、device-removed-&lt;path&gt;</td>
-<td>添加或移除设备节点时触发</td>
+<td>
+device-added-&lt;path&gt;、device-removed-&lt;path&gt;
+</td>
+<td>
+添加或移除设备节点时触发
+</td>
 </tr>
 <tr>
-<td>service-exited-&lt;name&gt;</td>
-<td>当特定的设备退出时触发</td>
+<td>
+service-exited-&lt;name&gt;
+</td>
+<td>
+当特定的设备退出时触发
+</td>
 </tr>
 </table>
 
 <h3 id="toc_1.3.2">Commands描述</h3>
 <table>
 <tr>
-<th>关键字</th>
-<th>描述</th>
+<th>
+关键字
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>exec &lt;path&gt; [ &lt;argument&gt; ]*</td>
-<td>执行一个程序，并阻塞直到程序退出</td>
+<td>
+exec &lt;path&gt; [ &lt;argument&gt; ]*
+</td>
+<td>
+执行一个程序，并阻塞直到程序退出
+</td>
 </tr>
 <tr>
-<td>export &lt;name&gt; &lt;value&gt;</td>
-<td>设置环境变量</td>
+<td>
+export &lt;name&gt; &lt;value&gt;
+</td>
+<td>
+设置环境变量
+</td>
 </tr>
 <tr>
-<td>ifup &lt;interface&gt;</td>
-<td>开启网络接口</td>
+<td>
+ifup &lt;interface&gt;
+</td>
+<td>
+开启网络接口
+</td>
 </tr>
 <tr>
-<td>import &lt;filename&gt;</td>
-<td>加载初始化配置文件，对当前的配置做扩展</td>
+<td>
+import &lt;filename&gt;
+</td>
+<td>
+加载初始化配置文件，对当前的配置做扩展
+</td>
 </tr>
 <tr>
-<td>hostname &lt;name&gt;</td>
-<td>设置主机名</td>
+<td>
+hostname &lt;name&gt;
+</td>
+<td>
+设置主机名
+</td>
 </tr>
 <tr>
-<td>chmod &lt;octal-mode&gt; &lt;path&gt;</td>
-<td>更改文件访问权限</td>
+<td>
+chmod &lt;octal-mode&gt; &lt;path&gt;
+</td>
+<td>
+更改文件访问权限
+</td>
 </tr>
 <tr>
-<td>chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;</td>
-<td>更改文件的所有者和组</td>
+<td>
+chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;
+</td>
+<td>
+更改文件的所有者和组
+</td>
 </tr>
 <tr>
-<td>class_start &lt;serviceclass&gt;</td>
-<td>开启指定的service，如果他们没有在运行</td>
+<td>
+class_start &lt;serviceclass&gt;
+</td>
+<td>
+开启指定的service，如果他们没有在运行
+</td>
 </tr>
 <tr>
-<td>class_stop &lt;serviceclass&gt;</td>
-<td>停止已经运行的指定的service</td>
+<td>
+class_stop &lt;serviceclass&gt;
+</td>
+<td>
+停止已经运行的指定的service
+</td>
 </tr>
 <tr>
-<td>domainname &lt;name&gt;</td>
-<td>设置域名</td>
+<td>
+domainname &lt;name&gt;
+</td>
+<td>
+设置域名
+</td>
 </tr>
 <tr>
-<td>insmod &lt;path&gt;</td>
-<td>安装系统模块</td>
+<td>
+insmod &lt;path&gt;
+</td>
+<td>
+安装系统模块
+</td>
 </tr>
 <tr>
-<td>mkdir &lt;path&gt; [mode] [owner] [group]</td>
-<td>创建文件夹</td>
+<td>
+mkdir &lt;path&gt; [mode] [owner] [group]
+</td>
+<td>
+创建文件夹
+</td>
 </tr>
 <tr>
-<td>mount &lt;type&gt; &lt;device&gt; &lt;dir&gt; [ &lt;mountpoint&gt; ]*</td>
-<td>挂载设备，&lt;mountoption&gt;包括 "ro"、"rw"、"remount"、"noatime"</td>
+<td>
+mount &lt;type&gt; &lt;device&gt; &lt;dir&gt; [ &lt;mountpoint&gt; ]*
+</td>
+<td>
+挂载设备，&lt;mountoption&gt;包括 "ro"、"rw"、"remount"、"noatime"
+</td>
 </tr>
 <tr>
-<td>setkey</td>
-<td>未使用</td>
+<td>
+setkey
+</td>
+<td>
+未使用
+</td>
 </tr>
 <tr>
-<td>setprop &lt;name&gt; &lt;value&gt;</td>
-<td>设置系统属性值</td>
+<td>
+setprop &lt;name&gt; &lt;value&gt;
+</td>
+<td>
+设置系统属性值
+</td>
 </tr>
 <tr>
-<td>setrlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;</td>
-<td>设置资源限制</td>
+<td>
+setrlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;
+</td>
+<td>
+设置资源限制
+</td>
 </tr>
 <tr>
-<td>start &lt;service&gt;</td>
-<td>开启service，如果他们没有在运行</td>
+<td>
+start &lt;service&gt;
+</td>
+<td>
+开启service，如果他们没有在运行
+</td>
 </tr>
 <tr>
-<td>restart &lt;service&gt;</td>
-<td>重启service，停止之前运行的服务，重新启动</td>
+<td>
+restart &lt;service&gt;
+</td>
+<td>
+重启service，停止之前运行的服务，重新启动
+</td>
 </tr>
 <tr>
-<td>stop &lt;service&gt;</td>
-<td>停止已经运行的service</td>
+<td>
+stop &lt;service&gt;
+</td>
+<td>
+停止已经运行的service
+</td>
 </tr>
 <tr>
-<td>symlink &lt;target&gt; &lt;path&gt;</td>
-<td>创建软链接</td>
+<td>
+symlink &lt;target&gt; &lt;path&gt;
+</td>
+<td>
+创建软链接
+</td>
 </tr>
 <tr>
-<td>sysclktz &lt;mins_west_of_gmt&gt;</td>
-<td>设置系统时钟基准(0代表时钟滴答以格林威治平均时(GMT)为准)</td>
+<td>
+sysclktz &lt;mins_west_of_gmt&gt;
+</td>
+<td>
+设置系统时钟基准(0代表时钟滴答以格林威治平均时(GMT)为准)
+</td>
 </tr>
 <tr>
-<td>trigger &lt;event&gt;</td>
-<td>触发一个事件。用于将一个action与另一个action排列</td>
+<td>
+trigger &lt;event&gt;
+</td>
+<td>
+触发一个事件。用于将一个action与另一个action排列
+</td>
 </tr>
 <tr>
-<td>write &lt;path&gt; &lt;string&gt; [ &lt;string&gt; ]*</td>
-<td>打开文件，并写入内容</td>
+<td>
+write &lt;path&gt; &lt;string&gt; [ &lt;string&gt; ]*
+</td>
+<td>
+打开文件，并写入内容
+</td>
 </tr>
 </table>
 
@@ -261,68 +390,128 @@ service &lt;name&gt; &lt;pathname&gt; [&lt;argument&gt;] *
 <h3 id="toc_1.4.1">Options描述</h3>
 <table>
 <tr>
-<th>关键字</th>
-<th>描述</th>
+<th>
+关键字
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>critical</td>
-<td>说明这是一个对于设备关键的服务。如果他四分钟内退出大于四次，系统将会重启并进入recovery(恢复)模式</td>
+<td>
+critical
+</td>
+<td>
+说明这是一个对于设备关键的服务。如果他四分钟内退出大于四次，系统将会重启并进入recovery(恢复)模式
+</td>
 </tr>
 <tr>
-<td>disabled</td>
-<td>不允许自动运行</td>
+<td>
+disabled
+</td>
+<td>
+不允许自动运行
+</td>
 </tr>
 <tr>
-<td>setenv &lt;name&gt; &lt;value&gt;</td>
-<td>在进程启动时将环境变量&lt;name&gt;设置为&lt;value&gt;</td>
+<td>
+setenv &lt;name&gt; &lt;value&gt;
+</td>
+<td>
+在进程启动时将环境变量&lt;name&gt;设置为&lt;value&gt;
+</td>
 </tr>
 <tr>
-<td>socket &lt;type&gt; &lt;name&gt; &lt;perm&gt; [ &lt;user&gt; [ &lt;group&gt; ] ]</td>
-<td>创建一个unix域的socket,名为/dev/socket/&lt;name&gt;,并将它的描述符传递给启动进程。&lt;type&gt; 必须是 "dgram"或"stream"。user和group默认为0</td>
+<td>
+socket &lt;type&gt; &lt;name&gt; &lt;perm&gt; [ &lt;user&gt; [ &lt;group&gt; ] ]
+</td>
+<td>
+创建一个unix域的socket,名为/dev/socket/&lt;name&gt;,并将它的描述符传递给启动进程。&lt;type&gt; 必须是 "dgram"或"stream"。user和group默认为0
+</td>
 </tr>
 <tr>
-<td>user &lt;username&gt;</td>
-<td>执行service前改变username，默认是root</td>
+<td>
+user &lt;username&gt;
+</td>
+<td>
+执行service前改变username，默认是root
+</td>
 </tr>
 <tr>
-<td>group &lt;groupname&gt; [ &lt;groupname&gt; ]*</td>
-<td>执行service前改变groupname，默认是root</td>
+<td>
+group &lt;groupname&gt; [ &lt;groupname&gt; ]*
+</td>
+<td>
+执行service前改变groupname，默认是root
+</td>
 </tr>
 <tr>
-<td>capability [ &lt;capability&gt; ]+</td>
-<td>执行service前设置linux capability</td>
+<td>
+capability [ &lt;capability&gt; ]+
+</td>
+<td>
+执行service前设置linux capability
+</td>
 </tr>
 <tr>
-<td>oneshot</td>
-<td>只执行一次，服务退出时不重启</td>
+<td>
+oneshot
+</td>
+<td>
+只执行一次，服务退出时不重启
+</td>
 </tr>
 <tr>
-<td>class &lt;name&gt;</td>
-<td>为service指定类名，所有同一类的服务可以同时启动和停止。如果不通过class选项指定一个类，则默认为"default"类服务</td>
+<td>
+class &lt;name&gt;
+</td>
+<td>
+为service指定类名，所有同一类的服务可以同时启动和停止。如果不通过class选项指定一个类，则默认为"default"类服务
+</td>
 </tr>
 <tr>
-<td>onrestart</td>
-<td>当服务重启，执行一个命令</td>
+<td>
+onrestart
+</td>
+<td>
+当服务重启，执行一个命令
+</td>
 </tr>
 </table>
 
 <h3 id="toc_1.4.2">Property描述</h3>
 <table>
 <tr>
-<th>关键字</th>
-<th>描述</th>
+<th>
+关键字
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>init.action</td>
-<td>action被执行</td>
+<td>
+init.action
+</td>
+<td>
+action被执行
+</td>
 </tr>
 <tr>
-<td>init.command</td>
-<td>command被执行</td>
+<td>
+init.command
+</td>
+<td>
+command被执行
+</td>
 </tr>
 <tr>
-<td>init.svc.&lt;name&gt;</td>
-<td>service状态，如"stopped","running","restarting"</td>
+<td>
+init.svc.&lt;name&gt;
+</td>
+<td>
+service状态，如"stopped","running","restarting"
+</td>
 </tr>
 </table>
 
@@ -384,6 +573,8 @@ service /system/bin/logwrapper /sbin/akmd
     user akmd
     group akmd
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -392,17 +583,6 @@ service /system/bin/logwrapper /sbin/akmd
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

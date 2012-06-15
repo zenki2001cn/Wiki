@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>大端和小端模式</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,15 +47,16 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">大端和小端模式</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">大端和小端模式</a></li>
+<li><a href="#toc_1">大端和小端模式</a>
 <ul>
-<li><a href="#toc_1.1">端模式的由来</a></li>
-<li><a href="#toc_1.2">大端和小端示例</a></li>
+<li><a href="#toc_1.1">端模式的由来</a>
+<li><a href="#toc_1.2">大端和小端示例</a>
 </ul>
 </ul>
 </div>
@@ -73,40 +74,78 @@
 <ul>
 <li>
 如果将一个32位的整数0x12345678存放到一个整型变量（int）中，这个整型在内存中的存储分布情况分为大端(Big-Endian)和小端(Little-Endian)。
-</li>
+
 <li>
 <code>小端</code>模式更符合人的习惯，通常<code>高位的字节存放在内存的高位，低位的字节存放在内存的低位</code>。通常我们遇到的端模式属于小端模式。
-</li>
+
 <li>
 <code>大端</code>模式将<code>高位字节存放在内存的低位，低位字节存放在内存的高位</code>，有利于内存地址从左到右按照由低到高的顺序输出。
-</li>
+
 </ul>
 <table>
 <tr>
-<th>&nbsp;</th>
-<th>内存0x00</th>
-<th>内存0x01</th>
-<th>内存0x02</th>
-<th>内存0x03</th>
-<th>内存低位...内存高位</th>
+<th>
+&nbsp;
+</th>
+<th>
+内存0x00
+</th>
+<th>
+内存0x01
+</th>
+<th>
+内存0x02
+</th>
+<th>
+内存0x03
+</th>
+<th>
+内存低位...内存高位
+</th>
 </tr>
 <tr>
-<td>小端模式</td>
-<td>0x78</td>
-<td>0x56</td>
-<td>0x34</td>
-<td>0x12</td>
-<td>符合人的习惯</td>
+<td>
+小端模式
+</td>
+<td>
+0x78
+</td>
+<td>
+0x56
+</td>
+<td>
+0x34
+</td>
+<td>
+0x12
+</td>
+<td>
+符合人的习惯
+</td>
 </tr>
 <tr>
-<td>大端模式</td>
-<td>0x12</td>
-<td>0x34</td>
-<td>0x56</td>
-<td>0x78</td>
-<td>有利于内存地址输出</td>
+<td>
+大端模式
+</td>
+<td>
+0x12
+</td>
+<td>
+0x34
+</td>
+<td>
+0x56
+</td>
+<td>
+0x78
+</td>
+<td>
+有利于内存地址输出
+</td>
 </tr>
 </table>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -115,17 +154,6 @@
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

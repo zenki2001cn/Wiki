@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Paint使用</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,6 +47,7 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Paint使用</h1>
 
@@ -59,43 +60,79 @@ import android.graphics.Paint;
 <ul>
 <li>
 Paint类主要包含了绘画的基本信息，如字体风格，颜色信息等等。
-</li>
+
 <li>
 Canvas类的一系列draw方法需要用到Paint对象。
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">主要方法列表</h2>
 <table>
 <tr>
-<th>返回值</th>
-<th>方法</th>
-<th>描述</th>
+<th>
+返回值
+</th>
+<th>
+方法
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>void</td>
-<td>setARGB(int a, int r, int g, int b)</td>
-<td>设置ARGB值</td>
+<td>
+void
+</td>
+<td>
+setARGB(int a, int r, int g, int b)
+</td>
+<td>
+设置ARGB值
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setColor(int color)</td>
-<td>设置颜色</td>
+<td>
+void
+</td>
+<td>
+setColor(int color)
+</td>
+<td>
+设置颜色
+</td>
 </tr>
 <tr>
-<td>Shader</td>
-<td>setShader(Shader  shader)</td>
-<td>设置阴影</td>
+<td>
+Shader
+</td>
+<td>
+setShader(Shader  shader)
+</td>
+<td>
+设置阴影
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setTextSize(float textSize)</td>
-<td>设置文字大小</td>
+<td>
+void
+</td>
+<td>
+setTextSize(float textSize)
+</td>
+<td>
+设置文字大小
+</td>
 </tr>
 <tr>
-<td>void</td>
-<td>setUnderlineText(boolean underlineText)</td>
-<td>设置文字下划线</td>
+<td>
+void
+</td>
+<td>
+setUnderlineText(boolean underlineText)
+</td>
+<td>
+设置文字下划线
+</td>
 </tr>
 </table>
 
@@ -118,6 +155,8 @@ p.setAntiAlias(true);
 
 canvas.drawText(mstrTitle,0,100,p);
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -126,17 +165,6 @@ canvas.drawText(mstrTitle,0,100,p);
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

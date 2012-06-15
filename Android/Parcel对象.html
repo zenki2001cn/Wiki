@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Parcel对象</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,6 +47,7 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Parcel详解</h1>
 <p>
@@ -55,22 +56,22 @@
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Parcel详解</a></li>
+<li><a href="#toc_1">Parcel详解</a>
 <ul>
-<li><a href="#toc_1.1">相关类</a></li>
-<li><a href="#toc_1.2">基本流程</a></li>
-<li><a href="#toc_1.3">基本类型及计算原则</a></li>
+<li><a href="#toc_1.1">相关类</a>
+<li><a href="#toc_1.2">基本流程</a>
+<li><a href="#toc_1.3">基本类型及计算原则</a>
 <ul>
-<li><a href="#toc_1.3.1">基本数据类型的大小</a></li>
-<li><a href="#toc_1.3.2">偏移量</a></li>
-<li><a href="#toc_1.3.3">示例代码</a></li>
+<li><a href="#toc_1.3.1">基本数据类型的大小</a>
+<li><a href="#toc_1.3.2">偏移量</a>
+<li><a href="#toc_1.3.3">示例代码</a>
 </ul>
 </ul>
-<li><a href="#toc_2">实现Parcelable接口</a></li>
+<li><a href="#toc_2">实现Parcelable接口</a>
 <ul>
-<li><a href="#toc_2.1">已知子类</a></li>
-<li><a href="#toc_2.2">基本流程</a></li>
-<li><a href="#toc_2.3">示例代码</a></li>
+<li><a href="#toc_2.1">已知子类</a>
+<li><a href="#toc_2.2">基本流程</a>
+<li><a href="#toc_2.3">示例代码</a>
 </ul>
 </ul>
 </div>
@@ -85,13 +86,13 @@ import android.os.Parcelable;
 <ul>
 <li>
 通过<code>Parcel.obtain()</code>构造一个对象
-</li>
+
 <li>
 通过<code>create*</code>、<code>write*</code>、<code>read*</code>等系列方法对数据进行操作
-</li>
+
 <li>
 <code>setDataPosition()</code>方法设置当前的偏移量，<code>dataPosition()</code>返回当前的偏移量，<code>dataSize()</code>返回数据大小，以偏移量为单位
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">基本类型及计算原则</h2>
@@ -99,40 +100,76 @@ import android.os.Parcelable;
 <h3 id="toc_1.3.1">基本数据类型的大小</h3>
 <table>
 <tr>
-<th>数据类型</th>
-<th>偏移量大小</th>
+<th>
+数据类型
+</th>
+<th>
+偏移量大小
+</th>
 </tr>
 <tr>
-<td>boolean</td>
-<td>1bit</td>
+<td>
+boolean
+</td>
+<td>
+1bit
+</td>
 </tr>
 <tr>
-<td>byte</td>
-<td>8bit</td>
+<td>
+byte
+</td>
+<td>
+8bit
+</td>
 </tr>
 <tr>
-<td>char</td>
-<td>16bit</td>
+<td>
+char
+</td>
+<td>
+16bit
+</td>
 </tr>
 <tr>
-<td>short</td>
-<td>16bit</td>
+<td>
+short
+</td>
+<td>
+16bit
+</td>
 </tr>
 <tr>
-<td>int</td>
-<td>32bit</td>
+<td>
+int
+</td>
+<td>
+32bit
+</td>
 </tr>
 <tr>
-<td>float</td>
-<td>32bit</td>
+<td>
+float
+</td>
+<td>
+32bit
+</td>
 </tr>
 <tr>
-<td>long</td>
-<td>64bit</td>
+<td>
+long
+</td>
+<td>
+64bit
+</td>
 </tr>
 <tr>
-<td>double</td>
-<td>64bit</td>
+<td>
+double
+</td>
+<td>
+64bit
+</td>
 </tr>
 </table>
 
@@ -159,56 +196,108 @@ String s = parcel.readString();
 <h2 id="toc_2.1">已知子类</h2>
 <table>
 <tr>
-<th>类名</th>
-<th>描述</th>
+<th>
+类名
+</th>
+<th>
+描述
+</th>
 </tr>
 <tr>
-<td>Bitmap</td>
-<td>&nbsp;</td>
+<td>
+Bitmap
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Bundle</td>
-<td>&nbsp;</td>
+<td>
+Bundle
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Gesture</td>
-<td>&nbsp;</td>
+<td>
+Gesture
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Intent</td>
-<td>&nbsp;</td>
+<td>
+Intent
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>KeyEvent</td>
-<td>&nbsp;</td>
+<td>
+KeyEvent
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Message</td>
-<td>&nbsp;</td>
+<td>
+Message
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Notification</td>
-<td>&nbsp;</td>
+<td>
+Notification
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Rect</td>
-<td>&nbsp;</td>
+<td>
+Rect
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>ServiceInfo</td>
-<td>&nbsp;</td>
+<td>
+ServiceInfo
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Surface</td>
-<td>&nbsp;</td>
+<td>
+Surface
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Uri</td>
-<td>&nbsp;</td>
+<td>
+Uri
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>WifiInfo</td>
-<td>&nbsp;</td>
+<td>
+WifiInfo
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -216,7 +305,7 @@ String s = parcel.readString();
 <ul>
 <li>
 从Parcelable类继承，并实现<code>Parcelable.Creator接口</code>和<code>writeToParcel</code>方法
-</li>
+
 </ul>
 
 <h2 id="toc_2.3">示例代码</h2>
@@ -255,6 +344,8 @@ public class MyParcelable implements Parcelable {
     }
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -263,17 +354,6 @@ public class MyParcelable implements Parcelable {
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

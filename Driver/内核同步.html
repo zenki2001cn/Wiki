@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>内核同步</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,63 +47,64 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">内核同步</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">内核同步</a></li>
+<li><a href="#toc_1">内核同步</a>
 <ul>
-<li><a href="#toc_1.1">相关头文件</a></li>
-<li><a href="#toc_1.2">中断与异常处理方式的比较</a></li>
-<li><a href="#toc_1.3">几种同步方式的比较</a></li>
-<li><a href="#toc_1.4">per-cpu变量</a></li>
+<li><a href="#toc_1.1">相关头文件</a>
+<li><a href="#toc_1.2">中断与异常处理方式的比较</a>
+<li><a href="#toc_1.3">几种同步方式的比较</a>
+<li><a href="#toc_1.4">per-cpu变量</a>
 <ul>
-<li><a href="#toc_1.4.1">方法列表</a></li>
+<li><a href="#toc_1.4.1">方法列表</a>
 </ul>
-<li><a href="#toc_1.5">优化屏障和内存屏障</a></li>
+<li><a href="#toc_1.5">优化屏障和内存屏障</a>
 <ul>
-<li><a href="#toc_1.5.1">方法列表</a></li>
+<li><a href="#toc_1.5.1">方法列表</a>
 </ul>
-<li><a href="#toc_1.6">原子操作</a></li>
+<li><a href="#toc_1.6">原子操作</a>
 <ul>
-<li><a href="#toc_1.6.1">atomic_t</a></li>
-<li><a href="#toc_1.6.2">方法列表</a></li>
+<li><a href="#toc_1.6.1">atomic_t</a>
+<li><a href="#toc_1.6.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.7">信号量</a></li>
+<li><a href="#toc_1.7">信号量</a>
 <ul>
-<li><a href="#toc_1.7.1">semaphore</a></li>
-<li><a href="#toc_1.7.2">方法列表</a></li>
+<li><a href="#toc_1.7.1">semaphore</a>
+<li><a href="#toc_1.7.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.8">读写信号量</a></li>
+<li><a href="#toc_1.8">读写信号量</a>
 <ul>
-<li><a href="#toc_1.8.1">rw_semaphore</a></li>
-<li><a href="#toc_1.8.2">方法列表</a></li>
+<li><a href="#toc_1.8.1">rw_semaphore</a>
+<li><a href="#toc_1.8.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.9">自旋锁</a></li>
+<li><a href="#toc_1.9">自旋锁</a>
 <ul>
-<li><a href="#toc_1.9.1">spinlock_t</a></li>
-<li><a href="#toc_1.9.2">方法列表</a></li>
+<li><a href="#toc_1.9.1">spinlock_t</a>
+<li><a href="#toc_1.9.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.10">读写锁</a></li>
+<li><a href="#toc_1.10">读写锁</a>
 <ul>
-<li><a href="#toc_1.10.1">rwlock_t</a></li>
-<li><a href="#toc_1.10.2">方法列表</a></li>
+<li><a href="#toc_1.10.1">rwlock_t</a>
+<li><a href="#toc_1.10.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.11">顺序锁</a></li>
+<li><a href="#toc_1.11">顺序锁</a>
 <ul>
-<li><a href="#toc_1.11.1">seqlock_t</a></li>
-<li><a href="#toc_1.11.2">方法列表</a></li>
+<li><a href="#toc_1.11.1">seqlock_t</a>
+<li><a href="#toc_1.11.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.12">读-拷贝-更新</a></li>
+<li><a href="#toc_1.12">读-拷贝-更新</a>
 <ul>
-<li><a href="#toc_1.12.1">rcu_head</a></li>
-<li><a href="#toc_1.12.2">方法列表</a></li>
+<li><a href="#toc_1.12.1">rcu_head</a>
+<li><a href="#toc_1.12.2">方法列表</a>
 </ul>
-<li><a href="#toc_1.13">completion</a></li>
+<li><a href="#toc_1.13">completion</a>
 <ul>
-<li><a href="#toc_1.13.1">completion</a></li>
-<li><a href="#toc_1.13.2">方法列表</a></li>
+<li><a href="#toc_1.13.1">completion</a>
+<li><a href="#toc_1.13.2">方法列表</a>
 </ul>
 </ul>
 </ul>
@@ -126,133 +127,291 @@
 <h2 id="toc_1.2">中断与异常处理方式的比较</h2>
 <table>
 <tr>
-<th>访问共享数据的内核控制路径</th>
-<th>单CPU同步方式</th>
-<th>多CPU同步方式</th>
-<th>备注</th>
+<th>
+访问共享数据的内核控制路径
+</th>
+<th>
+单CPU同步方式
+</th>
+<th>
+多CPU同步方式
+</th>
+<th>
+备注
+</th>
 </tr>
 <tr>
-<td>异常</td>
-<td>信号量</td>
-<td>无</td>
-<td>在某些情况下需要禁用内核抢占特性</td>
+<td>
+异常
+</td>
+<td>
+信号量
+</td>
+<td>
+无
+</td>
+<td>
+在某些情况下需要禁用内核抢占特性
+</td>
 </tr>
 <tr>
-<td>中断</td>
-<td>禁止本地中断</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>中断可嵌套执行，因此需要禁用本地中断，并保护临界区</td>
+<td>
+中断
+</td>
+<td>
+禁止本地中断
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+中断可嵌套执行，因此需要禁用本地中断，并保护临界区
+</td>
 </tr>
 <tr>
-<td>软中断</td>
-<td>无</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>软中断在单CPU上串行执行，在多CPU上可能并发</td>
+<td>
+软中断
+</td>
+<td>
+无
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+软中断在单CPU上串行执行，在多CPU上可能并发
+</td>
 </tr>
 <tr>
-<td>一个tasklet</td>
-<td>无</td>
-<td>无</td>
-<td>同一tasklet只能在单CPU上串行执行</td>
+<td>
+一个tasklet
+</td>
+<td>
+无
+</td>
+<td>
+无
+</td>
+<td>
+同一tasklet只能在单CPU上串行执行
+</td>
 </tr>
 <tr>
-<td>多个tasklet</td>
-<td>无</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>多个tasklet在单CPU上串行执行，在多CPU上可能并发</td>
+<td>
+多个tasklet
+</td>
+<td>
+无
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+多个tasklet在单CPU上串行执行，在多CPU上可能并发
+</td>
 </tr>
 <tr>
-<td>异常与中断</td>
-<td>禁止本地中断</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>&nbsp;</td>
+<td>
+异常与中断
+</td>
+<td>
+禁止本地中断
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>异常与可延迟函数</td>
-<td>禁止本地软中断</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>禁止本地软中断避免竞争，并使用自旋锁防止多CPU访问</td>
+<td>
+异常与可延迟函数
+</td>
+<td>
+禁止本地软中断
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+禁止本地软中断避免竞争，并使用自旋锁防止多CPU访问
+</td>
 </tr>
 <tr>
-<td>中断与可延迟函数</td>
-<td>禁止本地中断</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>禁止本地中断避免竞争，并使用自旋锁防止多CPU访问</td>
+<td>
+中断与可延迟函数
+</td>
+<td>
+禁止本地中断
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+禁止本地中断避免竞争，并使用自旋锁防止多CPU访问
+</td>
 </tr>
 <tr>
-<td>异常、中断与可延迟函数</td>
-<td>禁止本地中断</td>
-<td>自旋锁+禁止本地中断+禁止内核抢占</td>
-<td>禁止本地中断避免竞争，并使用自旋锁防止多CPU访问</td>
+<td>
+异常、中断与可延迟函数
+</td>
+<td>
+禁止本地中断
+</td>
+<td>
+自旋锁+禁止本地中断+禁止内核抢占
+</td>
+<td>
+禁止本地中断避免竞争，并使用自旋锁防止多CPU访问
+</td>
 </tr>
 </table>
 
 <h2 id="toc_1.3">几种同步方式的比较</h2>
 <table>
 <tr>
-<th>同步方式</th>
-<th>产生的影响</th>
-<th>备注</th>
+<th>
+同步方式
+</th>
+<th>
+产生的影响
+</th>
+<th>
+备注
+</th>
 </tr>
 <tr>
-<td>禁止本地中断</td>
-<td>禁止触发一个CPU上的中断，同时也禁止了软中断的发生</td>
-<td>&nbsp;</td>
+<td>
+禁止本地中断
+</td>
+<td>
+禁止触发一个CPU上的中断，同时也禁止了软中断的发生
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>禁止本地软中断</td>
-<td>禁止触发一个CPU上的软中断，但仍然可以触发硬件中断</td>
-<td>&nbsp;</td>
+<td>
+禁止本地软中断
+</td>
+<td>
+禁止触发一个CPU上的软中断，但仍然可以触发硬件中断
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>per-cpu变量</td>
-<td>不同CPU可以并发访问，但不能保护中断和可延迟函数</td>
-<td>&nbsp;</td>
+<td>
+per-cpu变量
+</td>
+<td>
+不同CPU可以并发访问，但不能保护中断和可延迟函数
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>内存屏障</td>
-<td>确保汇编语言的顺序执行</td>
-<td>&nbsp;</td>
+<td>
+内存屏障
+</td>
+<td>
+确保汇编语言的顺序执行
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>原子操作</td>
-<td>对引用计数的操作为原子操作</td>
-<td>&nbsp;</td>
+<td>
+原子操作
+</td>
+<td>
+对引用计数的操作为原子操作
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>信号量</td>
-<td>无法获取共享资源时使进程挂起等待（支持进程的可中断或不可中断状态），允许内核抢占</td>
-<td>&nbsp;</td>
+<td>
+信号量
+</td>
+<td>
+无法获取共享资源时使进程挂起等待（支持进程的可中断或不可中断状态），允许内核抢占
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>读写信号量</td>
-<td>读者可共享资源，写者需要等待，并使进程挂起等待（支持进程的可中断或不可中断状态）</td>
-<td>&nbsp;</td>
+<td>
+读写信号量
+</td>
+<td>
+读者可共享资源，写者需要等待，并使进程挂起等待（支持进程的可中断或不可中断状态）
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>自旋锁</td>
-<td>自动禁止内核抢占特性（自动禁止本地中断），导致系统忙等待</td>
-<td>&nbsp;</td>
+<td>
+自旋锁
+</td>
+<td>
+自动禁止内核抢占特性（自动禁止本地中断），导致系统忙等待
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>读写锁</td>
-<td>读者可共享资源，写者必须等待读者或另一个写释放锁才能获取共享资源，自动禁止内核抢占</td>
-<td>&nbsp;</td>
+<td>
+读写锁
+</td>
+<td>
+读者可共享资源，写者必须等待读者或另一个写释放锁才能获取共享资源，自动禁止内核抢占
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>顺序锁</td>
-<td>写者不必等待读者释放锁，但是读者必须检查顺序计数器，并反复读取共享资源，使用内存屏障、禁止内核抢占</td>
-<td>&nbsp;</td>
+<td>
+顺序锁
+</td>
+<td>
+写者不必等待读者释放锁，但是读者必须检查顺序计数器，并反复读取共享资源，使用内存屏障、禁止内核抢占
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>RCU</td>
-<td>读者和写者不需要锁进行同步，它们都访问共享数据的副本，在某一个特定时刻，写者会更新该副本的链表</td>
-<td>&nbsp;</td>
+<td>
+RCU
+</td>
+<td>
+读者和写者不需要锁进行同步，它们都访问共享数据的副本，在某一个特定时刻，写者会更新该副本的链表
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>Completion</td>
-<td>类似于信号量，不同的是Completion会使用自旋锁保护up()方法防止并发</td>
-<td>&nbsp;</td>
+<td>
+Completion
+</td>
+<td>
+类似于信号量，不同的是Completion会使用自旋锁保护up()方法防止并发
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -260,13 +419,13 @@
 <ul>
 <li>
 最简单也是最重要的同步技术是内核变量声明成per-cpu变量。per-cpu变量主要是数据结构的数组，系统的每个CPU对应数组的一个元素。
-</li>
+
 <li>
 一个CPU不应该访问与其他CPU对应的数组元素，另外，它可以随意读或修改它自己的元素而不用担心出现竞争条件。
-</li>
+
 <li>
 虽然per-cpu变量为来自不同CPU的并发访问提供保护，但对来自异步函数（中断处理程序和可延迟函数）的访问不提供保护，在这种情况下需要另外的同步方法。
-</li>
+
 </ul>
 
 <h3 id="toc_1.4.1">方法列表</h3>
@@ -300,13 +459,13 @@ per_cpu_ptr(pointer, cpu);
 <ul>
 <li>
 优化屏障保证编译程序不会混淆放在原语操作之前的汇编语言指令。如volatile关键字禁止编译器把asm指令与程序中的其他指令重新组合，memory关键字强制编译器假定RAM中的所有内存单元已被汇编指令修改；因此，编译器不能使用存放在CPU寄存器中的内存单元的值来优化asm指令前的代码。优化屏障并不保证不使当前CPU把汇编语言指令混在一起执行——这是内存屏障的作用。
-</li>
+
 <li>
 内存屏障确保在原语之后的操作开始执行之前，原语之前的操作已经完成。因此，内存屏障类似防火墙，让任何汇编语言指令都不能通过。
-</li>
+
 <li>
 内存屏障的实现依赖于系统的体系结构。
-</li>
+
 </ul>
 
 <h3 id="toc_1.5.1">方法列表</h3>
@@ -334,13 +493,13 @@ smp_wmb();
 <ul>
 <li>
 所谓原子操作，就是该操作绝不会在执行完毕前被任何其他任务或事件打断，也就说，它的最小的执行单位，不可能有比它更小的执行单位，因此这里的原子实际是使用了物理学里的物质微粒的概念。
-</li>
+
 <li>
 原子操作需要硬件的支持，因此是架构相关的，它们都使用汇编语言实现，因为C语言并不能实现这样的操作。
-</li>
+
 <li>
 原子操作主要用于实现资源计数，很多引用计数(refcnt)就是通过原子操作实现的。
-</li>
+
 </ul>
 
 <h3 id="toc_1.6.1">atomic_t</h3>
@@ -399,16 +558,16 @@ int atomic_dec_return(atomic_t * v);
 <ul>
 <li>
 Linux内核的信号量在概念和原理上与用户态的System V的IPC机制信号量是一样的，但是它绝不可能在内核之外使用，因此它与System V的IPC机制信号量毫不相干。
-</li>
+
 <li>
 信号量在创建时需要设置一个初始值，表示同时可以有几个任务可以访问该信号量保护的共享资源，初始值为1就变成互斥锁（Mutex），即同时只能有一个任务可以访问信号量保护的共享资源。
-</li>
+
 <li>
 一个任务要想访问共享资源，首先必须得到信号量，获取信号量的操作将把信号量的值减1，若当前信号量的值为负数，表明无法获得信号量，该任务必须挂起在该信号量的等待队列等待该信号量可用；若当前信号量的值为非负数，表示可以获得信号量，因而可以立刻访问被该信号量保护的共享资源。
-</li>
+
 <li>
 当任务访问完被信号量保护的共享资源后，必须释放信号量，释放信号量通过把信号量的值加1实现，如果信号量的值为非正数，表明有任务等待当前信号量，因此它也唤醒所有等待该信号量的任务。
-</li>
+
 </ul>
 
 <h3 id="toc_1.7.1">semaphore</h3>
@@ -461,13 +620,13 @@ void up(struct semaphore * sem);
 <ul>
 <li>
 读写信号量对访问者进行了细分，或者为读者，或者为写者，读者在保持读写信号量期间只能对该读写信号量保护的共享资源进行读访问，如果一个任务除了需要读，可能还需要写，那么它必须被归类为写者，它在对共享资源访问之前必须先获得写者身份，写者在发现自己不需要写访问的情况下可以降级为读者。读写信号量同时拥有的读者数不受限制，也就说可以有任意多个读者同时拥有一个读写信号量。
-</li>
+
 <li>
 如果一个读写信号量当前没有被写者拥有并且也没有写者等待读者释放信号量，那么任何读者都可以成功获得该读写信号量；否则，读者必须被挂起直到写者释放该信号量。如果一个读写信号量当前没有被读者或写者拥有并且也没有写者等待该信号量，那么一个写者可以成功获得该读写信号量，否则写者将被挂起，直到没有任何访问者。因此，写者是排他性的，独占性的。
-</li>
+
 <li>
 读写信号量有两种实现，一种是通用的，不依赖于硬件架构，因此，增加新的架构不需要重新实现它，但缺点是性能低，获得和释放读写信号量的开销大；另一种是架构相关的，因此性能高，获取和释放读写信号量的开销小，但增加新的架构需要重新实现。在内核配置时，可以通过选项去控制使用哪一种实现。
-</li>
+
 </ul>
 
 <h3 id="toc_1.8.1">rw_semaphore</h3>
@@ -522,25 +681,25 @@ void downgrade_write(struct rw_semaphore *sem);
 <ul>
 <li>
 自旋锁与互斥锁有点类似，只是自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁，"自旋"一词就是因此而得名。
-</li>
+
 <li>
 由于自旋锁使用者一般保持锁时间非常短，因此选择自旋而不是睡眠是非常必要的，自旋锁的效率远高于互斥锁。
-</li>
+
 <li>
 信号量和读写信号量适合于保持时间较长的情况，它们会导致调用者睡眠，因此只能在进程上下文使用（_trylock的变种能够在中断上下文使用），而自旋锁适合于保持时间非常短的情况，它可以在任何上下文使用。
-</li>
+
 <li>
 如果被保护的共享资源只在进程上下文访问，使用信号量保护该共享资源非常合适，如果对共享资源的访问时间非常短，自旋锁也可以。但是如果被保护的共享资源需要在中断上下文访问（包括后半部即中断处理句柄和顶半部即软中断），就必须使用自旋锁。
-</li>
+
 <li>
 自旋锁保持期间是抢占失效的，而信号量和读写信号量保持期间是可以被抢占的。自旋锁只有在内核可抢占或SMP的情况下才真正需要，在单CPU且不可抢占的内核下，自旋锁的所有操作都是空操作。
-</li>
+
 <li>
 跟互斥锁一样，一个执行单元要想访问被自旋锁保护的共享资源，必须先得到锁，在访问完共享资源后，必须释放锁。如果在获取自旋锁时，没有任何执行单元保持该锁，那么将立即得到锁；如果在获取自旋锁时锁已经有保持者，那么获取锁操作将自旋在那里，直到该自旋锁的保持者释放了锁。
-</li>
+
 <li>
 无论是互斥锁，还是自旋锁，在任何时刻，最多只能有一个保持者，也就说，在任何时刻最多只能有一个执行单元获得锁。
-</li>
+
 </ul>
 
 <h3 id="toc_1.9.1">spinlock_t</h3>
@@ -686,31 +845,31 @@ void write_unlock_bh(rwlock_t *lock);
 <ul>
 <li>
 Linux 2.6内核引入了顺序锁，它与读/写自旋自锁相似，只是赋予了写者更高的优先级。好处是写者永远不必等待（除非另外一个写者正在写），缺点是读者必须反复多次读相同的数据。
-</li>
+
 <li>
 每个顺序锁包含两个字段：
-</li>
+
 <ul>
 <li>
 lock用来保护临界区的代码。
-</li>
+
 <li>
 sequence是一个顺序计数器，每个读者必须在读数据前后两次读顺序计数器，并检查两次读到的值是否相同，如果不同，说明写者正在写，需要重新读取该数据。
-</li>
+
 </ul>
 <li>
 通常在以下情况下使用顺序锁：
-</li>
+
 <ul>
 <li>
 被保护的数据结构不包括被写者修改和被读者间接引用的指针。
-</li>
+
 <li>
 读者的临界区代码没有副作用（多个读者的操作会得到不同的结果）。
-</li>
+
 <li>
 写者不应经常获取顺序锁，否则，反复的读访问会引起严重的开销。
-</li>
+
 </ul>
 </ul>
 
@@ -762,36 +921,36 @@ void write_sequnlock(seqlock_t *sl)
 <ul>
 <li>
 读-拷贝-更新（RCU）允许多个读者和写者并发执行，而且RCU不使用锁。关键的思想如下：
-</li>
+
 <ul>
 <li>
 RCU只保护被动态分配并通过指针引用的数据结构。
-</li>
+
 <li>
 在被RCU保护的临界区中，任何内核控制路径都不能睡眠。
-</li>
+
 </ul>
 <li>
 读者在进入RCU临界区时调用rcu_read_lock()，退出临界区时调用rcu_read_unlock()，退出的时机称为CPU经过了静止状态：
-</li>
+
 <ul>
 <li>
 CPU执行进程切换。
-</li>
+
 <li>
 CPU开始在用户态执行。
-</li>
+
 <li>
 CPU执行空循环。
-</li>
+
 </ul>
 <li>
 写者要更新数据结构时，它间接引用指针生成整个结构的副本。一旦修改完成，写者改变指针数据结构的指针，以使它们指向被修改后的副本。写者调用call_rcu()来释放数据结构的旧副本。
-</li>
+
 <ul>
 <li>
 函数call_rcu()把回调函数和其参数的地址放在rcu_head描述符中，然后把描述符插入回调函数的per-cpu链表。当所有cpu都经过静止状态，rcu_tasklet就执行链表中的所有函数。
-</li>
+
 </ul>
 </ul>
 
@@ -822,17 +981,17 @@ call_rcu();
 <ul>
 <li>
 completion类似于信号量，与up()对应的方法叫做completion()，与down()对应的方法叫做wait_for_completion()。
-</li>
+
 <li>
 completion与信号量的差别在于如何使用等待队列中包含的自旋锁：
-</li>
+
 <ul>
 <li>
 在completion中，自旋锁保证了completion()和wait_for_completion()不会被并发调用。
-</li>
+
 <li>
 在信号量中，自旋锁用于避免并发执行的down()函数弄乱信号量的数据结构。
-</li>
+
 </ul>
 </ul>
 
@@ -868,6 +1027,8 @@ bool completion_done(struct completion *x);
 void complete(struct completion *x);
 void complete_all(struct completion *x);
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -876,17 +1037,6 @@ void complete_all(struct completion *x);
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>输入和输出</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,16 +47,17 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">输入和输出</h1>
 
 <ul>
 <li>
 IO库通常使用stream这个抽闲概念，它代表了所有有能力产生数据和接受数据的源。
-</li>
+
 <li>
 所有与输入有关的类都从InputStream继承，所有与输出有关的类都从OutputStream继承。
-</li>
+
 </ul>
 
 <h2 id="toc_1.1">InputStream类型</h2>
@@ -66,52 +67,80 @@ InputStream类作用是从不同的数据源产生输入的类，其中数据源
 <ol>
 <li>
 字节数组
-</li>
+
 <li>
 String 对象
-</li>
+
 <li>
 文件
-</li>
+
 <li>
 管道方式
-</li>
+
 <li>
 其他种类的流组成序列，以便我们将他们合并到单一流中
-</li>
+
 <li>
 其他数据源，如Internet连接
-</li>
+
 </ol>
 
 <table>
 <tr>
-<th>类</th>
-<th>功能</th>
+<th>
+类
+</th>
+<th>
+功能
+</th>
 </tr>
 <tr>
-<td>ByteArrayInputStream</td>
-<td>允许将内存缓冲区当做InputStream</td>
+<td>
+ByteArrayInputStream
+</td>
+<td>
+允许将内存缓冲区当做InputStream
+</td>
 </tr>
 <tr>
-<td>StringBufferInputStream</td>
-<td>将String转换成InputStream</td>
+<td>
+StringBufferInputStream
+</td>
+<td>
+将String转换成InputStream
+</td>
 </tr>
 <tr>
-<td>FileInputStream</td>
-<td>用于从文件读取信息</td>
+<td>
+FileInputStream
+</td>
+<td>
+用于从文件读取信息
+</td>
 </tr>
 <tr>
-<td>PipedInputStream</td>
-<td>实现管道化</td>
+<td>
+PipedInputStream
+</td>
+<td>
+实现管道化
+</td>
 </tr>
 <tr>
-<td>SequenceInputStream</td>
-<td>将两个和多个InputStream转换成一个InputStream</td>
+<td>
+SequenceInputStream
+</td>
+<td>
+将两个和多个InputStream转换成一个InputStream
+</td>
 </tr>
 <tr>
-<td>FilterInputStream</td>
-<td>抽象类，为其他InputStream提供有用功能</td>
+<td>
+FilterInputStream
+</td>
+<td>
+抽象类，为其他InputStream提供有用功能
+</td>
 </tr>
 </table>
 
@@ -123,24 +152,44 @@ OutputStream类作用是将数据输出到某个地方：字节数组，文件�
 
 <table>
 <tr>
-<th>类</th>
-<th>功能</th>
+<th>
+类
+</th>
+<th>
+功能
+</th>
 </tr>
 <tr>
-<td>ByteArrayOutputStream</td>
-<td>在内存中创建缓冲区，所有数据都输出在此缓冲区</td>
+<td>
+ByteArrayOutputStream
+</td>
+<td>
+在内存中创建缓冲区，所有数据都输出在此缓冲区
+</td>
 </tr>
 <tr>
-<td>FileOutputStream</td>
-<td>将数据写入文件</td>
+<td>
+FileOutputStream
+</td>
+<td>
+将数据写入文件
+</td>
 </tr>
 <tr>
-<td>PipedOutputStream</td>
-<td>实现管道化</td>
+<td>
+PipedOutputStream
+</td>
+<td>
+实现管道化
+</td>
 </tr>
 <tr>
-<td>FilterOutputStream</td>
-<td>抽象类，为其他OutputStream提供有用功能</td>
+<td>
+FilterOutputStream
+</td>
+<td>
+抽象类，为其他OutputStream提供有用功能
+</td>
 </tr>
 </table>
 
@@ -148,56 +197,100 @@ OutputStream类作用是将数据输出到某个地方：字节数组，文件�
 <ul>
 <li>
 Reader和Writer提供了兼容Unicode和面向字符的I/O功能
-</li>
+
 <li>
 面向字节的Stream类和面向字符Reader/Writer类继承关系
-</li>
+
 </ul>
 
 <table>
 <tr>
-<th>原始IO</th>
-<th>Reader和Writer</th>
+<th>
+原始IO
+</th>
+<th>
+Reader和Writer
+</th>
 </tr>
 <tr>
-<td>InputStream</td>
-<td>Reader</td>
+<td>
+InputStream
+</td>
+<td>
+Reader
+</td>
 </tr>
 <tr>
-<td>OutputStream</td>
-<td>Writer</td>
+<td>
+OutputStream
+</td>
+<td>
+Writer
+</td>
 </tr>
 <tr>
-<td>FileInputStream</td>
-<td>FileReader</td>
+<td>
+FileInputStream
+</td>
+<td>
+FileReader
+</td>
 </tr>
 <tr>
-<td>FileOutputStream</td>
-<td>FileWriter</td>
+<td>
+FileOutputStream
+</td>
+<td>
+FileWriter
+</td>
 </tr>
 <tr>
-<td>StringBufferInputStream</td>
-<td>StringReader</td>
+<td>
+StringBufferInputStream
+</td>
+<td>
+StringReader
+</td>
 </tr>
 <tr>
-<td>(no corresponding class)</td>
-<td>StringWriter</td>
+<td>
+(no corresponding class)
+</td>
+<td>
+StringWriter
+</td>
 </tr>
 <tr>
-<td>ByteArrayInputStream</td>
-<td>CharArrayReader</td>
+<td>
+ByteArrayInputStream
+</td>
+<td>
+CharArrayReader
+</td>
 </tr>
 <tr>
-<td>ByteArrayOutputStream</td>
-<td>CharArrayWriter</td>
+<td>
+ByteArrayOutputStream
+</td>
+<td>
+CharArrayWriter
+</td>
 </tr>
 <tr>
-<td>PipedInputStream</td>
-<td>PipedReader</td>
+<td>
+PipedInputStream
+</td>
+<td>
+PipedReader
+</td>
 </tr>
 <tr>
-<td>PipedOutputStream</td>
-<td>PipedWriter</td>
+<td>
+PipedOutputStream
+</td>
+<td>
+PipedWriter
+</td>
 </tr>
 </table>
 
@@ -363,6 +456,8 @@ System.setIn(InputStream);
 System.setOut(PrintStream);
 System.setErr(PrintStream);
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -371,17 +466,6 @@ System.setErr(PrintStream);
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Android资源</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,6 +47,7 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Android Resource</h1>
 
@@ -54,41 +55,71 @@
 
 <table>
 <tr>
-<th>目录</th>
-<th>资源类型</th>
+<th>
+目录
+</th>
+<th>
+资源类型
+</th>
 </tr>
 <tr>
-<td>res/anim/</td>
-<td>XML文件，它们被编译进逐帧动画(frame by frame animation)或补间动画(tweened animation)对象</td>
+<td>
+res/anim/
+</td>
+<td>
+XML文件，它们被编译进逐帧动画(frame by frame animation)或补间动画(tweened animation)对象
+</td>
 </tr>
 <tr>
-<td>res/drawable/</td>
-<td>.png、.9.png、.jpg文件，使用mContext.getResources().getDrawable(R.drawable.imageId)获取该资源</td>
+<td>
+res/drawable/
+</td>
+<td>
+.png、.9.png、.jpg文件，使用mContext.getResources().getDrawable(R.drawable.imageId)获取该资源
+</td>
 </tr>
 <tr>
-<td>res/layout/</td>
-<td>被编译为屏幕布局(或屏幕的一部分)的XML文件。</td>
+<td>
+res/layout/
+</td>
+<td>
+被编译为屏幕布局(或屏幕的一部分)的XML文件。
+</td>
 </tr>
 <tr>
-<td>res/values/</td>
-<td>可以被编译成很多种类型的资源的XML文件。</td>
+<td>
+res/values/
+</td>
+<td>
+可以被编译成很多种类型的资源的XML文件。
+</td>
 </tr>
 <tr>
-<td>res/xml/</td>
-<td>任意的XML文件，在运行时可以通过调用Resources.getXML()读取。如array.xml，colors.xml，dimens.xml，strings.xml，styles.xml等</td>
+<td>
+res/xml/
+</td>
+<td>
+任意的XML文件，在运行时可以通过调用Resources.getXML()读取。如array.xml，colors.xml，dimens.xml，strings.xml，styles.xml等
+</td>
 </tr>
 <tr>
-<td>res/raw/</td>
-<td>直接复制到设备中的任意文件。它们无需编译，添加到你的应用程序编译产生的压缩文件中。要使用这些资源，可以调用Resources.openRawResource()，参数是资源的ID，即R.raw.somefilename。</td>
+<td>
+res/raw/
+</td>
+<td>
+直接复制到设备中的任意文件。它们无需编译，添加到你的应用程序编译产生的压缩文件中。要使用这些资源，可以调用Resources.openRawResource()，参数是资源的ID，即R.raw.somefilename。
+</td>
 </tr>
 </table>
 
 <h2 id="toc_1.2">自动生成的R文件</h2>
 <blockquote>
 在项目文件夹的gen文件夹里面有个R.java，我们平常引用的资源主要引用这个类的变量。
- 
+</blockquote>
+<blockquote>
 注意：R类是自动生成的，并且它不能被手动修改。当资源发生变动时，它会自动修改。
 </blockquote>
+    
 <h2 id="toc_1.3">如何使用资源</h2>
 <p>
 下面是一个引用资源的语法：R.resource_type.resource_name  或者 android.R.resource_type.resource_name
@@ -132,7 +163,7 @@ msgTextView.setText(R.string.hello_message);
 <ul>
 <li>
 引用自定义的资源，android:text="@string/hello"，这里使用"@"前缀引入对一个资源的引用--在@[package:]type/name形式中后面的文本是资源的名称。type是xml子节点名，name是xml属性名：
-</li>
+
 </ul>
 
 <pre class="brush:xml">
@@ -145,13 +176,13 @@ msgTextView.setText(R.string.hello_message);
 <ul>
 <li>
 引用系统资源，android:textColor="@android:color/opaque_red"   指定package: android
-</li>
+
 </ul>
  
 <ul>
 <li>
 引用主题属性
-</li>
+
 </ul>
 
 <pre class="brush:text">
@@ -165,7 +196,7 @@ textDisabledColor)。除了使用这个资源的标识符来查询主题中的�
 <ul>
 <li>
 assets文件夹里面的文件都是保持原始的文件格式，需要用AssetManager以字节流的形式读取文件。
-</li>
+
 </ul>
 
 <pre class="brush:text">
@@ -174,6 +205,8 @@ assets文件夹里面的文件都是保持原始的文件格式，需要用Asset
 3. 然后就是用已经open file 的inputStream读取文件，读取完成后记得inputStream.close()。
 4. 调用AssetManager.close()关闭AssetManager。
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -182,17 +215,6 @@ assets文件夹里面的文件都是保持原始的文件格式，需要用Asset
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

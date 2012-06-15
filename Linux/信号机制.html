@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>信号机制</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,41 +47,42 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">信号机制</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">信号机制</a></li>
+<li><a href="#toc_1">信号机制</a>
 <ul>
-<li><a href="#toc_1.1">信号及信号来源</a></li>
+<li><a href="#toc_1.1">信号及信号来源</a>
 <ul>
-<li><a href="#toc_1.1.1">信号本质</a></li>
-<li><a href="#toc_1.1.2">信号来源</a></li>
+<li><a href="#toc_1.1.1">信号本质</a>
+<li><a href="#toc_1.1.2">信号来源</a>
 </ul>
-<li><a href="#toc_1.2">信号的种类</a></li>
+<li><a href="#toc_1.2">信号的种类</a>
 <ul>
-<li><a href="#toc_1.2.1">"不可靠信号"</a></li>
-<li><a href="#toc_1.2.2">"可靠信号"</a></li>
-<li><a href="#toc_1.2.3">实时信号与非实时信号</a></li>
+<li><a href="#toc_1.2.1">"不可靠信号"</a>
+<li><a href="#toc_1.2.2">"可靠信号"</a>
+<li><a href="#toc_1.2.3">实时信号与非实时信号</a>
 </ul>
-<li><a href="#toc_1.3">进程对信号的响应</a></li>
-<li><a href="#toc_1.4">信号的发送</a></li>
+<li><a href="#toc_1.3">进程对信号的响应</a>
+<li><a href="#toc_1.4">信号的发送</a>
 <ul>
-<li><a href="#toc_1.4.1">kill()</a></li>
-<li><a href="#toc_1.4.2">raise()</a></li>
-<li><a href="#toc_1.4.3">sigqueue()</a></li>
-<li><a href="#toc_1.4.4">alarm()</a></li>
-<li><a href="#toc_1.4.5">setitimer()</a></li>
-<li><a href="#toc_1.4.6">abort()</a></li>
+<li><a href="#toc_1.4.1">kill()</a>
+<li><a href="#toc_1.4.2">raise()</a>
+<li><a href="#toc_1.4.3">sigqueue()</a>
+<li><a href="#toc_1.4.4">alarm()</a>
+<li><a href="#toc_1.4.5">setitimer()</a>
+<li><a href="#toc_1.4.6">abort()</a>
 </ul>
-<li><a href="#toc_1.5">信号的安装</a></li>
+<li><a href="#toc_1.5">信号的安装</a>
 <ul>
-<li><a href="#toc_1.5.1">signal()</a></li>
-<li><a href="#toc_1.5.2">sigaction()</a></li>
+<li><a href="#toc_1.5.1">signal()</a>
+<li><a href="#toc_1.5.2">sigaction()</a>
 </ul>
-<li><a href="#toc_1.6">信号集及信号集操作函数</a></li>
-<li><a href="#toc_1.7">信号阻塞与信号未决</a></li>
+<li><a href="#toc_1.6">信号集及信号集操作函数</a>
+<li><a href="#toc_1.7">信号阻塞与信号未决</a>
 </ul>
 </ul>
 </div>
@@ -107,14 +108,14 @@
 <ul>
 <li>
 可以从两个不同的分类角度对信号进行分类：
-</li>
+
 <ul>
 <li>
 可靠性方面：可靠信号与不可靠信号；
-</li>
+
 <li>
 与时间的关系上：实时信号与非实时信号。在《Linux环境进程间通信(一)：管道及有名管道》的附1中列出了系统所支持的所有信号。
-</li>
+
 </ul>
 </ul>
 
@@ -181,20 +182,20 @@ Linux在支持新版本的信号安装函数sigation()以及信号发送函数si
 <ul>
 <li>
 发送信号的主要函数有：kill()、raise()、 sigqueue()、alarm()、setitimer()以及abort()。
-</li>
+
 </ul>
 
 <h3 id="toc_1.4.1">kill()</h3>
 <ul>
 <li>
 signo是信号值，当为0时（即空信号），实际不发送任何信号，但照常进行错误检查，因此，可用于检查目标进程是否存在，以及当前进程是否具有向目标发送信号的权限（root权限的进程可以向任何进程发送信号，非root权限的进程只能向属于同一个session或者同一个用户的进程发送信号）。
-</li>
+
 <li>
 Kill()最常用于pid&gt;0时的信号发送，调用成功返回0；否则，返回-1。
-</li>
+
 <li>
 注：对于pid&lt;0时的情况，对于哪些进程将接受信号，各种版本说法不一，其实很简单，参阅内核源码kernel/signal.c即可。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -205,24 +206,44 @@ int kill(pid_t pid,int signo)
 
 <table>
 <tr>
-<th>参数pid的值</th>
-<th>信号的接收进程</th>
+<th>
+参数pid的值
+</th>
+<th>
+信号的接收进程
+</th>
 </tr>
 <tr>
-<td>pid&gt;0</td>
-<td>进程ID为pid的进程</td>
+<td>
+pid&gt;0
+</td>
+<td>
+进程ID为pid的进程
+</td>
 </tr>
 <tr>
-<td>pid=0</td>
-<td>同一个进程组的进程</td>
+<td>
+pid=0
+</td>
+<td>
+同一个进程组的进程
+</td>
 </tr>
 <tr>
-<td>pid&lt;0 pid!=-1</td>
-<td>进程组ID为 -pid的所有进程</td>
+<td>
+pid&lt;0 pid!=-1
+</td>
+<td>
+进程组ID为 -pid的所有进程
+</td>
 </tr>
 <tr>
-<td>pid=-1</td>
-<td>除发送进程自身外，所有进程ID大于1的进程</td>
+<td>
+pid=-1
+</td>
+<td>
+除发送进程自身外，所有进程ID大于1的进程
+</td>
 </tr>
 </table>
 
@@ -230,7 +251,7 @@ int kill(pid_t pid,int signo)
 <ul>
 <li>
 向进程本身发送信号，参数为即将发送的信号值。调用成功返回0；否则，返回-1。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -242,7 +263,7 @@ int raise(int signo)
 <ul>
 <li>
 sigqueue()是比较新的发送信号系统调用，主要是针对实时信号提出的（当然也支持前32种），支持信号带有参数，与函数 sigaction()配合使用。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -254,7 +275,7 @@ int sigqueue(pid_t pid, int sig, const union sigval val); // 调用成功返回0
 <ul>
 <li>
 sigqueue的第一个参数是指定接收信号的进程ID，第二个参数确定即将发送的信号，第三个参数是一个联合数据结构union sigval，指定了信号传递的参数，即通常所说的4字节值。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -283,10 +304,10 @@ sigqueue()发送非实时信号时，仍然不支持排队，即在信号处理�
 <ul>
 <li>
 专门为SIGALRM信号而设，在指定的时间seconds秒后，将向进程本身发送SIGALRM信号，又称为闹钟时间。进程调用alarm后，任何以前的alarm()调用都将无效。如果参数seconds为零，那么进程内将不再包含任何闹钟时间。
-</li>
+
 <li>
 返回值，如果调用alarm()前，进程中已经设置了闹钟时间，则返回上一个闹钟时间的剩余时间，否则返回0。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -298,35 +319,35 @@ unsigned int alarm(unsigned int seconds);
 <ul>
 <li>
 setitimer()比alarm功能强大，支持3种类型的定时器：
-</li>
+
 <ul>
 <li>
 ITIMER_REAL：设定绝对时间；经过指定的时间后，内核将发送SIGALRM信号给本进程；
-</li>
+
 <li>
 ITIMER_VIRTUAL：设定程序执行时间；经过指定的时间后，内核将发送SIGVTALRM信号给本进程；
-</li>
+
 <li>
 ITIMER_PROF：设定进程执行以及内核因本进程而消耗的时间和，经过指定的时间后，内核将发送ITIMER_VIRTUAL信号给本进程；
-</li>
+
 </ul>
 <li>
 Setitimer()参数解析：
-</li>
+
 <ul>
 <li>
 第一个参数which指定定时器类型（上面三种之一）；
-</li>
+
 <li>
 第二个参数是结构itimerval的一个实例。
-</li>
+
 <li>
 第三个参数可不做处理。
-</li>
+
 </ul>
 <li>
 Setitimer()调用成功返回0，否则返回-1。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -347,7 +368,7 @@ struct timeval {
 <ul>
 <li>
 向进程发送SIGABORT信号，默认情况下进程会异常退出，当然可定义自己的信号处理函数。即使SIGABORT被进程设置为阻塞信号，调用abort()后，SIGABORT仍然能被进程接收。该函数无返回值。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -359,17 +380,17 @@ void abort(void);
 <ul>
 <li>
 如果进程要处理某一信号，那么就要在进程中安装该信号。安装信号主要用来确定信号值及进程针对该信号值的动作之间的映射关系，即进程将要处理哪个信号；该信号被传递给进程时，将执行何种操作。
-</li>
+
 <li>
 linux主要有两个函数实现信号的安装：signal()、sigaction()
-</li>
+
 <ul>
 <li>
 signal()在可靠信号系统调用的基础上实现,是库函数。它只有两个参数，不支持信号传递信息，主要是用于前32种非实时信号的安装；
-</li>
+
 <li>
 sigaction()是较新的函数（由两个系统调用实现：sys_signal以及sys_rt_sigaction），有三个参数，支持信号传递信息，主要用来与 sigqueue() 系统调用配合使用，当然，sigaction()同样支持非实时信号的安装。sigaction()优于signal()主要体现在支持信号带有参数。
-</li>
+
 </ul>
 </ul>
 
@@ -377,10 +398,10 @@ sigaction()是较新的函数（由两个系统调用实现：sys_signal以及sy
 <ul>
 <li>
 第一个参数指定信号的值，第二个参数指定针对前面信号值的处理，可以忽略该信号（参数设为SIG_IGN）；可以采用系统默认方式处理信号(参数设为 SIG_DFL)；也可以自己实现处理方式(参数指定一个函数地址)。
-</li>
+
 <li>
 如果signal()调用成功，返回最后一次为安装信号signum而调用signal()时的handler值；失败则返回SIG_ERR。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -396,21 +417,21 @@ sighandler_t signal(int signum, sighandler_t handler);
 <ul>
 <li>
 sigaction函数用于改变进程接收到特定信号后的行为。
-</li>
+
 <ul>
 <li>
 该函数的第一个参数为信号的值，可以为除SIGKILL及SIGSTOP 外的任何一个特定有效的信号（为这两个信号定义自己的处理函数，将导致信号安装错误）。
-</li>
+
 <li>
 第二个参数是指向结构sigaction的一个实例的指针，在结构 sigaction的实例中，指定了对特定信号的处理，可以为空，进程会以缺省方式对信号处理；
-</li>
+
 <li>
 第三个参数oldact指向的对象用来保存原来对相应信号的处理，可指定oldact为NULL。如果把第二、第三个参数都设为NULL，那么该函数可用于检查信号的有效性。
-</li>
+
 </ul>
 <li>
 第二个参数最为重要，其中包含了对指定信号的处理、信号所传递的信息、信号处理函数执行过程中应屏蔽掉哪些函数等等。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -421,7 +442,7 @@ int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact));
 <ul>
 <li>
 sigaction结构定义如下：
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -439,23 +460,23 @@ struct sigaction {
 <ul>
 <li>
 联合数据结构中的两个元素_sa_handler以及*_sa_sigaction指定信号关联函数，即用户指定的信号处理函数。除了可以是用户自定义的处理函数外，还可以为SIG_DFL(采用缺省的处理方式)，也可以为SIG_IGN（忽略信号）。
-</li>
+
 <li>
 由_sa_handler指定的处理函数只有一个参数，即信号值，所以信号不能传递除信号值之外的任何信息；
-</li>
+
 <li>
 由_sa_sigaction是指定的信号处理函数带有三个参数，是为实时信号而设的（当然同样支持非实时信号），它指定一个3参数信号处理函数。
-</li>
+
 <ul>
 <li>
 第一个参数为信号值。
-</li>
+
 <li>
 第二个参数是指向siginfo_t结构的指针，结构中包含信号携带的数据值，参数所指向的结构如下：
-</li>
+
 <li>
 第三个参数没有使用（posix没有规范使用该参数的标准）。
-</li>
+
 </ul>
 </ul>
 
@@ -520,7 +541,7 @@ typedef struct siginfo {
 <ul>
 <li>
 siginfo_t结构中的联合数据成员确保该结构适应所有的信号，比如对于实时信号来说，则实际采用下面的结构形式：
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -535,7 +556,7 @@ typedef struct {
 <ul>
 <li>
 结构的第四个域同样为一个联合数据结构：
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -548,26 +569,26 @@ union sigval {
 <ul>
 <li>
 采用联合数据结构，说明siginfo_t结构中的si_value要么持有一个4字节的整数值，要么持有一个指针，这就构成了与信号相关的数据。在信号的处理函数中，包含这样的信号相关数据指针，但没有规定具体如何对这些数据进行操作，操作方法应该由程序开发人员根据具体任务事先约定。
-</li>
+
 <li>
 前面在讨论系统调用sigqueue发送信号时，sigqueue的第三个参数就是sigval联合数据结构，当调用sigqueue时，该数据结构中的数据就将拷贝到信号处理函数的第二个参数中。这样，在发送信号同时，就可以让信号传递一些附加信息。信号可以传递信息对程序开发是非常有意义的。
-</li>
+
 </ul>
 
 <p>
-<a href="pic/sigaction.png"><img src="pic/sigaction.png" /></a>
+<a href="pic/sigaction.png.html">pic/sigaction.png</a>
 </p>
 
 <ul>
 <li>
 sa_mask指定在信号处理程序执行过程中，哪些信号应当被阻塞。缺省情况下当前信号本身被阻塞，防止信号的嵌套发送，除非指定 SA_NODEFER或者SA_NOMASK标志位。
-</li>
+
 <li>
 注：请注意sa_mask指定的信号阻塞的前提条件，是在由sigaction()安装信号的处理函数执行过程中由sa_mask指定的信号才被阻塞。
-</li>
+
 <li>
 sa_flags中包含了许多标志位，包括刚刚提到的SA_NODEFER及SA_NOMASK标志位。另一个比较重要的标志位是SA_SIGINFO，当设定了该标志位时，表示信号附带的参数可以被传递到信号处理函数中，因此，应该为sigaction结构中的sa_sigaction指定处理函数，而不应该为sa_handler指定信号处理函数，否则，设置该标志变得毫无意义。即使为sa_sigaction指定了信号处理函数，如果不设置SA_SIGINFO，信号处理函数同样不能得到信号传递过来的数据，在信号处理函数中对这些信息的访问都将导致段错误（Segmentation fault）。
-</li>
+
 </ul>
 
 <pre class="brush:text">
@@ -581,7 +602,7 @@ sa_flags中包含了许多标志位，包括刚刚提到的SA_NODEFER及SA_NOMAS
 <ul>
 <li>
 信号集被定义为一种数据类型：
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -593,7 +614,7 @@ typedef struct {
 <ul>
 <li>
 信号集用来描述信号的集合，linux所支持的所有信号可以全部或部分的出现在信号集中，主要与信号阻塞相关函数配合使用。下面是为信号集操作定义的相关函数：
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -614,13 +635,13 @@ sigismember(const sigset_t *set, int signum);   // 判定信号signum是否在se
 <ul>
 <li>
 每个进程都有一个用来描述哪些信号递送到进程时将被阻塞的信号集，该信号集中的所有信号在递送到进程后都将被阻塞。下面是与信号阻塞相关的几个函数：
-</li>
+
 <li>
 sigpending(sigset_t *set))获得当前已递送到进程，却被阻塞的所有信号，在set指向的信号集中返回结果。
-</li>
+
 <li>
 sigsuspend(const sigset_t *mask))用于在接收到某个信号之前, 临时用mask替换进程的信号掩码, 并暂停进程执行，直到收到信号为止。sigsuspend 返回后将恢复调用之前的信号掩码。信号处理函数完成后，进程将继续执行。该系统调用始终返回-1，并将errno设置为EINTR。
-</li>
+
 </ul>
 
 <pre class="brush:c">
@@ -633,26 +654,44 @@ int sigsuspend(const sigset_t *mask))；
 <ul>
 <li>
 sigprocmask()函数能够根据参数how来实现对信号集的操作，操作主要有三种：
-</li>
+
 </ul>
 <table>
 <tr>
-<th>参数how</th>
-<th>进程当前信号集</th>
+<th>
+参数how
+</th>
+<th>
+进程当前信号集
+</th>
 </tr>
 <tr>
-<td>SIG_BLOCK</td>
-<td>在进程当前阻塞信号集中添加set指向信号集中的信号</td>
+<td>
+SIG_BLOCK
+</td>
+<td>
+在进程当前阻塞信号集中添加set指向信号集中的信号
+</td>
 </tr>
 <tr>
-<td>SIG_UNBLOCK</td>
-<td>如果进程阻塞信号集中包含set指向信号集中的信号，则解除对该信号的阻塞</td>
+<td>
+SIG_UNBLOCK
+</td>
+<td>
+如果进程阻塞信号集中包含set指向信号集中的信号，则解除对该信号的阻塞
+</td>
 </tr>
 <tr>
-<td>SIG_SETMASK</td>
-<td>更新进程阻塞信号集为set指向的信号集</td>
+<td>
+SIG_SETMASK
+</td>
+<td>
+更新进程阻塞信号集为set指向的信号集
+</td>
 </tr>
 </table>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -661,17 +700,6 @@ sigprocmask()函数能够根据参数how来实现对信号集的操作，操作�
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Binder的设计思想</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,20 +47,21 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Binder的设计思想</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Binder的设计思想</a></li>
+<li><a href="#toc_1">Binder的设计思想</a>
 <ul>
-<li><a href="#toc_1.1">Binder与传统IPC的比较</a></li>
-<li><a href="#toc_1.2">Binder的通信模型</a></li>
+<li><a href="#toc_1.1">Binder与传统IPC的比较</a>
+<li><a href="#toc_1.2">Binder的通信模型</a>
 <ul>
-<li><a href="#toc_1.2.1">Binder驱动</a></li>
-<li><a href="#toc_1.2.2">ServiceManager与实名Binder</a></li>
-<li><a href="#toc_1.2.3">Client获取实名引用</a></li>
-<li><a href="#toc_1.2.4">匿名 Binder</a></li>
+<li><a href="#toc_1.2.1">Binder驱动</a>
+<li><a href="#toc_1.2.2">ServiceManager与实名Binder</a>
+<li><a href="#toc_1.2.3">Client获取实名引用</a>
+<li><a href="#toc_1.2.4">匿名 Binder</a>
 </ul>
 </ul>
 </ul>
@@ -69,24 +70,48 @@
 <h2 id="toc_1.1">Binder与传统IPC的比较</h2>
 <table>
 <tr>
-<th>IPC</th>
-<th>数据拷贝次数</th>
-<th>安全性</th>
+<th>
+IPC
+</th>
+<th>
+数据拷贝次数
+</th>
+<th>
+安全性
+</th>
 </tr>
 <tr>
-<td>共享内存</td>
-<td>0</td>
-<td>**</td>
+<td>
+共享内存
+</td>
+<td>
+0
+</td>
+<td>
+**
+</td>
 </tr>
 <tr>
-<td>Binder</td>
-<td>1</td>
-<td>***</td>
+<td>
+Binder
+</td>
+<td>
+1
+</td>
+<td>
+***
+</td>
 </tr>
 <tr>
-<td>Socket/管道/消息队列</td>
-<td>2</td>
-<td>*</td>
+<td>
+Socket/管道/消息队列
+</td>
+<td>
+2
+</td>
+<td>
+*
+</td>
 </tr>
 </table>
 
@@ -150,8 +175,10 @@ SMgr象个火车票代售点，收集了所有火车的车票，可以通过它�
 </pre>
 
 <p>
-<a href="pic/binder_model.jpg"><img src="pic/binder_model.jpg" /></a>
+<a href="pic/binder_model.jpg.html">pic/binder_model.jpg</a>
 </p>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -160,17 +187,6 @@ SMgr象个火车票代售点，收集了所有火车的车票，可以通过它�
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

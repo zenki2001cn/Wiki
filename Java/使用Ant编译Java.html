@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>使用Ant编译Java</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,23 +47,24 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">使用Ant工具</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">使用Ant工具</a></li>
+<li><a href="#toc_1">使用Ant工具</a>
 <ul>
-<li><a href="#toc_1.1">编写build.xml文件</a></li>
+<li><a href="#toc_1.1">编写build.xml文件</a>
 <ul>
-<li><a href="#toc_1.1.1">基本组成</a></li>
+<li><a href="#toc_1.1.1">基本组成</a>
 <ul>
-<li><a href="#toc_1.1.1.1">Project</a></li>
-<li><a href="#toc_1.1.1.2">target</a></li>
-<li><a href="#toc_1.1.1.3">property</a></li>
-<li><a href="#toc_1.1.1.4">Path-like Structures</a></li>
+<li><a href="#toc_1.1.1.1">Project</a>
+<li><a href="#toc_1.1.1.2">target</a>
+<li><a href="#toc_1.1.1.3">property</a>
+<li><a href="#toc_1.1.1.4">Path-like Structures</a>
 </ul>
-<li><a href="#toc_1.1.2">build.xml示例</a></li>
+<li><a href="#toc_1.1.2">build.xml示例</a>
 </ul>
 </ul>
 </ul>
@@ -91,96 +92,192 @@
 <h4 id="toc_1.1.1.1">Project</h4>
 <table>
 <tr>
-<th>属性</th>
-<th>描述</th>
-<th>是否必须</th>
+<th>
+属性
+</th>
+<th>
+描述
+</th>
+<th>
+是否必须
+</th>
 </tr>
 <tr>
-<td>name</td>
-<td>项目名称</td>
-<td>No</td>
+<td>
+name
+</td>
+<td>
+项目名称
+</td>
+<td>
+No
+</td>
 </tr>
 <tr>
-<td>default</td>
-<td>缺省的target标识</td>
-<td>Yes</td>
+<td>
+default
+</td>
+<td>
+缺省的target标识
+</td>
+<td>
+Yes
+</td>
 </tr>
 <tr>
-<td>basedir</td>
-<td>所有路径的基准路径</td>
-<td>No</td>
+<td>
+basedir
+</td>
+<td>
+所有路径的基准路径
+</td>
+<td>
+No
+</td>
 </tr>
 </table>
 
 <h4 id="toc_1.1.1.2">target</h4>
 <table>
 <tr>
-<th>属性</th>
-<th>描述</th>
-<th>是否必须</th>
+<th>
+属性
+</th>
+<th>
+描述
+</th>
+<th>
+是否必须
+</th>
 </tr>
 <tr>
-<td>name</td>
-<td>任务名称</td>
-<td>Yes</td>
+<td>
+name
+</td>
+<td>
+任务名称
+</td>
+<td>
+Yes
+</td>
 </tr>
 <tr>
-<td>depends</td>
-<td>逗号分隔的target列表，表示依赖关系</td>
-<td>No</td>
+<td>
+depends
+</td>
+<td>
+逗号分隔的target列表，表示依赖关系
+</td>
+<td>
+No
+</td>
 </tr>
 <tr>
-<td>if</td>
-<td>执行target需要设定的属性名</td>
-<td>No</td>
+<td>
+if
+</td>
+<td>
+执行target需要设定的属性名
+</td>
+<td>
+No
+</td>
 </tr>
 <tr>
-<td>unless</td>
-<td>执行target需要清除的属性名</td>
-<td>No</td>
+<td>
+unless
+</td>
+<td>
+执行target需要清除的属性名
+</td>
+<td>
+No
+</td>
 </tr>
 <tr>
-<td>description</td>
-<td>关于target的简短描述</td>
-<td>No</td>
+<td>
+description
+</td>
+<td>
+关于target的简短描述
+</td>
+<td>
+No
+</td>
 </tr>
 </table>
 
 <h4 id="toc_1.1.1.3">property</h4>
 <table>
 <tr>
-<th>属性</th>
-<th>描述</th>
-<th>是否必须</th>
+<th>
+属性
+</th>
+<th>
+描述
+</th>
+<th>
+是否必须
+</th>
 </tr>
 <tr>
-<td>name</td>
-<td>属性名称</td>
-<td>否</td>
+<td>
+name
+</td>
+<td>
+属性名称
+</td>
+<td>
+否
+</td>
 </tr>
 <tr>
-<td>value</td>
-<td>属性值</td>
-<td>否</td>
+<td>
+value
+</td>
+<td>
+属性值
+</td>
+<td>
+否
+</td>
 </tr>
 </table>
 
 <h4 id="toc_1.1.1.4">Path-like Structures</h4>
 <table>
 <tr>
-<th>属性</th>
-<th>描述</th>
-<th>是否必须</th>
+<th>
+属性
+</th>
+<th>
+描述
+</th>
+<th>
+是否必须
+</th>
 </tr>
 <tr>
-<td>location</td>
-<td>相对于基目录的文件位置</td>
-<td>&nbsp;</td>
+<td>
+location
+</td>
+<td>
+相对于基目录的文件位置
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 <tr>
-<td>path</td>
-<td>逗号分隔的文件列表</td>
-<td>&nbsp;</td>
+<td>
+path
+</td>
+<td>
+逗号分隔的文件列表
+</td>
+<td>
+&nbsp;
+</td>
 </tr>
 </table>
 
@@ -191,7 +288,7 @@
 &lt;project default="dist" basedir="."&gt;
 
     &lt;!!--主要的系统环境属性--&gt;
-    &lt;property environment="env"/&gt;
+    &lt;property environment="env"/&gt;&lt;!--取window,unix...的环境变量--&gt;
     &lt;property name="java.home" value="${env.JAVA_HOME}"/&gt;
     &lt;property name="ant.home"  value="${env.ANT_HOME}"/&gt;
 
@@ -325,6 +422,8 @@
 --&gt;
 &lt;/project&gt;
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -333,17 +432,6 @@
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>
