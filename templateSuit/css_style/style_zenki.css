@@ -62,7 +62,7 @@ blockquote{
     border-width:0; border-color:#ccc; border-style:solid;
     -moz-border-radius:8px; -khtml-border-radius:8px; -webkit-border-radius:8px; border-radius:8px;
     background-color:#F6F6BF; background-image:url(bg/testy-quote-open.gif),url(bg/testy-quote-close.gif); background-position:left top,right bottom; background-repeat:no-repeat; *background:#eee url(bg/testy-quote-open.gif) no-repeat;}
-code{margin:1px 3px; padding:2px; display:inline-block; background:#58CBF5 none; border:1px solid #FAD163; font-family:"Courier New"; -moz-border-radius:4px; -khtml-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;}
+code{margin:1px 3px; padding:2px; display:inline-block; background:#999999 none; border:1px solid #FAD163; font-family:"Courier New"; -moz-border-radius:4px; -khtml-border-radius:4px; -webkit-border-radius:4px; border-radius:4px;}
 
 table{table-layout:fixed; border-collapse:collapse; border-spacing:0;
     -moz-box-shadow:0 0 8px #666; -webkit-box-shadow:0 0 8px #666; box-shadow:0 0 8px #666;
