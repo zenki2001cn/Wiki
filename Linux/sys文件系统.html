@@ -120,53 +120,46 @@ block/  bus/  class/  dev/  devices/  firmware/  fs/  kernel/  module/  power/
 <ul>
 <li>
 <strong>devices</strong>
-
-</ul>
-
 <pre class="brush:text">
     这是内核对系统中所有设备的分层次表达模型，也是/sys文件系统管理设备的最重要的目录结构，
 下文会对它的内部结构作进一步分析；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>dev</strong>
-
-</ul>
-
 <pre class="brush:text">
     这个目录下维护一个按字符设备和块设备的主次号码(major:minor)链接到真实的设备(/sys/devices下)
 的符号链接文件，它是在内核 2.6.26 首次引入；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>bus</strong>
-
-</ul>
-
 <pre class="brush:text">
     这是内核设备按总线类型分层放置的目录结构，devices中的所有设备都是连接于某种总线之下，在这里的
 每一种具体总线之下可以找到每一个具体设备的符号链接，它也是构成Linux统一设备模型的一部分；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>class</strong>
-
-</ul>
-
 <pre class="brush:text">
     这是按照设备功能分类的设备模型，如：系统所有输入设备都会出现在/sys/class/input之下，而不论它们
 是以何种总线连接到系统。它也是构成Linux统一设备模型的一部分；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>block</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里是系统中当前所有的块设备所在，按照功能来说放置在/sys/class之下会更合适，但只是由于历史遗留
 因素而一直存在于/sys/block, 但从2.6.22开始就已标记为过时，只有在打开了CONFIG_SYSFS_DEPRECATED配置下
@@ -174,46 +167,42 @@ block/  bus/  class/  dev/  devices/  firmware/  fs/  kernel/  module/  power/
 容保留存在，但其中的内容已经变为指向它们在/sys/devices/中真实设备的符号链接文件；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>firmware</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里是系统加载固件机制的对用户空间的接口，关于固件有专用于固件加载的一套API，在附录LDD3一书中有
 关于内核支持固件加载机制的更详细的介绍；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>fs</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里按照设计是用于描述系统中所有文件系统，包括文件系统本身和按文件系统分类存放的已挂载点，
 但目前只有fuse，gfs2等少数文件系统支持sysfs接口，一些传统的虚拟文件系统(VFS)层次控制参数仍然
 在sysctl(/proc/sys/fs)接口中；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>kernel</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里是内核所有可调整参数的位置，目前只有uevent_helper, kexec_loaded, mm, 和新式的slab分配器等
 几项较新的设计在使用它，其它内核可调整参数仍然位于sysctl(/proc/sys/kernel)接口中；
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>module</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里有系统中所有模块的信息，不论这些模块是以内联(inlined)方式编译到内核映像文件(vmlinuz)中
 还是编译为外部模块(ko文件)，都可能会出现在/sys/module 中：
@@ -228,35 +217,32 @@ block/  bus/  class/  dev/  devices/  firmware/  fs/  kernel/  module/  power/
     * 没有非0属性参数的内联模块不会出现于此。
 </pre>
 
+</ul>
+
 <ul>
 <li>
 <strong>power</strong>
-
-</ul>
-
 <pre class="brush:text">
     这里是系统中电源选项，这个目录下有几个属性文件可以用于控制整个机器的电源状态，
 如可以向其中写入控制命令让机器关机、重启等。
 </pre>
 
+</ul>
+
 <h2 id="toc_1.3">/sys/devices目录示例</h2>
 <ul>
 <li>
 查看/sys/devices/的目录结构
-
-</ul>
-
 <pre class="brush:bash">
 $ ls -F /sys/devices/
 isa/  LNXSYSTM:00/  pci0000:00/  platform/  pnp0/  pnp1/  system/  virtual/
 </pre>
 
+</ul>
+
 <ul>
 <li>
 查看/sys/devices/pci0000:00/的目录结构
-
-</ul>
-
 <pre class="brush:bash">
 $ ls -F /sys/devices/pci0000:00/
 0000:00:00.0/  0000:00:02.5/  0000:00:03.1/  0000:00:0e.0/   power/
@@ -264,15 +250,14 @@ $ ls -F /sys/devices/pci0000:00/
 0000:00:02.0/  0000:00:03.0/  0000:00:03.3/  pci_bus/
 </pre>
 
+</ul>
+
 <ul>
 <li>
 查看/sys/devices/pci0000:00/的目录结构
 
 <li>
 其中有一个目录0000:01:00.0/, 其它都是属性文件和属性组。
-
-</ul>
-
 <pre class="brush:bash">
 $ ls -F /sys/devices/pci0000:00/0000:00:01.0/
 0000:01:00.0/         device         local_cpus  power/            subsystem_vendor
@@ -280,6 +265,8 @@ broken_parity_status  enable         modalias    resource          uevent
 class                 irq            msi_bus     subsystem@        vendor
 config                local_cpulist  pci_bus/    subsystem_device
 </pre>
+
+</ul>
 
 <p>
 <a href="pic/sysfs.png.html">pic/sysfs.png</a>
@@ -387,9 +374,6 @@ struct class
 
 <li>
 其中struct kref内含一个atomic_t类型用于引用计数，parent是单个指向父节点的指针，entry用于父kset以链表头结构将kobject结构维护成双向链表；
-
-</ul>
-
 <pre class="brush:c">
 struct kobject {
     const char              *name;
@@ -406,6 +390,8 @@ struct kobject {
 }; 
 </pre>
 
+</ul>
+
 <h3 id="toc_1.5.2">kset</h3>
 <ul>
 <li>
@@ -413,9 +399,6 @@ struct kobject {
 
 <li>
 其中的struct list_head list用于将集合中的kobject按struct list_head entry维护成双向链表；
-
-</ul>
-
 <pre class="brush:c">
 struct kset {
     struct list_head list;
@@ -424,6 +407,8 @@ struct kset {
     struct kset_uevent_ops *uevent_ops;
 }; 
 </pre>
+
+</ul>
 
 <h3 id="toc_1.5.3">sysfs_dirent</h3>
 <ul>
@@ -438,9 +423,6 @@ sysfs也是直接以VFS中的struct inode和struct dentry等VFS层次的结构�
 
 <li>
 具体在数据结构成员上，sysfs_dirent上有一个union共用体包含四种不同的结构，分别是目录、符号链接文件、属性文件、二进制属性文件；其中目录类型可以对应 kobject，在相应的s_dir中也有对kobject的指针，因此在内核数据结构，<code>kobject与sysfs_dirent是互相引用的</code>；
-
-</ul>
-
 <pre class="brush:c">
 struct sysfs_dirent {
     atomic_t                s_count;
@@ -462,6 +444,8 @@ struct sysfs_dirent {
     struct iattr    *s_iattr;
 };
 </pre>
+
+</ul>
 
 <h3 id="toc_1.5.4">与sysfs的对应关系</h3>
 <ul>
@@ -516,9 +500,6 @@ struct sysfs_dirent {
 <ul>
 <li>
 定义了sysfs所具有的基本属性，其中attribute_group会包含一组attribute。
-
-</ul>
-
 <pre class="brush:c">
 // 头文件include/linux/sysfs.h
 
@@ -542,6 +523,8 @@ struct attribute_group {
 	struct attribute	**attrs;
 };
 </pre>
+
+</ul>
 
 <h3 id="toc_2.2.2">__ATTR</h3>
 <ul>
@@ -623,9 +606,6 @@ CLASS_ATTR：表示类别
 <ul>
 <li>
 每个设备由一个device对象来描述，该子系统对应的目录为/sys/devices。
-
-</ul>
-
 <pre class="brush:c">
 struct device {
     ......
@@ -640,12 +620,11 @@ struct device {
 };
 </pre>
 
+</ul>
+
 <ul>
 <li>
 设备的类型由device_type来描述。
-
-</ul>
-
 <pre class="brush:c">
 struct device_type {
 	const char *name;
@@ -660,12 +639,11 @@ struct device_type {
 };
 </pre>
 
+</ul>
+
 <ul>
 <li>
 与device相关的宏定义
-
-</ul>
-
 <pre class="brush:c">
 // DEVICE_ATTR
 struct device_attribute {
@@ -680,13 +658,12 @@ struct device_attribute {
 struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
 </pre>
 
+</ul>
+
 <h3 id="toc_2.4.2">驱动程序(device_driver)</h3>
 <ul>
 <li>
 每个驱动程序由device_driver对象来描述，该对象的方法用来处理热拔插，即插即用和电源管理。
-
-</ul>
-
 <pre class="brush:c">
 struct device_driver {
 	const char		*name;
@@ -710,12 +687,11 @@ struct device_driver {
 };
 </pre>
 
+</ul>
+
 <ul>
 <li>
 与device_driver相关的宏定义
-
-</ul>
-
 <pre class="brush:c">
 // DRIVER_ATTR
 struct driver_attribute {
@@ -730,13 +706,12 @@ struct driver_attribute driver_attr_##_name =		\
 	__ATTR(_name, _mode, _show, _store)
 </pre>
 
+</ul>
+
 <h3 id="toc_2.4.3">总线(bus_type)</h3>
 <ul>
 <li>
 每种总线类型由一个bus_type对象描述，该子系统对应的目录为/sys/bus。
-
-</ul>
-
 <pre class="brush:c">
 struct bus_type {
 	const char		*name;
@@ -759,12 +734,11 @@ struct bus_type {
 };
 </pre>
 
+</ul>
+
 <ul>
 <li>
 与bus_type相关的宏定义
-
-</ul>
-
 <pre class="brush:c">
 // BUS_ATTR
 struct bus_attribute {
@@ -777,13 +751,12 @@ struct bus_attribute {
 struct bus_attribute bus_attr_##_name = __ATTR(_name, _mode, _show, _store)
 </pre>
 
+</ul>
+
 <h3 id="toc_2.4.4">类(class)</h3>
 <ul>
 <li>
 每个类由class对象描述，该子系统对应的目录为/sys/class。
-
-</ul>
-
 <pre class="brush:c">
 struct class {
 	const char		*name;
@@ -811,12 +784,11 @@ struct class {
 };
 </pre>
 
+</ul>
+
 <ul>
 <li>
 与class相关的宏定义
-
-</ul>
-
 <pre class="brush:c">
 // CLASS_ATTR
 struct class_attribute {
@@ -828,6 +800,8 @@ struct class_attribute {
 #define CLASS_ATTR(_name, _mode, _show, _store)			\
 struct class_attribute class_attr_##_name = __ATTR(_name, _mode, _show, _store)
 </pre>
+
+</ul>
 
 <h1 id="toc_3">mmc驱动示例</h1>
 <ul>

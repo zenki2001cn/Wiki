@@ -56,6 +56,9 @@
 <li><a href="#toc_1">变量定义</a>
 <ul>
 <li><a href="#toc_1.1">标量变量</a>
+<ul>
+<li><a href="#toc_1.1.1">Dictionary</a>
+</ul>
 <li><a href="#toc_1.2">有特殊含义的变量</a>
 <li><a href="#toc_1.3">变量赋值</a>
 <li><a href="#toc_1.4">释放变量</a>
@@ -81,6 +84,12 @@ w:name —— 只对当前窗口有效的变量
 g:name —— 全局变量
 v:name —— vim预定义变量
 a:name —— 函数的参变量
+</pre>
+
+<h3 id="toc_1.1.1">Dictionary</h3>
+<pre class="brush:bash">
+let g:dictionary_test = {}
+let g:dictionary_test['key'] = 'value'
 </pre>
 
 <h2 id="toc_1.2">有特殊含义的变量</h2>

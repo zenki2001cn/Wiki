@@ -18,16 +18,16 @@ article{margin:-5em 5em 0; padding:0 4em; display:block; }
 h1, h2, h3, h4, h5, h6 {font-family: Trebuchet MS, serif; margin-top: 1.5em; margin-bottom: 0.5em;
     border-bottom:0px solid #aaa; text-shadow:2px 2px 6px #999;
 }
-h1 {font-size: 2.0em; border-bottom:1px solid #ccc; line-height:1.5em; color:#0C4C83;}
+h1 {font-size: 2.0em; border-bottom:1px solid #ccc; line-height:1.5em; color:#9A3030;}
 h2 {font-size: 1.5em; color:#435A6E;}
-h3 {font-size: 1.2em; color:#435A6E;}
-h4 {font-size: 1.0em; color:#435A6E;}
-h5 {font-size: 0.8em; color:#435A6E;}
+h3 {font-size: 1.2em; color:#5A88B5;}
+h4 {font-size: 1.0em; color:#557255;}
+h5 {font-size: 0.8em; color:#C5A467;}
 h6 {font-size: 0.5em; color:#435A6E;}
 
-h1:after{content:'¶'; color:#0C4C83;}
+h1:after{content:'¶'; color:#9A3030;}
 h2:after{content:'¶¶'; color:#435A6E;}
-h3:after{content:'¶¶¶'; color:#435A6E;}
+h3:after{content:'¶¶¶'; color:#5A88B5;}
 h1:after, h2:after, h3:after{display:none;}
 h1:hover:after, h2:hover:after, h3:hover:after{display:inline;}
 
@@ -121,7 +121,7 @@ div.toc:hover{
     div.toc ul{margin:0; padding:0 0 0 1em; *padding:0;}
     div.toc>ul{padding:0;}
     div.toc ul ul{*padding:0 0 0 8px;}
-    div.toc li{list-style-type: none; margin:0; padding:0 0 0 18px; background:transparent url(bg/icons.png) no-repeat scroll 0 -48px; font-size:.9em; line-height:18px; overflow:hidden;}
+    div.toc li{list-style-type: none; margin:0; padding:0 0 0 18px; background:transparent url(bg/icons.png) no-repeat scroll 0 -48px; font-size:15px; line-height:18px; overflow:hidden;}
     
 /*
 div.toc{border:1px solid #ccc; background:#f8f8f8; float:right; padding:3px; position:fixed; right:1em; z-index:1;

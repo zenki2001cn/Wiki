@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>文本化</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">文本化</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">文本化</a>
+<ul>
+<li><a href="#toc_1.1">文本化的重要性</a>
+<li><a href="#toc_1.2">Unix文本文件格式的约定</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">文本化的重要性</h2>
+<pre class="brush:text">
+    文本流是非常有用的通用格式，因为人无需专门工具就可以很容易地编辑和读写文本流，
+这些格式是透明的。
+    使用二进制协议的唯一正当理由是：如果要处理大批量的数据集，因而确实关注能否在介
+质上获得最大位密度，或是非常关心将数据转化为芯片核心结构所必须的时间或指令开销。
+</pre>
+
+<h2 id="toc_1.2">Unix文本文件格式的约定</h2>
+<ul>
+<li>
+如果可能，以新行符结束的每一行只存只一个记录。
+
+<li>
+如果可能，每行不超过80个字符。
+
+<li>
+使用“#”引入注释。
+
+<li>
+支持反斜杠约定。
+
+<li>
+在每行一条记录的格式中，使用冒号或任何连续的空白作为字段分隔符。
+
+<li>
+不要过分区别tab和whitespace。
+
+<li>
+优先选用十六进制而不是八进制。
+
+<li>
+对于复杂的记录，使用“节格式”，要么让记录格式和RFC 822电子邮件头类似，用冒号终止的字段名关键字作为引导字段。
+
+<li>
+在节格式中，支持连续行。
+
+<li>
+要么包含一个版本号，要么将格式设计成相互独立的自描述字节块。
+
+<li>
+注意浮点数取整取问题。
+
+<li>
+不要仅对文件的一部分进行压缩或二进制编码。
+
+</ul>
+
+
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

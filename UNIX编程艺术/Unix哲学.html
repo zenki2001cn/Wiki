@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unix哲学</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">Unix哲学</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Unix哲学</a>
+<ul>
+<li><a href="#toc_1.1">模块原则：使用简洁的接口拼合简单的部件</a>
+<li><a href="#toc_1.2">清晰原则：清晰胜于技巧</a>
+<li><a href="#toc_1.3">组合原则</a>
+<li><a href="#toc_1.4">分离原则：策略同机制分离，接口同引擎分离</a>
+<li><a href="#toc_1.5">简洁原则：设计要简洁，复杂度能低则低</a>
+<li><a href="#toc_1.6">吝啬原则：除非确无它法，不要编写庞大的程序</a>
+<li><a href="#toc_1.7">透明性原则：设计要可见，以便审查和调试</a>
+<li><a href="#toc_1.8">健壮原则：健壮源于透明与简洁</a>
+<li><a href="#toc_1.9">表示原则：把知识叠入数据以求逻辑质朴而健壮</a>
+<li><a href="#toc_1.10">通俗原则：接口设计避免标新立异</a>
+<li><a href="#toc_1.11">缄默原则：如果一个程序没什么好说的，就保持沉默</a>
+<li><a href="#toc_1.12">补救原则：出现异常时，马上退出并给出足量错误信息</a>
+<li><a href="#toc_1.13">经济原则：宁花机器一分，不花程序员一秒</a>
+<li><a href="#toc_1.14">生成原则：避免手工hack，尽量编写程序去生成程序</a>
+<li><a href="#toc_1.15">优化原则：雕琢前先得有原型，跑之前先学会走</a>
+<li><a href="#toc_1.16">多样原则：决不相信所谓“不二法门”的断言</a>
+<li><a href="#toc_1.17">扩展原则：设计着眼未来，未来总比预想快</a>
+</ul>
+</ul>
+</div>
+
+<pre class="brush:text">
+“Those who do not understand Unix are condemned to reinvent it, poorly.”
+“不懂UNIX的人注定最终还要重复发明一个蹩脚的UNIX。”
+                                                        —— Henry Spencer
+</pre>
+
+<h2 id="toc_1.1">模块原则：使用简洁的接口拼合简单的部件</h2>
+<pre class="brush:text">
+    要编制复杂软件而又不至于一败涂地的唯一方法就是降低其整体复杂度——用清晰的接口
+把若干简单的模块组合成一个复杂软件。
+</pre>
+
+<h2 id="toc_1.2">清晰原则：清晰胜于技巧</h2>
+<pre class="brush:text">
+    永远不要去吃力地解读一段晦涩的代码三次。第一次也许侥幸成功，但如果发现必须重新
+解读一遍——离第一次太久了，具体细节无从回想——那么你该注释代码了，这样第三次就相对不会
+那么痛苦了。
+                                                    —— Henry Spencer
+</pre>
+
+<h2 id="toc_1.3">组合原则</h2>
+<pre class="brush:text">
+    当程序无法自然地使用序列化、协议形式的接口时，正确的UNIX设计至少是，把可能多
+的编程元素组织为一套定义良好的API。
+</pre>
+
+<h2 id="toc_1.4">分离原则：策略同机制分离，接口同引擎分离</h2>
+<pre class="brush:text">
+    这种模式的经典例子就是Emacs编辑器，它使用内嵌的脚本语言Lisp解释器来控制用C编写的
+编辑原语操作。
+</pre>
+
+<h2 id="toc_1.5">简洁原则：设计要简洁，复杂度能低则低</h2>
+<pre class="brush:text">
+    要避免这些陷阱，唯一的方法就是鼓励另一种软件文化，以简洁为美。
+</pre>
+
+<h2 id="toc_1.6">吝啬原则：除非确无它法，不要编写庞大的程序</h2>
+
+<h2 id="toc_1.7">透明性原则：设计要可见，以便审查和调试</h2>
+<pre class="brush:text">
+    软件系统的透明性是指你一眼就能够看出软件是在做什么以及怎样做的。显见性是指程序带有
+监视和显示内部状态的功能，这样程序不仅能够运行良好，而且还可以看得出它以何种方式运行。
+</pre>
+
+<h2 id="toc_1.8">健壮原则：健壮源于透明与简洁</h2>
+<pre class="brush:text">
+    模块性（代码简朴、接口简洁）是组织程序以达到更简洁目的的一个方法。
+</pre>
+
+<h2 id="toc_1.9">表示原则：把知识叠入数据以求逻辑质朴而健壮</h2>
+<pre class="brush:text">
+    数据要比编程逻辑更容易驾驭。在设计中，你应该主动将代码的复杂度转移到数据之中去。
+</pre>
+
+<h2 id="toc_1.10">通俗原则：接口设计避免标新立异</h2>
+<pre class="brush:text">
+    最小立异原则的另一面是避免表象相似而实际却略有不同。这会极端危险，因为表象相似往往导致
+人们产生错误的假定。所以最好让不同的事物有明显的区别，而不要看起来一模一样。
+                                                        —— Henry Spencer
+</pre>
+
+<h2 id="toc_1.11">缄默原则：如果一个程序没什么好说的，就保持沉默</h2>
+<pre class="brush:text">
+    我认为简洁是Unix程序的核心风格。一旦程序的输出成为了另一个程序的输入，就很容易把需要
+的数据挑出来。站在人的角度上来说——重要的信息不应该混杂在冗长的程序内部行为信息中。如果显示
+的信息都是重要的，那就不用找了。
+                                                        —— Ken Arnold
+</pre>
+
+<h2 id="toc_1.12">补救原则：出现异常时，马上退出并给出足量错误信息</h2>
+
+<h2 id="toc_1.13">经济原则：宁花机器一分，不花程序员一秒</h2>
+
+<h2 id="toc_1.14">生成原则：避免手工hack，尽量编写程序去生成程序</h2>
+
+<h2 id="toc_1.15">优化原则：雕琢前先得有原型，跑之前先学会走</h2>
+<pre class="brush:text">
+    先给你的设计做个未优化的、运行缓慢、很耗内存但是正确的实现，然后进行系统地调整，寻找那些
+可以通过牺牲最小的局部简洁性而获得较大性能提升的地方。
+</pre>
+
+<h2 id="toc_1.16">多样原则：决不相信所谓“不二法门”的断言</h2>
+<pre class="brush:text">
+    Unix奉行的是广泛采用多种语言、开放的可扩展系统的用户定制机制。
+</pre>
+
+<h2 id="toc_1.17">扩展原则：设计着眼未来，未来总比预想快</h2>
+<pre class="brush:text">
+    设计协议或是文件格式时，应使其具有充分的自描述性以便可以扩展。一直，总是，要么包含一个
+版本号，要么采用独立、自描述的语句，按照可以随时插入新的、换掉旧的而不会搞乱格式读取代码的
+方法组织格式。
+</pre>
+
+
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

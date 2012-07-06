@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>透明性</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">透明性</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">透明性</a>
+<ul>
+<li><a href="#toc_1.1">为透明性和可显性而设计</a>
+<ul>
+<li><a href="#toc_1.1.1">透明性之禅</a>
+<li><a href="#toc_1.1.2">为透明性和可显性而编码</a>
+<li><a href="#toc_1.1.3">透明性和避免过度保护</a>
+<li><a href="#toc_1.1.4">为可维护性而设计</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<pre class="brush:text">
+    不要让调试工具仅仅成为一种事后追加或者用过就束之高阁的东西。它们是通往
+代码的窗口：不要只在窗口凿出粗糙的洞，要修整这些洞并装上窗。如果打算让代码
+一直可被维护，就始终必须让光进去。
+</pre>
+
+<h2 id="toc_1.1">为透明性和可显性而设计</h2>
+<pre class="brush:text">
+    要为透明性和可显性而设计，就必须运用各种计策来保持代码的简洁，也必须专注
+代码同其他人交流的方式。在“这个设计能行吗？“之后要提出的头几个问题就是“别人能
+读懂这个设计吗？这个设计优雅吗？”
+</pre>
+
+<h3 id="toc_1.1.1">透明性之禅</h3>
+<ul>
+<li>
+要追求代码的透明，最有效的方法很简单，就是<code>不要在具体操作的代码上叠放太多的抽象层</code>。
+
+<li>
+禅的一个主要教导是，通常我们都透过源于欲望的偏见和成见的迷雾观察世界。要开悟，我们必须遵循禅的教导，不仅要“去欲望，少依恋”，还要“如实见”——不要让偏见和成见蒙住了眼。
+
+</ul>
+
+<h3 id="toc_1.1.2">为透明性和可显性而编码</h3>
+<ul>
+<li>
+思考以下几个问题：
+
+<ul>
+<li>
+程序调用层次中最大的静态深度是多少？如果大于四，就要当心。
+
+<li>
+代码是否具有强大、明显的不变性质？
+
+<li>
+每个API的各个函数调用是否正交？是否存在太多的标志位，使得一个调用完成多个任务？
+
+<li>
+程序的数据结构或分类和它们所代表的外在实体之间，是否存在清晰的一对一映射？
+
+<li>
+是否容易找到给定函数的代码部分？不仅单个函数、模块，还有整个代码，需要花多少精力才能读懂？
+
+<li>
+代码增加了特殊情况还是避免了特殊情况？特殊情况使代码更难理解。
+
+<li>
+代码中有多少个magic number?
+
+</ul>
+</ul>
+
+<h3 id="toc_1.1.3">透明性和避免过度保护</h3>
+<pre class="brush:text">
+    程序员经常建造过分精细的抽象城堡，这一倾向的近亲是过度保护底层细节。尽管在程序的正常
+操作模式中隐藏这些细节并不是不良做法，但这些细节必须能够找到。隐藏细节和无法访问细节有着
+重要区别。
+</pre>
+
+<h3 id="toc_1.1.4">为可维护性而设计</h3>
+<pre class="brush:text">
+    如果作者以外的其他人能够顺利地理解和修改软件，则这个软件是可维护的。可维护性不仅要求
+代码能够运行；还要求代码能够遵循清晰原则，并且和人以及计算机成功沟通。
+    Unix程序员学到了一种品性，就是宁愿抛弃、重建代码也不愿修补那些蹩脚的代码。
+    如果希望代码成为活代码，则有效的时间花费之一就是投入精力使代码具备可维护性。
+</pre>
+
+
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

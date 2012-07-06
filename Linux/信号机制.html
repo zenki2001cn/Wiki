@@ -195,14 +195,13 @@ Kill()最常用于pid&gt;0时的信号发送，调用成功返回0；否则，�
 
 <li>
 注：对于pid&lt;0时的情况，对于哪些进程将接受信号，各种版本说法不一，其实很简单，参阅内核源码kernel/signal.c即可。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;sys/types.h&gt;
 #include &lt;signal.h&gt;
 int kill(pid_t pid,int signo)
 </pre>
+
+</ul>
 
 <table>
 <tr>
@@ -251,26 +250,24 @@ pid=-1
 <ul>
 <li>
 向进程本身发送信号，参数为即将发送的信号值。调用成功返回0；否则，返回-1。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;signal.h&gt;
 int raise(int signo)
 </pre>
 
+</ul>
+
 <h3 id="toc_1.4.3">sigqueue()</h3>
 <ul>
 <li>
 sigqueue()是比较新的发送信号系统调用，主要是针对实时信号提出的（当然也支持前32种），支持信号带有参数，与函数 sigaction()配合使用。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;sys/types.h&gt;
 #include &lt;signal.h&gt;
 int sigqueue(pid_t pid, int sig, const union sigval val); // 调用成功返回0；否则，返回-1。
 </pre>
+
+</ul>
 
 <ul>
 <li>
@@ -307,13 +304,12 @@ sigqueue()发送非实时信号时，仍然不支持排队，即在信号处理�
 
 <li>
 返回值，如果调用alarm()前，进程中已经设置了闹钟时间，则返回上一个闹钟时间的剩余时间，否则返回0。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;unistd.h&gt;
 unsigned int alarm(unsigned int seconds);
 </pre>
+
+</ul>
 
 <h3 id="toc_1.4.5">setitimer()</h3>
 <ul>
@@ -347,9 +343,6 @@ Setitimer()参数解析：
 </ul>
 <li>
 Setitimer()调用成功返回0，否则返回-1。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;sys/time.h&gt;
 int setitimer(int which, const struct itimerval *value, struct itimerval *ovalue));
@@ -364,17 +357,18 @@ struct timeval {
 };
 </pre>
 
+</ul>
+
 <h3 id="toc_1.4.6">abort()</h3>
 <ul>
 <li>
 向进程发送SIGABORT信号，默认情况下进程会异常退出，当然可定义自己的信号处理函数。即使SIGABORT被进程设置为阻塞信号，调用abort()后，SIGABORT仍然能被进程接收。该函数无返回值。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;stdlib.h&gt;
 void abort(void);
 </pre>
+
+</ul>
 
 <h2 id="toc_1.5">信号的安装</h2>
 <ul>
@@ -401,9 +395,6 @@ sigaction()是较新的函数（由两个系统调用实现：sys_signal以及sy
 
 <li>
 如果signal()调用成功，返回最后一次为安装信号signum而调用signal()时的handler值；失败则返回SIG_ERR。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;signal.h&gt;
 void (*signal(int signum, void (*handler)(int)))(int);
@@ -412,6 +403,8 @@ void (*signal(int signum, void (*handler)(int)))(int);
 typedef void (*sighandler_t)(int)；
 sighandler_t signal(int signum, sighandler_t handler);
 </pre>
+
+</ul>
 
 <h3 id="toc_1.5.2">sigaction()</h3>
 <ul>
@@ -431,20 +424,16 @@ sigaction函数用于改变进程接收到特定信号后的行为。
 </ul>
 <li>
 第二个参数最为重要，其中包含了对指定信号的处理、信号所传递的信息、信号处理函数执行过程中应屏蔽掉哪些函数等等。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;signal.h&gt;
 int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact));
 </pre>
 
+</ul>
+
 <ul>
 <li>
 sigaction结构定义如下：
-
-</ul>
-
 <pre class="brush:c">
 struct sigaction {
     union{
@@ -456,6 +445,8 @@ struct sigaction {
     unsigned long sa_flags； 
 }
 </pre>
+
+</ul>
 
 <ul>
 <li>
@@ -541,9 +532,6 @@ typedef struct siginfo {
 <ul>
 <li>
 siginfo_t结构中的联合数据成员确保该结构适应所有的信号，比如对于实时信号来说，则实际采用下面的结构形式：
-
-</ul>
-
 <pre class="brush:c">
 typedef struct {
     int si_signo;
@@ -553,18 +541,19 @@ typedef struct {
 } siginfo_t;
 </pre>
 
+</ul>
+
 <ul>
 <li>
 结构的第四个域同样为一个联合数据结构：
-
-</ul>
-
 <pre class="brush:c">
 union sigval {
     int sival_int;		
     void *sival_ptr;	
 }
 </pre>
+
+</ul>
 
 <ul>
 <li>
@@ -588,9 +577,6 @@ sa_mask指定在信号处理程序执行过程中，哪些信号应当被阻塞�
 
 <li>
 sa_flags中包含了许多标志位，包括刚刚提到的SA_NODEFER及SA_NOMASK标志位。另一个比较重要的标志位是SA_SIGINFO，当设定了该标志位时，表示信号附带的参数可以被传递到信号处理函数中，因此，应该为sigaction结构中的sa_sigaction指定处理函数，而不应该为sa_handler指定信号处理函数，否则，设置该标志变得毫无意义。即使为sa_sigaction指定了信号处理函数，如果不设置SA_SIGINFO，信号处理函数同样不能得到信号传递过来的数据，在信号处理函数中对这些信息的访问都将导致段错误（Segmentation fault）。
-
-</ul>
-
 <pre class="brush:text">
     注：很多文献在阐述该标志位时都认为，如果设置了该标志位，就必须定义三参数信号处理函数。
 实际不是这样的，验证方法很简单：自己实现一个单一参数信号处理函数，并在程序中设置该标志位，
@@ -598,25 +584,23 @@ sa_flags中包含了许多标志位，包括刚刚提到的SA_NODEFER及SA_NOMAS
 则传递参数；否则，不传递参数。
 </pre>
 
+</ul>
+
 <h2 id="toc_1.6">信号集及信号集操作函数</h2>
 <ul>
 <li>
 信号集被定义为一种数据类型：
-
-</ul>
-
 <pre class="brush:c">
 typedef struct {
     unsigned long sig[_NSIG_WORDS]；
 } sigset_t
 </pre>
 
+</ul>
+
 <ul>
 <li>
 信号集用来描述信号的集合，linux所支持的所有信号可以全部或部分的出现在信号集中，主要与信号阻塞相关函数配合使用。下面是为信号集操作定义的相关函数：
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;signal.h&gt;
 int sigemptyset(sigset_t *set)；
@@ -631,6 +615,8 @@ sigdelset(sigset_t *set, int signum);   // 在set指向的信号集中删除sign
 sigismember(const sigset_t *set, int signum);   // 判定信号signum是否在set指向的信号集中。
 </pre>
 
+</ul>
+
 <h2 id="toc_1.7">信号阻塞与信号未决</h2>
 <ul>
 <li>
@@ -641,15 +627,14 @@ sigpending(sigset_t *set))获得当前已递送到进程，却被阻塞的所有
 
 <li>
 sigsuspend(const sigset_t *mask))用于在接收到某个信号之前, 临时用mask替换进程的信号掩码, 并暂停进程执行，直到收到信号为止。sigsuspend 返回后将恢复调用之前的信号掩码。信号处理函数完成后，进程将继续执行。该系统调用始终返回-1，并将errno设置为EINTR。
-
-</ul>
-
 <pre class="brush:c">
 #include &lt;signal.h&gt;
 int sigprocmask(int how, const sigset_t *set, sigset_t *oldset))；
 int sigpending(sigset_t *set));
 int sigsuspend(const sigset_t *mask))；
 </pre>
+
+</ul>
 
 <ul>
 <li>
