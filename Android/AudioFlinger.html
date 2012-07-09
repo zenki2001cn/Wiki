@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>AudioFlinger</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,60 +47,61 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">AudioFlinger</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">AudioFlinger</a></li>
+<li><a href="#toc_1">AudioFlinger</a>
 <ul>
-<li><a href="#toc_1.1">概述</a></li>
-<li><a href="#toc_1.2">功能描述</a></li>
-<li><a href="#toc_1.3">AudioFlinger初始化</a></li>
+<li><a href="#toc_1.1">概述</a>
+<li><a href="#toc_1.2">功能描述</a>
+<li><a href="#toc_1.3">AudioFlinger初始化</a>
 <ul>
-<li><a href="#toc_1.3.1">AudioFlinger::AudioFlinger</a></li>
+<li><a href="#toc_1.3.1">AudioFlinger::AudioFlinger</a>
 </ul>
-<li><a href="#toc_1.4">音轨抽象类和共享内存</a></li>
+<li><a href="#toc_1.4">音轨抽象类和共享内存</a>
 <ul>
-<li><a href="#toc_1.4.1">AudioFlinger::ThreadBase::TrackBase::TrackBase</a></li>
-<li><a href="#toc_1.4.2">AudioFlinger::PlaybackThread::Track::Track</a></li>
-<li><a href="#toc_1.4.3">AudioFlinger::RecordThread::RecordTrack::RecordTrack</a></li>
+<li><a href="#toc_1.4.1">AudioFlinger::ThreadBase::TrackBase::TrackBase</a>
+<li><a href="#toc_1.4.2">AudioFlinger::PlaybackThread::Track::Track</a>
+<li><a href="#toc_1.4.3">AudioFlinger::RecordThread::RecordTrack::RecordTrack</a>
 </ul>
-<li><a href="#toc_1.5">音频输出流程</a></li>
+<li><a href="#toc_1.5">音频输出流程</a>
 <ul>
-<li><a href="#toc_1.5.1">创建硬件抽象层的I/O对象</a></li>
+<li><a href="#toc_1.5.1">创建硬件抽象层的I/O对象</a>
 <ul>
-<li><a href="#toc_1.5.1.1">AudioSystem::getOutput</a></li>
-<li><a href="#toc_1.5.1.2">AudioPolicyService::getOutput</a></li>
+<li><a href="#toc_1.5.1.1">AudioSystem::getOutput</a>
+<li><a href="#toc_1.5.1.2">AudioPolicyService::getOutput</a>
 </ul>
-<li><a href="#toc_1.5.2">播放线程初始化</a></li>
+<li><a href="#toc_1.5.2">播放线程初始化</a>
 <ul>
-<li><a href="#toc_1.5.2.1">AudioFlinger::openOutput</a></li>
+<li><a href="#toc_1.5.2.1">AudioFlinger::openOutput</a>
 </ul>
-<li><a href="#toc_1.5.3">通过TrackHandle播放</a></li>
+<li><a href="#toc_1.5.3">通过TrackHandle播放</a>
 <ul>
-<li><a href="#toc_1.5.3.1">AudioFlinger::createTrack</a></li>
-<li><a href="#toc_1.5.3.2">AudioFlinger::checkPlaybackThread_l</a></li>
-<li><a href="#toc_1.5.3.3">AudioFlinger::PlaybackThread::createTrack_l</a></li>
+<li><a href="#toc_1.5.3.1">AudioFlinger::createTrack</a>
+<li><a href="#toc_1.5.3.2">AudioFlinger::checkPlaybackThread_l</a>
+<li><a href="#toc_1.5.3.3">AudioFlinger::PlaybackThread::createTrack_l</a>
 </ul>
-<li><a href="#toc_1.5.4">播放线程堆栈图</a></li>
+<li><a href="#toc_1.5.4">播放线程堆栈图</a>
 </ul>
-<li><a href="#toc_1.6">音频采集流程</a></li>
+<li><a href="#toc_1.6">音频采集流程</a>
 <ul>
-<li><a href="#toc_1.6.1">创建硬件抽象层的I/O对象</a></li>
+<li><a href="#toc_1.6.1">创建硬件抽象层的I/O对象</a>
 <ul>
-<li><a href="#toc_1.6.1.1">AudioSystem::getInput</a></li>
-<li><a href="#toc_1.6.1.2">AudioPolicyService::getInput</a></li>
+<li><a href="#toc_1.6.1.1">AudioSystem::getInput</a>
+<li><a href="#toc_1.6.1.2">AudioPolicyService::getInput</a>
 </ul>
-<li><a href="#toc_1.6.2">录音线程初始化</a></li>
+<li><a href="#toc_1.6.2">录音线程初始化</a>
 <ul>
-<li><a href="#toc_1.6.2.1">AudioFlinger::openInput</a></li>
+<li><a href="#toc_1.6.2.1">AudioFlinger::openInput</a>
 </ul>
-<li><a href="#toc_1.6.3">通过RecordHandle录音</a></li>
+<li><a href="#toc_1.6.3">通过RecordHandle录音</a>
 <ul>
-<li><a href="#toc_1.6.3.1">AudioFlinger::openRecord</a></li>
-<li><a href="#toc_1.6.3.2">AudioFlinger::checkRecordThread_l</a></li>
-<li><a href="#toc_1.6.3.3">AudioFlinger::RecordThread::createRecordTrack_l</a></li>
+<li><a href="#toc_1.6.3.1">AudioFlinger::openRecord</a>
+<li><a href="#toc_1.6.3.2">AudioFlinger::checkRecordThread_l</a>
+<li><a href="#toc_1.6.3.3">AudioFlinger::RecordThread::createRecordTrack_l</a>
 </ul>
 </ul>
 </ul>
@@ -118,53 +119,53 @@ AudioFlinger向上通过IAudioFinger接口提供服务。所以，AudioFlinger�
 <ul>
 <li>
 AudioFlinger包含以下内部类：
-</li>
+
 <ul>
 <li>
 <code>IAudioFlinger接口</code>：这是AudioFlinger向外提供服务的接口，例如openOutput，openInput，createTrack，openRecord等等，应用程序或者其他service通过ServiceManager可以获得该接口。该接口通过继承BnAudioFlinger得到。
-</li>
+
 </ul>
 <li>
 <code>ThreadBase</code>：在AudioFlinger中，Android为每一个放音/录音设备均创建一个处理线程，负责音频数据的I/O和合成，ThreadBase是这些线程的基类，所有的播放和录音线程都派生自ThreadBase。
-</li>
+
 <ul>
 <li>
 <code>PlaybackThread</code>：音频输出线程。它有一个mOutput变量，类型为AudioStreamOutput*，因此它与HAL层的音频输出相关联。
-</li>
+
 <ul>
 <li>
 <code>MixerThread</code>：混音线程，它将来自多个源的音频数据混音后再输出。
-</li>
+
 <li>
 <code>DirectOutputThread</code>：多路输出线程，它从MixerThread派生，意味着它也能够混音。它最终会把混音后的数据写到多个输出中，也就是一份数据会有多个接收者。这就是Duplicate的含义。
-</li>
+
 <li>
 PlaybackThread维护两个Track数组，一个是mActiveTracks，表示当前活跃的Track。另一个是mTracks，表示所有Track。
-</li>
+
 </ul>
 <li>
 <code>RecordThread</code>：音频采集线程。它有一个mInput变量，类型为AudioStreamInput*，因此它与HAL层的音频采集相关联。
-</li>
+
 </ul>
 </ul>
 
 <ul>
 <li>
 旧的pic/audio_flinger.jpg
-</li>
+
 </ul>
 <p>
-<a href="pic/Audio_Thread.png"><img src="pic/Audio_Thread.png" /></a>
+<img src="http:pic/Audio_Thread.png" />
 </p>
 
 <h2 id="toc_1.3">AudioFlinger初始化</h2>
 <ul>
 <li>
 初始化最主要的功能是创建HAL层的模块对象，并初始化默认音频设置。
-</li>
+
 <li>
 关注该构造方法是为了明确如何访问HAL层的接口。
-</li>
+
 </ul>
 
 <h3 id="toc_1.3.1">AudioFlinger::AudioFlinger</h3>
@@ -193,25 +194,25 @@ AudioFlinger::AudioFlinger() : BnAudioFlinger(),
 <ul>
 <li>
 在现实世界，每一种音色的声音可以定义为一个音轨，而Android的世界，同样有对应的抽象类。
-</li>
+
 <li>
 <code>TrackBase</code>：应用程序每创建一个音轨（AudioTrack / AudioRecord），在AudioFlinger中都会创建一个对应的Track实例，TrackBase就是这些Track的基类，它的主要任务是分配共享内存空间。其派生类有：
-</li>
+
 <ul>
 <li>
 PlaybackTread::Track：用于普通播放，对应于应用层的AudioTrack。
-</li>
+
 <li>
 PlaybackThread::OutputTrack：用于多重设备输出，当蓝牙播放开启时使用。
-</li>
+
 <li>
 RecordThread::RecordTrack：用于录音，对应于应用层的AudioRecord。
-</li>
+
 </ul>
 </ul>
 
 <p>
-<a href="pic/Audio_Track.png"><img src="pic/Audio_Track.png" /></a>
+<img src="http:pic/Audio_Track.png" />
 </p>
 
 <h3 id="toc_1.4.1">AudioFlinger::ThreadBase::TrackBase::TrackBase</h3>
@@ -290,13 +291,13 @@ AudioFlinger::RecordThread::RecordTrack::RecordTrack(
 <ul>
 <li>
 要与硬件设备通信，需要涉及到I/O的操作，而在Framework中，<code>该I/O操作被抽象成audio_io_handle_t</code>。
-</li>
+
 <li>
 在<a href="AudioTrack.html">AudioTrack</a>一节，我们分析了AudioTrack::set方法初始化时会调用AudioSystem::getOutput方法获取一个output句柄标识。
-</li>
+
 <li>
 AudioSystem又会进一步通过IAudioPolicyService接口得到真正的io句柄。
-</li>
+
 </ul>
 
 <h4 id="toc_1.5.1.1">AudioSystem::getOutput</h4>
@@ -347,10 +348,10 @@ audio_io_handle_t AudioPolicyService::getOutput(AudioSystem::stream_type stream,
 <ul>
 <li>
 首先通过硬件抽象层获取AudioStreamOut对象，之后创建<code>DirectOutputThread</code>或<code>MixerThread</code>对象。
-</li>
+
 <li>
 创建好的线程会把该线程和它的ID保存在AudioFlinger的成员变量mPlaybackThreads中，mPlaybackThreads是一个Vector，AudioFlinger创建的线程都会保存在里面。最后，openOutput返回该线程的ID这个ID也就是所谓的audio_io_handle_t。这样，AudioFlinger的调用者（如AudioTrack）就能看到这个ID，当需要访问时传入该ID，AudioFlinger会通过mPlaybackThreads，得到该线程的指针。
-</li>
+
 </ul>
 
 <h4 id="toc_1.5.2.1">AudioFlinger::openOutput</h4>
@@ -394,21 +395,21 @@ int AudioFlinger::openOutput(uint32_t *pDevices, uint32_t *pSamplingRate,
 <ul>
 <li>
 创建Track对象：回忆<a href="AudioTrack.html">AudioTrack</a>一节，上层应用首先要通过IAudioFlinger接口，调用createTrack()，createTrack会调用PlaybackThread类的createTrack_l方法。
-</li>
+
 <ul>
 <li>
 checkPlaybackThread_l：根据线程句柄标识，在线程的容器中找到对应的PlaybackThread线程。该线程句柄标识由调用者AudioTrack传入。
-</li>
+
 <li>
 createTrack_l：创建了PlaybackThread::Track对象，然后加入播放线程的track列表mTracks中。
-</li>
+
 </ul>
 <li>
 createTrack最后创建了TrackHandle类并返回。<code>有了io句柄，就有了播放线程，播放线程又创建了不同的Track</code>，TrackHandle的作用就是封装这些Track，并继承实现IAudioTrack接口，提供跨进程的访问。之后，createTrack的调用者可以通过IAudioTrack接口与AudioFlinger中对应的Track实例交互。
-</li>
+
 <li>
 播放线程实际上是MixerThread或DirectOutputThread的一个实例，该实例的<code>threadLoop()</code>会把该线程中的各个Track进行混合，必要时还要进行ReSample(重采样)的动作，转换为统一的采样率(44.1K)，然后通过音频系统的AudioHardware层输出音频数据。
-</li>
+
 </ul>
 
 <h4 id="toc_1.5.3.1">AudioFlinger::createTrack</h4>
@@ -519,24 +520,24 @@ Exit:
 <ul>
 <li>
 旧的pic/playthread.png
-</li>
+
 </ul>
 <p>
-<a href="pic/AudioPlaybackThread.png"><img src="pic/AudioPlaybackThread.png" /></a>
+<img src="http:pic/AudioPlaybackThread.png" />
 </p>
 
 <h2 id="toc_1.6">音频采集流程</h2>
 <ul>
 <li>
 录音的流程和放音差不多，只不过数据流动的方向相反，录音线程变成RecordThread，Track变成了RecordTrack，openRecord返回RecordHandle。
-</li>
+
 </ul>
 
 <h3 id="toc_1.6.1">创建硬件抽象层的I/O对象</h3>
 <ul>
 <li>
 在<a href="AudioRecord.html">AudioRecord</a>一节中描述了AudioRecord初始化时会调用AudioSystem::getInput方法创建audio_io_handle_t句柄，而该方法又会进一步通过IAudioPolicyService接口来获取真正的io句柄。
-</li>
+
 </ul>
 
 <h4 id="toc_1.6.1.1">AudioSystem::getInput</h4>
@@ -572,7 +573,7 @@ audio_io_handle_t AudioPolicyService::getInput(int inputSource,
 <ul>
 <li>
 AudioFlinger::openInput首先创建AudioStreamIn对象，之后创建RecordThread线程并加入到线程队列中。
-</li>
+
 </ul>
 
 <h4 id="toc_1.6.2.1">AudioFlinger::openInput</h4>
@@ -610,13 +611,13 @@ int AudioFlinger::openInput(uint32_t *pDevices, uint32_t *pSamplingRate,
 <ul>
 <li>
 应用程序通过IAudioFlinger接口调用openRecord方法，该方法通过RecordThread创建RecordTrack对象，并最终初始化RecordHandle。
-</li>
+
 <li>
 RecordHandle实现了IAudioRecord接口，应用程序最终通过该接口与RecordThread交互进行录音操作。
-</li>
+
 <li>
 录音的线程处理请查看<code>AudioFlinger::RecordThread::threadLoop()</code>方法。
-</li>
+
 </ul>
 
 <h4 id="toc_1.6.3.1">AudioFlinger::openRecord</h4>
@@ -707,6 +708,8 @@ Exit:
     return track;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -715,17 +718,6 @@ Exit:
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>策略模式-Strategy Pattern</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,6 +47,7 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">策略模式(Strategy Pattern)</h1>
 <p>
@@ -54,7 +55,7 @@
 </p>
 
 <p>
-<img src="pic/strategy.png" />
+<img src="http:pic/strategy.png" />
 </p>
 
 <p>
@@ -63,16 +64,16 @@
 <ul>
 <li>
 抽象
-</li>
+
 <li>
 封装
-</li>
+
 <li>
 多态
-</li>
+
 <li>
 继承
-</li>
+
 </ul>
 
 <p>
@@ -81,13 +82,13 @@
 <ul>
 <li>
 将变化的部分独立出来并进行封装。
-</li>
+
 <li>
 针对接口编程，而不是实现编程。
-</li>
+
 <li>
 多用组合，少用继承。
-</li>
+
 </ul>
 
 <p>
@@ -96,17 +97,19 @@
 <ul>
 <li>
 许多相关的类仅仅是行为有异。“策略”提供了一种用多个行为中的一个行为来配置一个类的方法。
-</li>
+
 <li>
 需要使用一个算法的不同变体。例如，你可能会定义一些反映不同的空间/时间权衡的算法。当这些变体实现为一个算法的类层次时,可以使用策略模式。
-</li>
+
 <li>
 算法使用客户不应该知道的数据。可使用策略模式以避免暴露复杂的、与算法相关的数据结构。
-</li>
+
 <li>
 一个类定义了多种行为, 并且这些行为在这个类的操作中以多个条件语句的形式出现。将相关的条件分支移入它们各自的Strategy类中以代替这些条件语句。
-</li>
+
 </ul>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -115,17 +118,6 @@
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

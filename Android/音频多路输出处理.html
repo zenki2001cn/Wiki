@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>音频多路输出处理</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,21 +47,22 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">多路输出处理</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">多路输出处理</a></li>
+<li><a href="#toc_1">多路输出处理</a>
 <ul>
-<li><a href="#toc_1.1">开启多线程</a></li>
+<li><a href="#toc_1.1">开启多线程</a>
 <ul>
-<li><a href="#toc_1.1.1">AudioPolicyManagerBase::handleA2dpConnection</a></li>
+<li><a href="#toc_1.1.1">AudioPolicyManagerBase::handleA2dpConnection</a>
 </ul>
-<li><a href="#toc_1.2">处理线程</a></li>
+<li><a href="#toc_1.2">处理线程</a>
 <ul>
-<li><a href="#toc_1.2.1">AudioFlinger::openDuplicateOutput</a></li>
-<li><a href="#toc_1.2.2">AudioFlinger::DuplicatingThread::addOutputTrack</a></li>
+<li><a href="#toc_1.2.1">AudioFlinger::openDuplicateOutput</a>
+<li><a href="#toc_1.2.2">AudioFlinger::DuplicatingThread::addOutputTrack</a>
 </ul>
 </ul>
 </ul>
@@ -71,29 +72,29 @@
 <ul>
 <li>
 AudioPolicyManagerBase::handleA2dpConnection和AudioPolicyManagerBase::handleA2dpDisconnection用来处理蓝牙连接的情形。
-</li>
+
 <li>
 当设备连接时，会先调用AudioPolicyService::openOutput打开设备，随后调用AudioPolicyService::openDuplicateOutput进行双线程处理。
-</li>
+
 <li>
 AudioPolicyManagerBase会做出以下动作：
-</li>
+
 <ul>
 <li>
 首先打开（或创建）蓝牙输出线程A2dpOutput
-</li>
+
 <li>
 以HardwareOutput和A2dpOutput作为参数，调用openDuplicateOutput，创建 DuplicatingThread
-</li>
+
 <li>
 把属于STRATEGY_MEDIA类型的Track移到A2dpOutput中
-</li>
+
 <li>
 把属于STRATEGY_DTMF类型的Track移到A2dpOutput中
-</li>
+
 <li>
 把属于STRATEGY_SONIFICATION类型的Track移到DuplicateOutput中
-</li>
+
 </ul>
 </ul>
 
@@ -137,25 +138,25 @@ status_t AudioPolicyManagerBase::handleA2dpConnection(AudioSystem::audio_devices
 <ul>
 <li>
 AudioFlinger中有一个特殊的线程类：DuplicatingThread，从类结构图可以发现，它是MixerThread的子类。当系统中有两个设备要同时输出时，DuplicatingThread将被创建，通过IAudioFlinger的openDuplicateOutput方法创建DuplicatingThread。
-</li>
+
 <ul>
 <li>
 DuplicatingThread的构造方法会调用DuplicatingThread::addOutputTrack创建第一个OutputTrack对象并加入到成员变量mOutputTracks的容器。
-</li>
+
 <li>
 之后构造方法会返回DuplicatingThread对象，再调用一次addOutputTrack方法创建第二个OutputTrack对象并加入容器。
-</li>
+
 <li>
 以上创建的两个OutputTrack对象同时又会被加入到两个MixerThread线程中。
-</li>
+
 </ul>
 <li>
 当DuplicatingThread::threadLoop线程往两个OutputTrack对象写数据的同时，两个<code>MixerThread::threadLoop</code>线程从中获取数据并输出到不同目标中。
-</li>
+
 </ul>
 
 <p>
-<a href="pic/bt_thread_track.png"><img src="pic/bt_thread_track.png" /></a>
+<img src="http:pic/bt_thread_track.png" />
 </p>
 
 <h3 id="toc_1.2.1">AudioFlinger::openDuplicateOutput</h3>
@@ -198,6 +199,8 @@ void AudioFlinger::DuplicatingThread::addOutputTrack(MixerThread *thread)
     }
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -206,17 +209,6 @@ void AudioFlinger::DuplicatingThread::addOutputTrack(MixerThread *thread)
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>HAL的C实现</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,40 +47,41 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">HAL的C实现</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">HAL的C实现</a></li>
+<li><a href="#toc_1">HAL的C实现</a>
 <ul>
-<li><a href="#toc_1.1">标准模块定义(hardware.h)</a></li>
+<li><a href="#toc_1.1">标准模块定义(hardware.h)</a>
 <ul>
-<li><a href="#toc_1.1.1">struct hw_module_t</a></li>
-<li><a href="#toc_1.1.2">struct hw_module_methods_t</a></li>
-<li><a href="#toc_1.1.3">struct hw_device_t</a></li>
+<li><a href="#toc_1.1.1">struct hw_module_t</a>
+<li><a href="#toc_1.1.2">struct hw_module_methods_t</a>
+<li><a href="#toc_1.1.3">struct hw_device_t</a>
 </ul>
-<li><a href="#toc_1.2">定义自定义HAL模块</a></li>
+<li><a href="#toc_1.2">定义自定义HAL模块</a>
 <ul>
-<li><a href="#toc_1.2.1">led_module_t</a></li>
-<li><a href="#toc_1.2.2">led_control_device_t</a></li>
-<li><a href="#toc_1.2.3">led_control_open</a></li>
-<li><a href="#toc_1.2.4">LED_HARDWARE_MODULE_ID</a></li>
+<li><a href="#toc_1.2.1">led_module_t</a>
+<li><a href="#toc_1.2.2">led_control_device_t</a>
+<li><a href="#toc_1.2.3">led_control_open</a>
+<li><a href="#toc_1.2.4">LED_HARDWARE_MODULE_ID</a>
 </ul>
-<li><a href="#toc_1.3">实现自定义HAL模块</a></li>
+<li><a href="#toc_1.3">实现自定义HAL模块</a>
 <ul>
-<li><a href="#toc_1.3.1">led_device_open</a></li>
-<li><a href="#toc_1.3.2">led_module_methods</a></li>
-<li><a href="#toc_1.3.3">struct led_module_t HAL_MODULE_INFO_SYM</a></li>
+<li><a href="#toc_1.3.1">led_device_open</a>
+<li><a href="#toc_1.3.2">led_module_methods</a>
+<li><a href="#toc_1.3.3">struct led_module_t HAL_MODULE_INFO_SYM</a>
 </ul>
-<li><a href="#toc_1.4">LED示例</a></li>
+<li><a href="#toc_1.4">LED示例</a>
 <ul>
-<li><a href="#toc_1.4.1">get_device_and_on</a></li>
+<li><a href="#toc_1.4.1">get_device_and_on</a>
 </ul>
-<li><a href="#toc_1.5">GPS示例</a></li>
+<li><a href="#toc_1.5">GPS示例</a>
 <ul>
-<li><a href="#toc_1.5.1">GpsInterface</a></li>
-<li><a href="#toc_1.5.2">get_gps_interface</a></li>
+<li><a href="#toc_1.5.1">GpsInterface</a>
+<li><a href="#toc_1.5.2">get_gps_interface</a>
 </ul>
 </ul>
 </ul>
@@ -90,28 +91,28 @@
 <ul>
 <li>
 该头文件定义了实现<code>HAL</code>所需要的头文件，规范的实现方法需要继承以下定义这些结构
-</li>
+
 <ul>
 <li>
 <code>struct hw_module_t</code>;
-</li>
+
 <li>
 <code>struct hw_module_methods_t</code>;
-</li>
+
 <li>
 <code>struct hw_device_t</code>;
-</li>
+
 </ul>
 </ul>
 
 <p>
-<a href="pic/hal_module.png"><img src="pic/hal_module.png" /></a>
+<img src="http:pic/hal_module.png" />
 </p>
 
 <ul>
 <li>
 概括的说，就是定义一个hw_module_t模块对象，用该<code>模块对象</code>的open方法初始化hw_device_t对象，最终的调用device<code>设备对象</code>的自定义方法对模块进行操作。
-</li>
+
 </ul>
 
 <h3 id="toc_1.1.1">struct hw_module_t</h3>
@@ -318,7 +319,7 @@ led_device* get_device_and_on() {
 <ul>
 <li>
 参考GPS的HAL实现，可以给device添加一个描述操作接口的struct结构GpsInterface，和一个获取该接口的方法get_gps_interface，所有的操作可以封装在这个接口中，并在这个获取方法中初始化，最终用户可以通过一个方法获取到相关操作的接口。
-</li>
+
 </ul>
 
 <h3 id="toc_1.5.1">GpsInterface</h3>
@@ -363,6 +364,8 @@ static const GpsInterface* get_gps_interface() {
     return interface;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -371,17 +374,6 @@ static const GpsInterface* get_gps_interface() {
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

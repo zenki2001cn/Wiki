@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>sp和wp</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,40 +47,41 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">sp和wp</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">sp和wp</a></li>
+<li><a href="#toc_1">sp和wp</a>
 <ul>
-<li><a href="#toc_1.1">RefBase</a></li>
-<li><a href="#toc_1.2">struct ref_entry</a></li>
-<li><a href="#toc_1.3">sp和wp</a></li>
+<li><a href="#toc_1.1">RefBase</a>
+<li><a href="#toc_1.2">struct ref_entry</a>
+<li><a href="#toc_1.3">sp和wp</a>
 <ul>
-<li><a href="#toc_1.3.1">sp和wp继承图</a></li>
+<li><a href="#toc_1.3.1">sp和wp继承图</a>
 </ul>
-<li><a href="#toc_1.4">RefBase.h</a></li>
+<li><a href="#toc_1.4">RefBase.h</a>
 <ul>
-<li><a href="#toc_1.4.1">RefBase</a></li>
-<li><a href="#toc_1.4.2">sp::sp</a></li>
-<li><a href="#toc_1.4.3">sp::~sp</a></li>
-<li><a href="#toc_1.4.4">wp::wp</a></li>
-<li><a href="#toc_1.4.5">wp::~wp</a></li>
-<li><a href="#toc_1.4.6">wp::promote</a></li>
+<li><a href="#toc_1.4.1">RefBase</a>
+<li><a href="#toc_1.4.2">sp::sp</a>
+<li><a href="#toc_1.4.3">sp::~sp</a>
+<li><a href="#toc_1.4.4">wp::wp</a>
+<li><a href="#toc_1.4.5">wp::~wp</a>
+<li><a href="#toc_1.4.6">wp::promote</a>
 </ul>
-<li><a href="#toc_1.5">RefBase.cpp</a></li>
+<li><a href="#toc_1.5">RefBase.cpp</a>
 <ul>
-<li><a href="#toc_1.5.1">RefBase::RefBase</a></li>
-<li><a href="#toc_1.5.2">RefBase::~RefBase</a></li>
-<li><a href="#toc_1.5.3">RefBase::incStrong</a></li>
-<li><a href="#toc_1.5.4">RefBase::decStrong</a></li>
-<li><a href="#toc_1.5.5">RefBase::createWeak</a></li>
-<li><a href="#toc_1.5.6">RefBase::weakref_impl</a></li>
-<li><a href="#toc_1.5.7">RefBase::weakref_type::incWeak</a></li>
-<li><a href="#toc_1.5.8">RefBase::weakref_type::decWeak</a></li>
-<li><a href="#toc_1.5.9">sp</a></li>
-<li><a href="#toc_1.5.10">wp</a></li>
+<li><a href="#toc_1.5.1">RefBase::RefBase</a>
+<li><a href="#toc_1.5.2">RefBase::~RefBase</a>
+<li><a href="#toc_1.5.3">RefBase::incStrong</a>
+<li><a href="#toc_1.5.4">RefBase::decStrong</a>
+<li><a href="#toc_1.5.5">RefBase::createWeak</a>
+<li><a href="#toc_1.5.6">RefBase::weakref_impl</a>
+<li><a href="#toc_1.5.7">RefBase::weakref_type::incWeak</a>
+<li><a href="#toc_1.5.8">RefBase::weakref_type::decWeak</a>
+<li><a href="#toc_1.5.9">sp</a>
+<li><a href="#toc_1.5.10">wp</a>
 </ul>
 </ul>
 </ul>
@@ -106,21 +107,21 @@ RefBase::incStrong会同时增加强引用计数和弱引用计数，而weakref_
 <ul>
 <li>
 理解上面两个概念后，我们引入sp和wp这两个类。它们是<code>模板类</code>，用来管理上面提到的强引用和弱引用。
-</li>
+
 <li>
 sp代表“强引用指针”。它提供了重载的<code>*</code>和<code>-&gt;</code>操作符来返回实际的目标对象，所以看起来像个指针。sp调用的是<code>RefBase::incString()</code>和<code>RefBase::decStrong()</code>，所以不仅对强引用做增减操作，还对弱引用做增减操作。
-</li>
+
 <li>
 wp代表“弱引用指针”。wp调用的是<code>weakref_impl::incWeak()</code>和<code>weakref_impl::decWeak()</code>，所以只会对弱引用做增减操作。当一个对象同时赋值给一个sp和wp时，如果销毁sp对象，wp对象仍然存在，因为弱引用的计数没有减少。但是从wp的类方法可以发现，wp没有重载<code>*</code>和<code>-&gt;</code>操作符号，因此无法引用目标对象，必须通过<code>promote()</code>方法升级为sp对象。
-</li>
+
 <li>
 无论是sp或wp，它要求构造参数的目标对象类型必须继承自<code>RefBase</code>类(可参考以下UML图)。<code>sp和wp是对目标对象的一层封装，虽然目标对象是继承于RefBase类，但他们不会直接管理引用计数，而这个任务就交给了sp和wp</code>。
-</li>
+
 </ul>
 
 <h3 id="toc_1.3.1">sp和wp继承图</h3>
 <p>
-<a href="pic/spwp.png"><img src="pic/spwp.png" /></a>
+<img src="http:pic/spwp.png" />
 </p>
 
 <h2 id="toc_1.4">RefBase.h</h2>
@@ -572,6 +573,8 @@ private:
     weakref_type*   m_refs;
 };
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -580,17 +583,6 @@ private:
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

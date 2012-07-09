@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>MountService实现</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,37 +47,38 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">MountService实现</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">MountService实现</a></li>
+<li><a href="#toc_1">MountService实现</a>
 <ul>
-<li><a href="#toc_1.1">相关文件</a></li>
-<li><a href="#toc_1.2">MountService的功能</a></li>
-<li><a href="#toc_1.3">MountService的初始化</a></li>
+<li><a href="#toc_1.1">相关文件</a>
+<li><a href="#toc_1.2">MountService的功能</a>
+<li><a href="#toc_1.3">MountService的初始化</a>
 <ul>
-<li><a href="#toc_1.3.1">NativeDaemonConnector工作线程</a></li>
+<li><a href="#toc_1.3.1">NativeDaemonConnector工作线程</a>
 </ul>
-<li><a href="#toc_1.4">向下注册的回调</a></li>
+<li><a href="#toc_1.4">向下注册的回调</a>
 <ul>
-<li><a href="#toc_1.4.1">INativeDaemonConnectorCallbacks</a></li>
-<li><a href="#toc_1.4.2">onDaemonConnected</a></li>
-<li><a href="#toc_1.4.3">onEvent</a></li>
-<li><a href="#toc_1.4.4">updatePublicVolumeState</a></li>
+<li><a href="#toc_1.4.1">INativeDaemonConnectorCallbacks</a>
+<li><a href="#toc_1.4.2">onDaemonConnected</a>
+<li><a href="#toc_1.4.3">onEvent</a>
+<li><a href="#toc_1.4.4">updatePublicVolumeState</a>
 </ul>
-<li><a href="#toc_1.5">注册上层的回调</a></li>
+<li><a href="#toc_1.5">注册上层的回调</a>
 <ul>
-<li><a href="#toc_1.5.1">registerListener</a></li>
-<li><a href="#toc_1.5.2">MountService.MountServiceBinderListener</a></li>
+<li><a href="#toc_1.5.1">registerListener</a>
+<li><a href="#toc_1.5.2">MountService.MountServiceBinderListener</a>
 </ul>
-<li><a href="#toc_1.6">Media管理</a></li>
+<li><a href="#toc_1.6">Media管理</a>
 <ul>
-<li><a href="#toc_1.6.1">updateExternalMediaStatus</a></li>
-<li><a href="#toc_1.6.2">updateExternalMediaStatusInner</a></li>
+<li><a href="#toc_1.6.1">updateExternalMediaStatus</a>
+<li><a href="#toc_1.6.2">updateExternalMediaStatusInner</a>
 </ul>
-<li><a href="#toc_1.7">PackageHelper工具</a></li>
+<li><a href="#toc_1.7">PackageHelper工具</a>
 </ul>
 </ul>
 </div>
@@ -96,43 +97,43 @@ frameworks/base/core/java/android/os/storage/MountServiceListener.java
 <ul>
 <li>
 MountService主要是为管理层提供一组存储设备的操作方法，如mount、unmount设备、查询设备状态等。
-</li>
+
 <li>
 MountService获取PackageManagerService对象，当设备状态变化时通过该对象进行一些package的管理，例如当sdcard移除时，卸载相关程序。
-</li>
+
 <li>
 MountService会以回调方式通知上层设备状态的变化，通过registerListener()方法注册回调。
-</li>
+
 <li>
 NativeDaemonConnector是用来接收socket消息的线程类，MountService向其注册回调接口INativeDaemonConnectorCallbacks来传递消息。
-</li>
+
 </ul>
 
 <p>
-<a href="pic/MountService.png"><img src="pic/MountService.png" /></a>
+<img src="http:pic/MountService.png" />
 </p>
 
 <h2 id="toc_1.3">MountService的初始化</h2>
 <ul>
 <li>
 从MountService的构造方法来看它的运行机制和工作流程：
-</li>
+
 <ul>
 <li>
 获取<code>PackageManagerService</code>对象，当获取事件消息后会进行关于package的操作。
-</li>
+
 <li>
 注册broadcast用来监测package的安装和移除。
-</li>
+
 <li>
 注册mHandler用来处理unmount事件消息。
-</li>
+
 <li>
 注册mObbActionHandler用来处理obb事件消息。
-</li>
+
 <li>
 开启<code>NativeDaemonConnector</code>线程用来监听vold上传的事件。
-</li>
+
 </ul>
 </ul>
 
@@ -183,10 +184,10 @@ public MountService(Context context) {
 <ul>
 <li>
 其中NativeDaemonConnector是一个核心线程，我们首先分析该线程的工作流程。
-</li>
+
 <li>
 <a href="NativeDaemonConnector工作线程.html">NativeDaemonConnector工作线程</a>分析。
-</li>
+
 </ul>
 
 
@@ -194,37 +195,37 @@ public MountService(Context context) {
 <ul>
 <li>
 NativeDaemonConnector工作线程在接收了Vold上传的事件后，会通过一个回调返回给上层，这个回调就是INativeDaemonConnectorCallbacks接口，而实现者就是MountService类，下面来分析这个回调做了什么。
-</li>
+
 <li>
 onDaemonConnected方法会在socket连接上Vold后触发，该回调会发送"volume list"指令查询所有设备的状态，然后做出相应的处理。
-</li>
+
 <li>
 onEvent方法会在Vold应答设备状态时调用，以通知上层进行设备变更的处理，这里需要注意以下的处理：
-</li>
+
 <ul>
 <li>
 Vold的返回信息会通过onEvent方法的参数传递，包括信息代码，字符串信息等，可根据这些信息做具体处理。
-</li>
+
 <li>
 调用updatePublicVolumeState方法。
-</li>
+
 <li>
 发送Broadcast通知其他应用当前的设备状态。
-</li>
+
 </ul>
 <li>
 updatePublicVolumeState方法主要会做如下处理：
-</li>
+
 <ul>
 <li>
 该方法会调用StorageManager注册的回调<code>IMountServiceListener</code>。 
-</li>
+
 <li>
 通过内部handler进行消息处理，如OBB相关的事件处理。
-</li>
+
 <li>
 调用<code>PackageManagerService</code>进行media的更新处理。
-</li>
+
 </ul>
 </ul>
 
@@ -392,17 +393,17 @@ private void updatePublicVolumeState(String path, String state) {
 <ul>
 <li>
 MountService通过注册IMountServiceListener接口的方式将事件通知给上层StorageManager。
-</li>
+
 <li>
 registerListener方法主要进行以下操作：
-</li>
+
 <ul>
 <li>
 根据IMountServiceListener生成一个MountServiceBinderListener对象，并将该对象加入到队列。
-</li>
+
 <li>
 向Binder服务端注册MountServiceBinderListener回调。
-</li>
+
 </ul>
 </ul>
 
@@ -423,10 +424,10 @@ public void registerListener(IMountServiceListener listener) {
 <ul>
 <li>
 MountServiceBinderListener是MountService的内部类，要注意它和StorageManager.MountServiceBinderListener的区别，它还实现了IBinder.DeathRecipient接口。
-</li>
+
 <li>
 该类是传递给Binder的回调接口，当Binder注销时会将给对象从队列中移除。
-</li>
+
 </ul>
 
 <h3 id="toc_1.5.2">MountService.MountServiceBinderListener</h3>
@@ -452,13 +453,13 @@ private final class MountServiceBinderListener implements IBinder.DeathRecipient
 <ul>
 <li>
 当设备变更时，会涉及到安装在该设备上的media，这时需要对这些media进行管理。PackageManagerService的作用是根据获取到设备状态做出不同的处理，如安装和卸载外部卡上的应用。 
-</li>
+
 <li>
 这里会使用一个包装类PackageHelper来进行设备相关的处理，该类是对MountService的包装，向上层提供接口。
-</li>
+
 <li>
 上面提到的updatePublicVolumeState方法主要调用PackageManagerService.updateExternalMediaStatus方法来更新media状态。
-</li>
+
 </ul>
 
 <h3 id="toc_1.6.1">updateExternalMediaStatus</h3>
@@ -545,7 +546,7 @@ private void updateExternalMediaStatusInner(boolean mediaStatus,
 <ul>
 <li>
 该类是对MountService的API进行包装，具体功能由MountService实现。
-</li>
+
 </ul>
 
 <pre class="brush:java">
@@ -599,6 +600,8 @@ public class PackageHelper {
     }
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -607,17 +610,6 @@ public class PackageHelper {
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

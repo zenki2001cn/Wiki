@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>显示缓冲区的作用</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,27 +47,28 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">显示缓冲区的作用</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">显示缓冲区的作用</a></li>
+<li><a href="#toc_1">显示缓冲区的作用</a>
 <ul>
-<li><a href="#toc_1.1">概述</a></li>
-<li><a href="#toc_1.2">锁定显示缓冲区</a></li>
+<li><a href="#toc_1.1">概述</a>
+<li><a href="#toc_1.2">锁定显示缓冲区</a>
 <ul>
-<li><a href="#toc_1.2.1">lockCanvas(Surface.java)</a></li>
-<li><a href="#toc_1.2.2">Surface_lockCanvas(JNI)</a></li>
-<li><a href="#toc_1.2.3">Surface::lock(C++)</a></li>
-<li><a href="#toc_1.2.4">Surface::dequeueBuffer(C++层)</a></li>
+<li><a href="#toc_1.2.1">lockCanvas(Surface.java)</a>
+<li><a href="#toc_1.2.2">Surface_lockCanvas(JNI)</a>
+<li><a href="#toc_1.2.3">Surface::lock(C++)</a>
+<li><a href="#toc_1.2.4">Surface::dequeueBuffer(C++层)</a>
 </ul>
-<li><a href="#toc_1.3">释放显示缓冲区</a></li>
+<li><a href="#toc_1.3">释放显示缓冲区</a>
 <ul>
-<li><a href="#toc_1.3.1">unlockCanvasAndPost(Java层)</a></li>
-<li><a href="#toc_1.3.2">Surface_unlockCanvasAndPost(JNI)</a></li>
-<li><a href="#toc_1.3.3">Surface::unlockAndPost(C++层)</a></li>
-<li><a href="#toc_1.3.4">Surface::queueBuffer(C++层)</a></li>
+<li><a href="#toc_1.3.1">unlockCanvasAndPost(Java层)</a>
+<li><a href="#toc_1.3.2">Surface_unlockCanvasAndPost(JNI)</a>
+<li><a href="#toc_1.3.3">Surface::unlockAndPost(C++层)</a>
+<li><a href="#toc_1.3.4">Surface::queueBuffer(C++层)</a>
 </ul>
 </ul>
 </ul>
@@ -83,22 +84,22 @@
 <ul>
 <li>
 虽然在SurfaceFlinger在创建Layer时已经为每个Layer申请了两个缓冲区，但是此时在JAVA层并看不到这两个缓冲区，JAVA层要想在Surface上进行画图操作，必须要先把其中的一个缓冲区绑定到Canvas中，然后所有对该Canvas的画图操作最后都会画到该缓冲区内。
-</li>
+
 <ul>
 <li>
 Surface(java层)会先调用lockCanvas()来得到要进行画图操作的Canvas，lockCanvas会进一步调用native层的 Surface_lockCanvas，native代码利用Java层传入的SurfaceControl对象，通过getSurface()取得native层的 Surface对象，接着调用该Surface对象的lock()方法。
-</li>
+
 <li>
 lock()返回了该Surface的信息，其中包括了可用缓冲区的首地址vaddr，该vaddr在Android的2D图形库Skia中，创建了一个bitmap，然后通过Skia库中Canvas的 API：Canvas.setBitmapDevice(bitmap)，把该bitmap绑定到Canvas中。
-</li>
+
 <li>
 最后把这个Canvas返回给Java 层，这样JAVA层就可以在该Canvas上进行画图操作，而这些画图操作最终都会画在以vaddr为首地址的缓冲区中。
-</li>
+
 </ul>
 </ul>
 
 <p>
-<a href="pic/lock_surface.png"><img src="pic/lock_surface.png" /></a>
+<img src="http:pic/lock_surface.png" />
 </p>
 
 <h3 id="toc_1.2.1">lockCanvas(Surface.java)</h3>
@@ -266,39 +267,39 @@ int Surface::dequeueBuffer(android_native_buffer_t** buffer)
 <ul>
 <li>
 画图完成后，要想把Surface的内容显示到屏幕上，需要把Canvas中绑定的缓冲区释放，并且把该缓冲区从变成可投递(因为默认只有两个 buffer，所以实际上就是变成了frontBuffer)，SurfaceFlinger的工作线程会在适当的刷新时刻，把系统中所有的 frontBuffer混合在一起，然后通过OpenGL刷新到屏幕上。
-</li>
+
 <ul>
 <li>
 Java层Surface调用unlockCanvasAndPost
-</li>
+
 <li>
 native代码：Surface_unlockCanvasAndPost
-</li>
+
 <li>
 native代码利用Java层传入的SurfaceControl对象，通过getSurface()取得C++层的Surface对象
-</li>
+
 <li>
 绑定一个空的bitmap到Canvas中
-</li>
+
 <li>
 调用Surface(C++层)的unlockAndPost方法
-</li>
+
 <ul>
 <li>
 调用GraphicBuffer的unlock()，解锁缓冲区
-</li>
+
 <li>
 在queueBuffer()调用了SharedBufferClient的queue()，把该缓冲区更新为可投递状态
-</li>
+
 </ul>
 </ul>
 <li>
 SurfaceFlinger的渲染线程looper在条件信号上等待事件触发，如果需要更新，则会通过Framebuffer驱动做更新动作。
-</li>
+
 </ul>
 
 <p>
-<a href="pic/free_surface.png"><img src="pic/free_surface.png" /></a>
+<img src="http:pic/free_surface.png" />
 </p>
 
 <h3 id="toc_1.3.1">unlockCanvasAndPost(Java层)</h3>
@@ -378,6 +379,8 @@ int Surface::queueBuffer(android_native_buffer_t* buffer)
     return err;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -386,17 +389,6 @@ int Surface::queueBuffer(android_native_buffer_t* buffer)
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

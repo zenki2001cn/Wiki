@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>守护进程的驱动者</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,54 +47,55 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">守护进程的驱动者</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">守护进程的驱动者</a></li>
+<li><a href="#toc_1">守护进程的驱动者</a>
 <ul>
-<li><a href="#toc_1.1">相关文件</a></li>
-<li><a href="#toc_1.2">框架图</a></li>
-<li><a href="#toc_1.3">要点分析</a></li>
+<li><a href="#toc_1.1">相关文件</a>
+<li><a href="#toc_1.2">框架图</a>
+<li><a href="#toc_1.3">要点分析</a>
 <ul>
-<li><a href="#toc_1.3.1">示例代码</a></li>
+<li><a href="#toc_1.3.1">示例代码</a>
 </ul>
-<li><a href="#toc_1.4">IServiceManager.h</a></li>
+<li><a href="#toc_1.4">IServiceManager.h</a>
 <ul>
-<li><a href="#toc_1.4.1">IServiceManager</a></li>
-<li><a href="#toc_1.4.2">BnServiceManager</a></li>
+<li><a href="#toc_1.4.1">IServiceManager</a>
+<li><a href="#toc_1.4.2">BnServiceManager</a>
 </ul>
-<li><a href="#toc_1.5">IServiceManager.cpp</a></li>
+<li><a href="#toc_1.5">IServiceManager.cpp</a>
 <ul>
-<li><a href="#toc_1.5.1">defaultServiceManager</a></li>
-<li><a href="#toc_1.5.2">interface_cast</a></li>
-<li><a href="#toc_1.5.3">BpServiceManager</a></li>
-<li><a href="#toc_1.5.4">BnServiceManager</a></li>
+<li><a href="#toc_1.5.1">defaultServiceManager</a>
+<li><a href="#toc_1.5.2">interface_cast</a>
+<li><a href="#toc_1.5.3">BpServiceManager</a>
+<li><a href="#toc_1.5.4">BnServiceManager</a>
 </ul>
-<li><a href="#toc_1.6">IInterface.h</a></li>
+<li><a href="#toc_1.6">IInterface.h</a>
 <ul>
-<li><a href="#toc_1.6.1">DECLARE_META_INTERFACE</a></li>
-<li><a href="#toc_1.6.2">IMPLEMENT_META_INTERFACE</a></li>
+<li><a href="#toc_1.6.1">DECLARE_META_INTERFACE</a>
+<li><a href="#toc_1.6.2">IMPLEMENT_META_INTERFACE</a>
 </ul>
-<li><a href="#toc_1.7">ProcessState.cpp</a></li>
+<li><a href="#toc_1.7">ProcessState.cpp</a>
 <ul>
-<li><a href="#toc_1.7.1">getContextObject 方法1</a></li>
-<li><a href="#toc_1.7.2">getContextObject 方法2</a></li>
-<li><a href="#toc_1.7.3">getStrongProxyForHandle</a></li>
+<li><a href="#toc_1.7.1">getContextObject 方法1</a>
+<li><a href="#toc_1.7.2">getContextObject 方法2</a>
+<li><a href="#toc_1.7.3">getStrongProxyForHandle</a>
 </ul>
-<li><a href="#toc_1.8">BpBinder.cpp</a></li>
+<li><a href="#toc_1.8">BpBinder.cpp</a>
 <ul>
-<li><a href="#toc_1.8.1">BpBinder::BpBinder</a></li>
-<li><a href="#toc_1.8.2">transact</a></li>
+<li><a href="#toc_1.8.1">BpBinder::BpBinder</a>
+<li><a href="#toc_1.8.2">transact</a>
 </ul>
-<li><a href="#toc_1.9">ServiceManager.h</a></li>
+<li><a href="#toc_1.9">ServiceManager.h</a>
 <ul>
-<li><a href="#toc_1.9.1">BServiceManager</a></li>
+<li><a href="#toc_1.9.1">BServiceManager</a>
 </ul>
-<li><a href="#toc_1.10">ServiceManager.cpp</a></li>
+<li><a href="#toc_1.10">ServiceManager.cpp</a>
 <ul>
-<li><a href="#toc_1.10.1">BServiceManager</a></li>
+<li><a href="#toc_1.10.1">BServiceManager</a>
 </ul>
 </ul>
 </ul>
@@ -114,20 +115,20 @@ frameworks/base/libs/binde/BpBinder.cpp
 
 <h2 id="toc_1.2">框架图</h2>
 <p>
-<img src="pic/Binder_frame.png" />
+<img src="http:pic/Binder_frame.png" />
 </p>
 
 <h2 id="toc_1.3">要点分析</h2>
 <ul>
 <li>
 之所以分离这一部分内容，是因为Android存在一个特殊的，也是基于Binder实现的一个守护进程ServiceManager。服务端如何注册？客户端又如何去查询？这是本章要解决的问题。Android提供了与进程ServiceManager交互的机制，它是ServiceManager的驱动者，服务端通过它来注册服务，客户端又通过它来查询服务。
-</li>
+
 <li>
 注册和查询的功能主要是通过<code>IServiceManager</code>、<code>BpServiceManager</code>来完成。这一机制自身也是通过Binder来实现，它与系统进程ServiceManager合作来完成服务的注册、查询等等功能。
-</li>
+
 <li>
 参见<a href="服务端守护进程.html">服务端守护进程</a>
-</li>
+
 </ul>
 
 <h3 id="toc_1.3.1">示例代码</h3>
@@ -142,19 +143,19 @@ void CameraService::instantiate() {
 <ul>
 <li>
 IServiceManager为Android的基础服务，它用来完成添加各种其他服务的功能并为客户端提供查询接口。它是一个完整Binder机制的C++实现。
-</li>
+
 <li>
 IServiceManager定义了几个接口方法<code>getService</code>、<code>checkService</code>、<code>addService</code>和<code>listServices</code>。
-</li>
+
 <li>
 BnServiceManager为该服务的实现类。
-</li>
+
 <li>
 BpServiceManager为该服务的代理类。
-</li>
+
 <li>
 分析从defaultServiceManager()方法开始。
-</li>
+
 </ul>
 
 <h3 id="toc_1.4.1">IServiceManager</h3>
@@ -212,13 +213,13 @@ public:
 <ul>
 <li>
 首先通过<code>ProcessState::self()-&gt;getContextObject(NULL)</code>获取<code>0</code>号句柄的<code>BpBinder</code>对象。
-</li>
+
 <li>
 通过interface_cast()方法转换成<code>BpServiceManager</code>，INTERFACE::asInterface(obj)的实现需查看<code>IMPLEMENT_META_INTERFACE</code>宏。这里有一个要点：基于Binder的接口还需要继承自IInterface类。该类的宏定义提供了一系列关于Binder与接口之间的转换。
-</li>
+
 <li>
 随后BpServiceManager会通过代理方法，访问驱动层，从而实现addService()功能。
-</li>
+
 </ul>
 
 <pre class="brush:c++">
@@ -251,13 +252,13 @@ inline sp&lt;INTERFACE&gt; interface_cast(const sp&lt;IBinder&gt;&amp; obj)
 <ul>
 <li>
 该类为ServiceManager方法的代理类，它实现了一套自己的<code>*Service()</code>方法。
-</li>
+
 <li>
 代理类的*Service()方法会使用remote()-&gt;transact()方法调用远程对象的实现。
-</li>
+
 <li>
 remote()返回的是BpBinder的对象，由此调用BpBinder的transact()方法。
-</li>
+
 </ul>
 
 <pre class="brush:c++">
@@ -493,13 +494,13 @@ sp&lt;IBinder&gt; ProcessState::getStrongProxyForHandle(int32_t handle)
 <ul>
 <li>
 BpBinder构造方法会通过IPCThreadState将自身的引用计数加一。
-</li>
+
 <li>
 当代理类调用BpBinder的transact()方法时，它会调用IPCThreadState的transact()方法与驱动交互。参见<a href="驱动适配层.html">驱动适配层</a>。
-</li>
+
 <li>
 ServiceManager是一个特殊的服务，它的服务端实现其实就是进程ServiceManager。因此，当BpServiceManager访问驱动时，进程ServiceManager会处理这些请求。参见<a href="服务端守护进程.html">服务端守护进程</a>。
-</li>
+
 </ul>
 
 <h3 id="toc_1.8.1">BpBinder::BpBinder</h3>
@@ -538,7 +539,7 @@ status_t BpBinder::transact(
 <ul>
 <li>
 BServiceManager继承自BnServiceManager，它是<code>*Service()</code>方法的本地实现，主要是通过KeyedVector&lt;String16, sp&lt;IBinder&gt;&gt;记录服务名与对应的IBinder对象。
-</li>
+
 </ul>
 
 <h3 id="toc_1.9.1">BServiceManager</h3>
@@ -612,6 +613,8 @@ Vector&lt;String16&gt; BServiceManager::listServices()
     return res;
 }
 </pre>
+
+
 <footer>
     <a href="index.html" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
@@ -620,17 +623,6 @@ Vector&lt;String16&gt; BServiceManager::listServices()
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>
