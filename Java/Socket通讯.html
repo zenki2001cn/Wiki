@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Socket通讯</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">Socket通讯</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Socket通讯</a>
+<ul>
+<li><a href="#toc_1.1">相关文件</a>
+<li><a href="#toc_1.2">TCP实现方式</a>
+<ul>
+<li><a href="#toc_1.2.1">服务端</a>
+<li><a href="#toc_1.2.2">客户端</a>
+</ul>
+<li><a href="#toc_1.3">UDP实现方式</a>
+<ul>
+<li><a href="#toc_1.3.1">服务端</a>
+<li><a href="#toc_1.3.2">客户端</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:java">
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+</pre>
+
+<h2 id="toc_1.2">TCP实现方式</h2>
+<p>
+<img src="http:pic/socket_tcp.jpg" />
+</p>
+
+<h3 id="toc_1.2.1">服务端</h3>
+<ul>
+<li>
+初始化Socket服务，需要注意的是指定的IP地址和端口。
+<pre class="brush:java">
+private void setUp() {
+    try {
+        // 根据IP地址构建InetAddress对象
+        InetAddress address = InetAddress.getByName(mLocalAddress);
+        // 创建ServerSocket对象，并绑定指定的IP和端口
+        mSocket = new ServerSocket(mLocalPort, 10, address);
+    } catch (Exception e) {
+        // catch e
+    }
+}
+</pre>
+
+</ul>
+
+<ul>
+<li>
+监听Socket，该方法需要注意的是对tcp数据流的接收和处理。
+<pre class="brush:java">
+public void listenToCommand() {
+    Socket client = null;
+    InputStream is = null;
+
+    byte buffer[];
+    String event = "";
+
+    try {
+        // 以循环模式监听客户端请求
+        while (!mQuit) {
+            if (mSocket != null) {
+                // 监听客户端请求
+                client = mSocket.accept();
+                // 获取输入流
+                is = client.getInputStream();
+                // 这里的BUFFER_SIZE需要指定足够的大小，
+                // 以满足缓冲区的处理。
+                buffer = new byte[BUFFER_SIZE];
+
+                int count = 0;
+                int start = 0;
+                while (true) {
+                    count = is.read(buffer, start, BUFFER_SIZE - start);
+                    if (count &lt; 0) {
+                        break;
+                    }
+
+                    // 每读取一次数据，就将该数据大小加上start。
+                    // 因为如果不匹配协议字符串，start值将变成
+                    // 上一次未处理数据的字节数
+                    count += start;
+                    // 这里将start置0，以便在后面处理已接收的数据
+                    start = 0;
+
+                    for (int i = 0; i &lt; count; i++) {
+                        // 此处根据\r\n结尾的标识来解析协议字符串
+                        if ((buffer[i] == '\r') &amp;&amp; (i + 1 &lt; count)
+                                &amp;&amp; (buffer[i + 1] == '\n')) {
+                            event = new String(buffer, start, i - start);
+                            
+                            // 获取到event事件后，做处理
+                            // ......
+                            // 如果找到可用的字串，则更新start标志
+                            // 接下来的数据不会覆盖未处理的数据，
+                            // start值用来记录未处理数据的起始位置。
+                            start = i + 1;
+                        }
+                    }
+
+                    // start != count 表示还有未处理的数据，
+                    // 因此需要做数据的拷贝动作。
+                    if (start != count) {
+                        final int remaining = BUFFER_SIZE - start;
+                        System.arraycopy(buffer, start, buffer, 0,
+                                remaining);
+                        // 这里将start更新为未处理数据的大小
+                        start = remaining;
+                    } else {
+                        // 如果接收到的数据正好处理完而没有剩余，
+                        // 就将start值恢复为0，并且不用做数据拷贝。
+                        start = 0;
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        // 在finally块中做释放处理
+        synchronized (this) {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+                is = null;
+            }
+        }
+
+        try {
+            if (client != null) {
+                client.close();
+            }
+        } catch (IOException ex) {
+        }
+    }
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.2">客户端</h3>
+<ul>
+<li>
+初始化客户端Socket
+<pre class="brush:java">
+private void setUp() {
+    try {
+        // 创建连接远程服务器的Socket对象
+        mSocket = new Socket(mRemoteAddress, mRemotePort);
+        // 设置超时时间
+        mSocket.setSoTimeout(10000);
+
+        if (mSocket != null) {
+            // 获取输出流对象
+            mOutputStream = mSocket.getOutputStream();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</pre>
+
+</ul>
+
+<ul>
+<li>
+向服务器发送数据
+<pre class="brush:java">
+public void transformCommand(byte[] buffer) {
+    try {
+        if (mOutputStream != null) {
+            mOutputStream.write(buffer);
+            mOutputStream.flush();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</pre>
+
+</ul>
+
+<h2 id="toc_1.3">UDP实现方式</h2>
+<h3 id="toc_1.3.1">服务端</h3>
+<pre class="brush:java">
+// 创建一个DatagramSocket对象，并指定监听的端口号
+DatagramSocket socket = new DatagramSocket(4567);
+byte data [] = new byte[1024];
+
+// 创建一个空的DatagramPacket对象
+DatagramPacket packet = new DatagramPacket(data,data.length);
+
+// 使用receive方法接收客户端所发送的数据，
+// 如果客户端没有发送数据，该进程就停滞在这里
+socket.receive(packet);
+String result = new String(packet.getData(),packet.getOffset(), packet.getLength());
+System.out.println("result---&gt;" + result);
+</pre>
+
+<h3 id="toc_1.3.2">客户端</h3>
+<pre class="brush:java">
+try {
+    // 首先创建一个DatagramSocket对象
+    DatagramSocket socket = new DatagramSocket(4567);
+
+    // 创建一个InetAddree
+    InetAddress serverAddress = InetAddress.getByName("192.168.1.104");
+
+    String str = "hello";  //这是要传输的数据
+    byte data [] = str.getBytes();  //把传输内容分解成字节
+
+    // 创建一个DatagramPacket对象，并指定要指定这个数据包发送到
+    // 网络当中的哪个地址，以及端口号
+
+    DatagramPacket packet = new DatagramPacket(data,data.length,serverAddress,4567);
+
+    // 调用socket对象的send方法，发送数据
+    socket.send(packet);
+
+} catch (Exception e) {
+    e.printStackTrace();
+}
+</pre>
+
+
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

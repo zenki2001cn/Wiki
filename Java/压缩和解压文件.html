@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>压缩和解压文件</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">压缩和解压文件</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">压缩和解压文件</a>
+<ul>
+<li><a href="#toc_1.1">示例代码</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">示例代码</h2>
+<pre class="brush:java">
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
+
+/**
+ * Usage:
+ *  	new ZipHelper().zip("/sdcard/test_dir", "/sdcard/mytest.zip");
+ *  	new ZipHelper().unZip("/sdcard/mytest.zip", "/sdcard/");
+ */
+public class ZipHelper {
+
+	public ZipHelper() {
+	}
+
+	public void zip(String inputFileName, String zipFileName) throws Exception {
+		zip(zipFileName, new File(inputFileName));
+	}
+
+	private void zip(String zipFileName, File inputFile) throws Exception {
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
+				zipFileName));
+
+        // 根据zip文件名创建zip包中根目录的名称
+		String base = "";
+		String fileName = new File(zipFileName).getName();
+		int index = fileName.lastIndexOf(".");
+		if (index == -1) {
+			base = fileName;
+		} else {
+			base = fileName.substring(0, index);
+		}
+
+		zip(out, inputFile, base);
+		out.close();
+	}
+
+    // 对文件夹和文件做递归处理
+	private void zip(ZipOutputStream out, File f, String base) throws Exception {
+		if (f.isDirectory()) {
+			File[] fl = f.listFiles();
+			// 创建zip包中的文件夹，加上"/"
+			out.putNextEntry(new ZipEntry(base + "/"));
+			base = base.length() == 0 ? "" : base + "/";
+			for (int i = 0; i &lt; fl.length; i++) {
+				zip(out, fl[i], base + fl[i].getName());
+			}
+		} else {
+		    // 创建zip包中的文件
+		    out.putNextEntry(new ZipEntry(base));
+			FileInputStream in = new FileInputStream(f);
+			int len = 0;
+			byte[] buf = new byte[1024];
+			while ((len = in.read(buf)) != -1) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+		}
+	}
+
+    // 解压zip文件到指定的目录
+	public void unZip(String zipfile, String destDir) {
+		destDir = destDir.endsWith(File.separator) ? destDir : destDir
+				+ File.separator;
+		byte b[] = new byte[1024];
+		int length;
+		ZipFile zipFile;
+
+		try {
+			zipFile = new ZipFile(new File(zipfile));
+			// 获取zip包中的所有目录项
+			Enumeration&lt;? extends ZipEntry&gt; enumeration = zipFile.entries();
+			ZipEntry zipEntry = null;
+			
+			// 遍历每个目录项
+			while (enumeration.hasMoreElements()) {
+				zipEntry = (ZipEntry) enumeration.nextElement();
+				File loadFile = new File(destDir + zipEntry.getName());
+				
+				// 如果是目录，则创建目录，文件则通过读写方式复制数据
+				if (zipEntry.isDirectory()) {
+					loadFile.mkdirs();
+				} else {
+					if (!loadFile.getParentFile().exists()) {
+						loadFile.getParentFile().mkdirs();
+					}
+					
+					OutputStream outputStream = new FileOutputStream(loadFile);
+					InputStream inputStream = zipFile.getInputStream(zipEntry);
+					while ((length = inputStream.read(b)) &gt; 0) {
+						outputStream.write(b, 0, length);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+</pre>
+
+
+<footer>
+    <a href="index.html" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="http://www.163.com/" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
