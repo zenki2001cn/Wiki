@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Parcel传输介质</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,42 +47,47 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">Parcel传输介质</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Parcel传输介质</a></li>
+<li><a href="#toc_1">Parcel传输介质</a>
 <ul>
-<li><a href="#toc_1.1">Parcel的作用</a></li>
-<li><a href="#toc_1.2">分析Parcel</a></li>
-<li><a href="#toc_1.3">要点总结</a></li>
-<li><a href="#toc_1.4">Parcel.h</a></li>
+<li><a href="#toc_1.1">Parcel的作用</a>
+<li><a href="#toc_1.2">分析Parcel</a>
+<li><a href="#toc_1.3">要点总结</a>
 <ul>
-<li><a href="#toc_1.4.1">Parcel</a></li>
+<li><a href="#toc_1.3.1">Java层传递字符串</a>
+<li><a href="#toc_1.3.2">C++层接收字符串</a>
 </ul>
-<li><a href="#toc_1.5">Parcel.cpp</a></li>
+<li><a href="#toc_1.4">Parcel.h</a>
 <ul>
-<li><a href="#toc_1.5.1">PAD_SIZE宏定义</a></li>
-<li><a href="#toc_1.5.2">Parcel::dataPosition</a></li>
-<li><a href="#toc_1.5.3">Parcel::dataSize</a></li>
-<li><a href="#toc_1.5.4">Parcel::readAligned</a></li>
-<li><a href="#toc_1.5.5">Parcel::writeAligned</a></li>
-<li><a href="#toc_1.5.6">Parcel::write</a></li>
-<li><a href="#toc_1.5.7">Parcel::writeInplace</a></li>
-<li><a href="#toc_1.5.8">Parcel::read</a></li>
-<li><a href="#toc_1.5.9">Parcel::readInplace</a></li>
-<li><a href="#toc_1.5.10">flatten_binder</a></li>
-<li><a href="#toc_1.5.11">unflatten_binder</a></li>
-<li><a href="#toc_1.5.12">Parcel::finishWrite</a></li>
-<li><a href="#toc_1.5.13">Parcel::growData</a></li>
-<li><a href="#toc_1.5.14">Parcel::continueWrite</a></li>
-<li><a href="#toc_1.5.15">acquire_object</a></li>
+<li><a href="#toc_1.4.1">Parcel</a>
 </ul>
-<li><a href="#toc_1.6">IPCThreadState.cpp</a></li>
+<li><a href="#toc_1.5">Parcel.cpp</a>
 <ul>
-<li><a href="#toc_1.6.1">IPCThreadState::joinThreadPool</a></li>
-<li><a href="#toc_1.6.2">IPCThreadState::talkWithDriver</a></li>
+<li><a href="#toc_1.5.1">PAD_SIZE宏定义</a>
+<li><a href="#toc_1.5.2">Parcel::dataPosition</a>
+<li><a href="#toc_1.5.3">Parcel::dataSize</a>
+<li><a href="#toc_1.5.4">Parcel::readAligned</a>
+<li><a href="#toc_1.5.5">Parcel::writeAligned</a>
+<li><a href="#toc_1.5.6">Parcel::write</a>
+<li><a href="#toc_1.5.7">Parcel::writeInplace</a>
+<li><a href="#toc_1.5.8">Parcel::read</a>
+<li><a href="#toc_1.5.9">Parcel::readInplace</a>
+<li><a href="#toc_1.5.10">flatten_binder</a>
+<li><a href="#toc_1.5.11">unflatten_binder</a>
+<li><a href="#toc_1.5.12">Parcel::finishWrite</a>
+<li><a href="#toc_1.5.13">Parcel::growData</a>
+<li><a href="#toc_1.5.14">Parcel::continueWrite</a>
+<li><a href="#toc_1.5.15">acquire_object</a>
+</ul>
+<li><a href="#toc_1.6">IPCThreadState.cpp</a>
+<ul>
+<li><a href="#toc_1.6.1">IPCThreadState::joinThreadPool</a>
+<li><a href="#toc_1.6.2">IPCThreadState::talkWithDriver</a>
 </ul>
 </ul>
 </ul>
@@ -99,26 +104,26 @@ Android也提供了这样一种机制，而且效率更加高效，所有序列�
 <ul>
 <li>
 从Parcel类的构造方法可以看到该类保存普通数据和Binder类型的数据分别采用不同的成员<code>mData</code>和<code>mObjects</code>，并提供了读数据的<code>read*</code>方法和写数据的<code>write*</code>方法。
-</li>
+
 <li>
 之前讨论<a href="驱动适配层.html">驱动适配层</a>时发现IPCThreadState包含两个Parcel的成员对象<code>mIn</code>和<code>mOut</code>，分别代表从驱动读出的数据和写入到驱动中的数据。我们以IPCThreadState::joinThreadPool为例来分析Parcel的运用和实现：
-</li>
+
 <ul>
 <li>
 首先根据isMain的标识往mOut中写入BC_ENTER_LOOPER或BC_REGISTER_LOOPER命令，通知驱动当前的线程状态。writeInt32()方法会调用<code>writeAligned()</code>方法。它首先检查分配的内存大小是否能够容纳写入的数据，如果满足条件，就会给当前的数据指针增加偏移值，再调用finishWrite()方法完成写入操作;否则会调用<code>growData()</code>方法扩充内存大小，它会按照<code>((mDataSize+len)*3)/2</code>的大小分配新的内存空间，并调用<code>continueWrite()</code>方法。continueWrite()会分几种情况处理，具体操作参见continueWrite()的注释。需要注意的是mOwner是一个回调函数指针，用来通知驱动释放它的内存空间。
-</li>
+
 <li>
 接下来joinThreadPool会进入一个while循环，第一个条件语句调用了mIn的<code>dataPosition()</code>和<code>dataSize()</code>方法，这两个方法分别返回当前指针的偏移位置<code>mDataPos</code>和数据的大小<code>mDataSize</code>。通常我们写入数据会增加mDataPos的值，最终在finishWrite()中会将该值赋予mDataSize。
-</li>
+
 <li>
 第二个条件语句，IPCThreadState会调用mIn的<code>dataAvail()</code>方法检查请求缓冲区，读取命令字段，再发送给驱动。dataAvail()方法会返回<code>mDataSize-mDataPos</code>。可以在talkWithDriver()方法中发现，如果<code>bwr.read_consumed &gt; 0</code>，则会将mDataPos置为0，因此从dataAvail()的结果判断至少需要int32_t大小的数据才会执行读取操作。如果小于这个数值就continue，否则使用readInt32()方法取出一个int32_t大小数据作为的命令请求发送给驱动。readInt32()会调用<code>readAligned()</code>方法读取指定大小的数据。与此同时，mDataPos的偏移量则改为了<code>mDataPos += sizeof(T)</code>。
-</li>
+
 <li>
 从目前的分析我们可以发现Parcel的数据是按顺序写入，mDataPos维护这个数据偏移大小的位置，读数据的时候也是按照这个顺序读出来，相应的mDataPos的大小也会改变。通常我们可以理解为<code>当前数据的地址 = 数据起始地址 + 数据偏移地址</code>。
-</li>
+
 <li>
 Parcel提供了一组read*和write*方法，我们只分析了readInt32()和writeInt32，还有诸如read()、write()、readCString()、writeCString()、readObject()、writeObject()等。其中需要注意的一个细节是<code>PAD_SIZE</code>这个宏，作用是在读写是以<code>4个字节</code>大小对齐，也就是说数据包的字节大小永远是4的倍数。
-</li>
+
 </ul>
 </ul>
 
@@ -126,28 +131,42 @@ Parcel提供了一组read*和write*方法，我们只分析了readInt32()和writ
 <ul>
 <li>
 我们以joinThreadPool()方法流程为例分析了Parcel在Binder传输中的作用，可以做出以下总结：
-</li>
+
 <ul>
 <li>
 序列化主要是进行内存分配，内存拷贝等，所有读写数据的行为都是在内存中，因此效率比较高。
-</li>
+
 <li>
 <code>读写数据都是4字节对齐的。</code>
-</li>
+
 <li>
 如果空间不足，会根据((mDataSize+len)*3)/2大小的字节进行扩充。
-</li>
+
 <li>
 普通数据和IBinder数据分别通过mData和mObjects保存。并且对于整型/浮点型、字符串型和IBinder类型采用不同的处理方式(查看read*和write*方法)。
-</li>
+
 <li>
 <code>Parcel对数据读写的特性决定了它能够保存一个对象到内存中，再读取该段内存数据后还可以还原这个对象，并借助Binder机制来实现跨进程的对象序列化功能。</code>
-</li>
+
 <li>
 Parcel还具备与生俱来的与驱动交互的特性，从flatten_binder()和unflatten_binder()中发现在读取IBinder对象类型时，会使用ProcessState对象与驱动交互。
-</li>
+
 </ul>
+<li>
+通常在Java层也有对应的Parcel类，需要注意的是在Java层传递一个字符串到C++层时，要进行String16类型到String8类型的转换，代码如下：
+
 </ul>
+<h3 id="toc_1.3.1">Java层传递字符串</h3>
+<pre class="brush:java">
+Parcel data = Parcel.obtain();
+data.writeString("hello,world");
+</pre>
+
+<h3 id="toc_1.3.2">C++层接收字符串</h3>
+<pre class="brush:c++">
+const String8 hello = String8(data.readString16());
+LOGE("readString8 = %s", hello.string());
+</pre>
 
 <h2 id="toc_1.4">Parcel.h</h2>
 <h3 id="toc_1.4.1">Parcel</h3>
@@ -708,25 +727,16 @@ status_t IPCThreadState::talkWithDriver(bool doReceive)
     ......
 }
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>
