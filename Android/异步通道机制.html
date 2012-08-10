@@ -1,0 +1,829 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>异步通道机制</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">异步通道机制</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">异步通道机制</a>
+<ul>
+<li><a href="#toc_1.1">概述</a>
+<li><a href="#toc_1.2">两种模式</a>
+<ul>
+<li><a href="#toc_1.2.1">AsyncChannel命令标识</a>
+<li><a href="#toc_1.2.2">AsyncChannel状态标识</a>
+</ul>
+<li><a href="#toc_1.3">AsyncChannel如何工作</a>
+<ul>
+<li><a href="#toc_1.3.1">发起连接请求</a>
+<li><a href="#toc_1.3.2">确认连接请求</a>
+<li><a href="#toc_1.3.3">发送消息</a>
+<li><a href="#toc_1.3.4">回复消息</a>
+<li><a href="#toc_1.3.5">断开连接</a>
+</ul>
+<li><a href="#toc_1.4">示例代码</a>
+<ul>
+<li><a href="#toc_1.4.1">客户端发送请求</a>
+<li><a href="#toc_1.4.2">服务端接收请求</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<pre class="brush:text">
+    AsyncChannel用来连接两个Handler之间的异步消息处理的通道，它的实现核心是Messenger。
+因此它不仅支持进程内的消息传递，还支持多进程间的消息传递。
+    AsyncChannel是Framework内部使用的一种通信机制，并没有作为API给应用程序使用。
+</pre>
+
+<h2 id="toc_1.2">两种模式</h2>
+<ul>
+<li>
+AsyncChannel的核心实现是基于跨进程的Handler-Message机制，可参见<a href="跨进程消息处理机制.html">跨进程消息处理机制</a>。
+
+<li>
+AsyncChannel提供了两种模式的通信方法，称为半连接(<code>Half Connection</code>)和全连接(<code>Full Connection</code>)。
+
+</ul>
+<table>
+<tr>
+<th>
+模式
+</th>
+<th>
+客户端调用方法
+</th>
+<th>
+服务端调用方法
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+半连接
+</td>
+<td>
+connect、sendMessage
+</td>
+<td>
+replyToMessage
+</td>
+<td>
+客户端发送请求给服务端，服务端不需要知道客户端的存在，只需要回复客户端消息。
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+全连接
+</td>
+<td>
+connect、sendMessage
+</td>
+<td>
+connected、sendMessage
+</td>
+<td>
+服务端在客户端发送请求后，主动再次连接客户端，并通过四次握手方式完成全连接的建立。
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<p>
+<img src="http:pic/AsyncChannel.png" />
+</p>
+
+<h3 id="toc_1.2.1">AsyncChannel命令标识</h3>
+<ul>
+<li>
+在AsyncChannel通信协议中，使用一组命令标识描述当前连接建立的过程。
+
+<li>
+所有命令都以BASE为基数：<code>int BASE = Protocol.BASE_SYSTEM_ASYNC_CHANNEL;</code>。
+
+</ul>
+<table>
+<tr>
+<th>
+命令标识
+</th>
+<th>
+Message.arg1
+</th>
+<th>
+Message.obj
+</th>
+<th>
+Message.replyTo
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+CMD_CHANNEL_HALF_CONNECTED
+</td>
+<td>
+0 =&gt; STATUS_SUCCESSFUL, 1 =&gt; STATUS_BINDING_UNSUCCESSFUL
+</td>
+<td>
+AsyncChannel对象
+</td>
+<td>
+目标Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+CMD_CHANNEL_FULL_CONNECTION
+</td>
+<td>
+X
+</td>
+<td>
+X
+</td>
+<td>
+源Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+CMD_CHANNEL_FULLY_CONNECTED
+</td>
+<td>
+0 =&gt; 接受连接, other =&gt; 拒绝连接
+</td>
+<td>
+X
+</td>
+<td>
+X
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+CMD_CHANNEL_DISCONNECT
+</td>
+<td>
+X
+</td>
+<td>
+X
+</td>
+<td>
+断开连接的Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+CMD_CHANNEL_DISCONNECTED
+</td>
+<td>
+0 =&gt; STATUS_SUCCESSFUL, 1 =&gt; STATUS_BINDING_UNSUCCESSFUL, 2 =&gt; STATUS_SEND_UNSUCCESSFUL
+</td>
+<td>
+AsyncChannel对象
+</td>
+<td>
+断开连接的Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h3 id="toc_1.2.2">AsyncChannel状态标识</h3>
+<ul>
+<li>
+AsyncChannel连接是否成功根据一组状态标识判断。
+
+</ul>
+<table>
+<tr>
+<th>
+状态标识
+</th>
+<th>
+值
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+STATUS_SUCCESSFUL
+</td>
+<td>
+0
+</td>
+<td>
+连接成功
+</td>
+</tr>
+<tr>
+<td>
+STATUS_BINDING_UNSUCCESSFUL
+</td>
+<td>
+1
+</td>
+<td>
+绑定连接时出错
+</td>
+</tr>
+<tr>
+<td>
+STATUS_SEND_UNSUCCESSFUL
+</td>
+<td>
+2
+</td>
+<td>
+发送消息时出错
+</td>
+</tr>
+<tr>
+<td>
+STATUS_FULL_CONNECTION_REFUSED_ALREADY_CONNECTED
+</td>
+<td>
+3
+</td>
+<td>
+当连接一个已存在的连接时被拒绝
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">AsyncChannel如何工作</h2>
+<ul>
+<li>
+AsyncChannel的工作方式主要分为以下几个阶段：发起连接请求、确认连接请求、发送消息、回复消息、断开连接等。对于以上每一个步骤，AsyncChannel类都提供了相应的方法，并考虑到不同的对象作为参数。
+
+</ul>
+<h3 id="toc_1.3.1">发起连接请求</h3>
+<table>
+<tr>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+connectSrcHandlerToPackageSync(Context srcContext, Handler srcHandler, String dstPackageName, String dstClassName)
+</td>
+<td>
+连接一个Handler到一个Class
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connectSync(Context srcContext, Handler srcHandler, Messenger dstMessenger)
+</td>
+<td>
+同步连接一个Handler到一个Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connectSync(Context srcContext, Handler srcHandler, Handler dstHandler)
+</td>
+<td>
+同步连接一个Handler到另一个Handler
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+fullyConnectSync(Context srcContext, Handler srcHandler, Handler dstHandler)
+</td>
+<td>
+两个Handler之间做全连接
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connect(Context srcContext, Handler srcHandler, String dstPackageName, String dstClassName)
+</td>
+<td>
+连接一个Handler到一个Class
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connect(Context srcContext, Handler srcHandler, Class&lt;?&gt; klass)
+</td>
+<td>
+连接一个Handler到一个Class
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connect(Context srcContext, Handler srcHandler, Messenger dstMessenger)
+</td>
+<td>
+连接一个Handler到一个Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connect(Context srcContext, Handler srcHandler, Handler dstHandler)
+</td>
+<td>
+连接两个Handler
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+connect(AsyncService srcAsyncService, Messenger dstMessenger)
+</td>
+<td>
+连接AsyncService和Messenger
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h3 id="toc_1.3.2">确认连接请求</h3>
+<table>
+<tr>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+connected(Context srcContext, Handler srcHandler, Messenger dstMessenger)
+</td>
+<td>
+连接Handler和Messenger，该方法通常在做全连接时，由Server调用回复给客户端
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h3 id="toc_1.3.3">发送消息</h3>
+<table>
+<tr>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+sendMessage(Message msg)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+sendMessage(int what)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+sendMessage(int what, int arg1)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+sendMessage(int what, int arg1, int arg2)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+sendMessage(int what, int arg1, int arg2, Object obj)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+sendMessage(int what, Object obj)
+</td>
+<td>
+向目标Handler发送消息
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h3 id="toc_1.3.4">回复消息</h3>
+<table>
+<tr>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, Message dstMsg)
+</td>
+<td>
+回复dstMsg给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, int what)
+</td>
+<td>
+回复消息给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, int what, int arg1)
+</td>
+<td>
+回复消息给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, int what, int arg1, int arg2)
+</td>
+<td>
+回复消息给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, int what, int arg1, int arg2, Object obj)
+</td>
+<td>
+回复消息给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+replyToMessage(Message srcMsg, int what, Object obj)
+</td>
+<td>
+回复消息给srcMsg
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h3 id="toc_1.3.5">断开连接</h3>
+<table>
+<tr>
+<th>
+方法名称
+</th>
+<th>
+描述
+</th>
+<th>
+备注
+</th>
+</tr>
+<tr>
+<td>
+disconnected()
+</td>
+<td>
+当Handler接收到CMD_CHANNEL_DISCONNECTED消息时调用
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+disconnect()
+</td>
+<td>
+主动断开连接
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.4">示例代码</h2>
+<h3 id="toc_1.4.1">客户端发送请求</h3>
+<ul>
+<li>
+以WifiService为例，该类包含一个连接通道WifiStateMachineHandler，它在初始化时与WifiStateMachine建立连接。
+
+<li>
+当连接建立以后，WifiService可利用这个AsyncChannel与WifiStateMachine之间进行消息通信，并且在断开连接后还会自动重连。
+<pre class="brush:java">
+private class WifiStateMachineHandler extends Handler {
+    private AsyncChannel mWsmChannel;
+
+    WifiStateMachineHandler(android.os.Looper looper) {
+        super(looper);
+        // 创建AsyncChannel对象
+        mWsmChannel = new AsyncChannel();
+        // 与WifiStateMachine的Handler建立连接
+        mWsmChannel.connect(mContext, this, mWifiStateMachine.getHandler());
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            // 建立半连接半状态
+            case AsyncChannel.CMD_CHANNEL_HALF_CONNECTED: {
+                if (msg.arg1 == AsyncChannel.STATUS_SUCCESSFUL) {
+                    mWifiStateMachineChannel = mWsmChannel;
+                } else {
+                    mWifiStateMachineChannel = null;
+                }
+                break;
+            }
+            // 连接断开状态
+            case AsyncChannel.CMD_CHANNEL_DISCONNECTED: {
+                mWifiStateMachineChannel = null;
+                // 重新与Server建立连接
+                mWsmChannel.connect(mContext, this, mWifiStateMachine.getHandler());
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+WifiStateMachineHandler mWifiStateMachineHandler;
+</pre>
+
+</ul>
+
+<h3 id="toc_1.4.2">服务端接收请求</h3>
+<ul>
+<li>
+WifiService同样包含一个等待连接的服务端AsyncServiceHandler，当有客户端连接时，它会记录每个客户端对象，并在断开连接时移除。
+
+<li>
+当客户端连接建立以后，可通过AsyncChannel发送<code>WifiManager.CMD*</code>消息给该AsyncServiceHandler进行消息处理。
+<pre class="brush:java">
+private class AsyncServiceHandler extends Handler {
+    AsyncServiceHandler(android.os.Looper looper) {
+        super(looper);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            case AsyncChannel.CMD_CHANNEL_HALF_CONNECTED: {
+                if (msg.arg1 == AsyncChannel.STATUS_SUCCESSFUL) {
+                    mClients.add((AsyncChannel) msg.obj);
+                } else {
+                }
+                break;
+            }
+            case AsyncChannel.CMD_CHANNEL_DISCONNECTED: {
+                if (msg.arg1 == AsyncChannel.STATUS_SEND_UNSUCCESSFUL) {
+                } else {
+                }
+                mClients.remove((AsyncChannel) msg.obj);
+                break;
+            }
+            case AsyncChannel.CMD_CHANNEL_FULL_CONNECTION: {
+                AsyncChannel ac = new AsyncChannel();
+                ac.connect(mContext, this, msg.replyTo);
+                break;
+            }
+            case WifiManager.CMD_ENABLE_TRAFFIC_STATS_POLL: {
+                mEnableTrafficStatsPoll = (msg.arg1 == 1);
+                mTrafficStatsPollToken++;
+                if (mEnableTrafficStatsPoll) {
+                    notifyOnDataActivity();
+                    sendMessageDelayed(Message.obtain(this, WifiManager.CMD_TRAFFIC_STATS_POLL,
+                            mTrafficStatsPollToken, 0), POLL_TRAFFIC_STATS_INTERVAL_MSECS);
+                }
+                break;
+            }
+            case WifiManager.CMD_TRAFFIC_STATS_POLL: {
+                if (msg.arg1 == mTrafficStatsPollToken) {
+                    notifyOnDataActivity();
+                    sendMessageDelayed(Message.obtain(this, WifiManager.CMD_TRAFFIC_STATS_POLL,
+                            mTrafficStatsPollToken, 0), POLL_TRAFFIC_STATS_INTERVAL_MSECS);
+                }
+                break;
+            }
+            case WifiManager.CMD_CONNECT_NETWORK: {
+                if (msg.obj != null) {
+                    mWifiStateMachine.connectNetwork((WifiConfiguration)msg.obj);
+                } else {
+                    mWifiStateMachine.connectNetwork(msg.arg1);
+                }
+                break;
+            }
+            case WifiManager.CMD_SAVE_NETWORK: {
+                mWifiStateMachine.saveNetwork((WifiConfiguration)msg.obj);
+                break;
+            }
+            case WifiManager.CMD_FORGET_NETWORK: {
+                mWifiStateMachine.forgetNetwork(msg.arg1);
+                break;
+            }
+            case WifiManager.CMD_START_WPS: {
+                mWifiStateMachine.startWps(msg.replyTo, (WpsInfo)msg.obj);
+                break;
+            }
+            case WifiManager.CMD_DISABLE_NETWORK: {
+                mWifiStateMachine.disableNetwork(msg.replyTo, msg.arg1, msg.arg2);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+private AsyncServiceHandler mAsyncServiceHandler;
+</pre>
+
+</ul>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

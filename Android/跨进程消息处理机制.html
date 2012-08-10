@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>跨进程消息处理机制</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">跨进程消息处理机制</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">跨进程消息处理机制</a>
+<ul>
+<li><a href="#toc_1.1">概述</a>
+<li><a href="#toc_1.2">Messenger如何跨进程发送Message？</a>
+<li><a href="#toc_1.3">服务进程如何创建Messenger？</a>
+<li><a href="#toc_1.4">客户端如何获取Messenger？</a>
+<li><a href="#toc_1.5">客户端如何传递Message？</a>
+<li><a href="#toc_1.6">服务端如何传递Message？</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">概述</h2>
+<pre class="brush:text">
+    之前我们讨论过在多个线程间传递消息时，使用Message-Handler机制来传递消息。而这种消息机制
+在跨进程通信中同样可行，这里需要使用到一个额外的类：Messenger。
+    Messenger称为信使，它是Handler对象的引用。该类允许跨进程间基于Message的通信(即两个进程间
+可以通过Message进行通信)，在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以
+与服务端通信了。
+</pre>
+
+<h2 id="toc_1.2">Messenger如何跨进程发送Message？</h2>
+<ul>
+<li>
+Messenger能够发送Message对象，它首先需要持有一个Handler对象，该对象是由处理消息的那个进程所产生的。因此Messenger的构造方法需要传入一个Handler对象。
+
+<li>
+Messenger还提供一个以IBinder为参数的构造方法，该方法由客户端获取了IBinder对象后还原远程的服务端Messenger，参见后面的分析。
+<pre class="brush:java">
+public final class Messenger implements Parcelable {
+    // 这里是一个IMessenger的接口，该接口由AIDL实现远程访问功能。
+    private final IMessenger mTarget;
+
+    public Messenger(Handler target) {
+        mTarget = target.getIMessenger();
+    }
+    
+    public Messenger(IBinder target) {
+        mTarget = IMessenger.Stub.asInterface(target);
+    }
+    // ......
+} 
+</pre>
+
+</ul>
+
+<ul>
+<li>
+如何做到跨进程通信，答案是Binder机制。Messenger内部包含一个IMessenger接口，而该接口通过Handler.getIMessenger()方法获取。
+<pre class="brush:java">
+public class Handler {
+    // ......
+    final IMessenger getIMessenger() {
+        synchronized (mQueue) {
+            if (mMessenger != null) {
+                return mMessenger;
+            }
+            mMessenger = new MessengerImpl();
+            return mMessenger;
+        }
+    }
+
+    // 实现了IMessenger.Stub的内部类，实际则调用本地的Handler处理消息
+    private final class MessengerImpl extends IMessenger.Stub {
+        public void send(Message msg) {
+            Handler.this.sendMessage(msg);
+        }
+    }
+    // ......
+}
+</pre>
+
+</ul>
+
+<h2 id="toc_1.3">服务进程如何创建Messenger？</h2>
+<ul>
+<li>
+服务进程创建Messenger的方法非常简单，只要将本进程的Handler对象作为参数构造一个Messenger即可。
+
+<li>
+通常客户端是通过BindService的形式连接到客户端，因此，服务端需要提供一个IBinder对象给客户端，Messenger.getBinder()正好提供了这个方法。
+<pre class="brush:java">
+Messenger mMessenger = new Messenger(mHandler);
+
+public IBinder onBind(Intent intent) {    
+    //返回服务端信使的binder,以供客户端通过这个binder得到服务端的信使对象。
+    return mMessenger.getBinder();    
+}
+</pre>
+
+</ul>
+
+<h2 id="toc_1.4">客户端如何获取Messenger？</h2>
+<ul>
+<li>
+客户端在BindService之后，通过一个IBinder对象来构造Messenger。
+<pre class="brush:java">
+public void onServiceConnected(ComponentName name, IBinder service) {    
+    // 通过IBinder构造Messenger
+    serverMessenger = new Messenger(service);    
+}
+</pre>
+
+</ul>
+
+<h2 id="toc_1.5">客户端如何传递Message？</h2>
+<ul>
+<li>
+客户端在重新构造了一个Messenger对象后，即可通过send方法向服务端发送消息，并且该消息是可以跨进程的。
+<pre class="brush:java">
+private void sendMessage() {    
+    Message message = Message.obtain(null, MessengerService.MSG_SET_VALUE);    
+    try {    
+        // 通过send发送消息
+        serverMessenger.send(message);    
+    } catch (RemoteException e) {    
+        e.printStackTrace();    
+    }    
+} 
+</pre>
+
+</ul>
+
+<h2 id="toc_1.6">服务端如何传递Message？</h2>
+<ul>
+<li>
+客户端通过BindService获取到服务端的Messenger，这个过程是单向的。服务端如果需要发送消息给客户端，同样需要得到客户端的Messenger。
+
+<li>
+客户端在发送消息给服务端时，可以将自己的Messenger通过Message传递给服务端。
+<pre class="brush:java">
+private void sendMessage() {    
+    Message message = Message.obtain(null, MessengerService.MSG_SET_VALUE);    
+    // 客户端将自己的Messenger包裹在Message中传递给服务端
+    message.replyTo = clientMessenger;
+    try {    
+        // 通过send发送消息
+        serverMessenger.send(message);    
+    } catch (RemoteException e) {    
+        e.printStackTrace();    
+    }    
+}
+</pre>
+
+</ul>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
