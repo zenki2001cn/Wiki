@@ -1,0 +1,714 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>HTTP错误代码</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">HTTP错误代码表</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">HTTP错误代码表</a>
+<ul>
+<li><a href="#toc_1.1">1xx - 信息提示</a>
+<li><a href="#toc_1.2">2xx - 成功</a>
+<li><a href="#toc_1.3">3xx - 重定向</a>
+<li><a href="#toc_1.4">4xx - 客户端错误</a>
+<li><a href="#toc_1.5">5xx - 服务器错误</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">1xx - 信息提示</h2>
+<table>
+<tr>
+<th>
+错误码
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+100 - Continue
+</td>
+<td>
+继续
+</td>
+</tr>
+<tr>
+<td>
+101 - Switching Protocols
+</td>
+<td>
+切换协议
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.2">2xx - 成功</h2>
+<table>
+<tr>
+<th>
+错误码
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+200 - OK
+</td>
+<td>
+确定，客户端请求已成功
+</td>
+</tr>
+<tr>
+<td>
+201 - Created
+</td>
+<td>
+已创建
+</td>
+</tr>
+<tr>
+<td>
+202 - Accepted
+</td>
+<td>
+已接受
+</td>
+</tr>
+<tr>
+<td>
+203 - Non-Authoritative Information
+</td>
+<td>
+非权威性信息
+</td>
+</tr>
+<tr>
+<td>
+204 - No Content
+</td>
+<td>
+无内容
+</td>
+</tr>
+<tr>
+<td>
+205 - Reset Content
+</td>
+<td>
+重置内容
+</td>
+</tr>
+<tr>
+<td>
+206 - Partial Content
+</td>
+<td>
+部分内容
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.3">3xx - 重定向</h2>
+<table>
+<tr>
+<th>
+错误码
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+301 - Moved Permanently
+</td>
+<td>
+客户请求的文档在其他地方，新的URL在Location头中给出，浏览器应该自动地访问新的URL
+</td>
+</tr>
+<tr>
+<td>
+302 - Found
+</td>
+<td>
+类似于301，但新的URL应该被视为临时性的替代，而不是永久性的
+</td>
+</tr>
+<tr>
+<td>
+303 - See Other
+</td>
+<td>
+类似于301/302，不同之处在于，如果原来的请求是POST，Location头指定的重定向目标文档应该通过GET提取
+</td>
+</tr>
+<tr>
+<td>
+304 - Not Modified
+</td>
+<td>
+客户端有缓冲的文档并发出了一个条件性的请求，原来缓冲的文档还可以继续使用
+</td>
+</tr>
+<tr>
+<td>
+305 - Use Proxy
+</td>
+<td>
+客户请求的文档应该通过Location头所指明的代理服务器提取
+</td>
+</tr>
+<tr>
+<td>
+307 - Temporary Redirect
+</td>
+<td>
+和302相同
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.4">4xx - 客户端错误</h2>
+<table>
+<tr>
+<th>
+错误码
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+400 - Bad Request
+</td>
+<td>
+请求无效
+</td>
+</tr>
+<tr>
+<td>
+401 - Unauthorized
+</td>
+<td>
+访问被拒绝
+</td>
+</tr>
+<tr>
+<td>
+401.1
+</td>
+<td>
+登录失败
+</td>
+</tr>
+<tr>
+<td>
+401.2
+</td>
+<td>
+服务器配置导致登录失败
+</td>
+</tr>
+<tr>
+<td>
+401.3
+</td>
+<td>
+由于ACL对资源的限制而未获得授权
+</td>
+</tr>
+<tr>
+<td>
+401.4
+</td>
+<td>
+筛选器授权失败
+</td>
+</tr>
+<tr>
+<td>
+401.5
+</td>
+<td>
+ISAPI/CGI应用程序授权失败
+</td>
+</tr>
+<tr>
+<td>
+401.7
+</td>
+<td>
+访问被Web服务器上的URL授权策略拒绝。这个错误代码为IIS 6.0所专用
+</td>
+</tr>
+<tr>
+<td>
+403 - Forbidden
+</td>
+<td>
+禁止访问
+</td>
+</tr>
+<tr>
+<td>
+403.1
+</td>
+<td>
+禁止访问：禁止可执行访问
+</td>
+</tr>
+<tr>
+<td>
+403.2
+</td>
+<td>
+禁止访问：禁止读访问
+</td>
+</tr>
+<tr>
+<td>
+403.3
+</td>
+<td>
+禁止访问：禁止写访问
+</td>
+</tr>
+<tr>
+<td>
+403.4
+</td>
+<td>
+禁止访问：要求SSL
+</td>
+</tr>
+<tr>
+<td>
+403.5
+</td>
+<td>
+禁止访问：要求SSL 128
+</td>
+</tr>
+<tr>
+<td>
+403.6
+</td>
+<td>
+禁止访问：IP地址被拒绝
+</td>
+</tr>
+<tr>
+<td>
+403.7
+</td>
+<td>
+禁止访问：要求客户证书
+</td>
+</tr>
+<tr>
+<td>
+403.8
+</td>
+<td>
+禁止访问：禁止站点访问
+</td>
+</tr>
+<tr>
+<td>
+403.9
+</td>
+<td>
+禁止访问：连接的用户过多
+</td>
+</tr>
+<tr>
+<td>
+403.10
+</td>
+<td>
+禁止访问：配置无效
+</td>
+</tr>
+<tr>
+<td>
+403.11
+</td>
+<td>
+禁止访问：密码更改
+</td>
+</tr>
+<tr>
+<td>
+403.12
+</td>
+<td>
+禁止访问：映射器拒绝访问
+</td>
+</tr>
+<tr>
+<td>
+403.13
+</td>
+<td>
+禁止访问：客户证书已被吊销
+</td>
+</tr>
+<tr>
+<td>
+403.15
+</td>
+<td>
+禁止访问：客户访问许可过多
+</td>
+</tr>
+<tr>
+<td>
+403.16
+</td>
+<td>
+禁止访问：客户证书不可信或者无效
+</td>
+</tr>
+<tr>
+<td>
+403.17
+</td>
+<td>
+禁止访问：客户证书已经到期或者尚未生效
+</td>
+</tr>
+<tr>
+<td>
+404 - Not Found
+</td>
+<td>
+未找到
+</td>
+</tr>
+<tr>
+<td>
+404.0
+</td>
+<td>
+没有找到文件或目录
+</td>
+</tr>
+<tr>
+<td>
+404.1
+</td>
+<td>
+无法在所请求的端口上访问 Web 站点
+</td>
+</tr>
+<tr>
+<td>
+404.2
+</td>
+<td>
+Web服务扩展锁定策略阻止本请求
+</td>
+</tr>
+<tr>
+<td>
+404.3
+</td>
+<td>
+MIME映射策略阻止本请求
+</td>
+</tr>
+<tr>
+<td>
+405 - Method Not Allowed
+</td>
+<td>
+用来访问本页面的HTTP谓词不被允许
+</td>
+</tr>
+<tr>
+<td>
+406 - Not Acceptable
+</td>
+<td>
+客户端浏览器不接受所请求页面的MIME类型
+</td>
+</tr>
+<tr>
+<td>
+407 - Proxy Authentication Required
+</td>
+<td>
+要求进行代理身份验证
+</td>
+</tr>
+<tr>
+<td>
+410 - Gone
+</td>
+<td>
+永远不可用
+</td>
+</tr>
+<tr>
+<td>
+412 - Precondition Failed
+</td>
+<td>
+前提条件失败
+</td>
+</tr>
+<tr>
+<td>
+413 - Request Entity Too Large
+</td>
+<td>
+请求实体太大
+</td>
+</tr>
+<tr>
+<td>
+414 - Request-URI Too Large
+</td>
+<td>
+请求URI太长
+</td>
+</tr>
+<tr>
+<td>
+415 - Unsupported Media Type
+</td>
+<td>
+不支持的媒体类型
+</td>
+</tr>
+<tr>
+<td>
+416 - Requested range not satisfiable
+</td>
+<td>
+所请求的范围无法满足
+</td>
+</tr>
+<tr>
+<td>
+417 - Expectation Failed
+</td>
+<td>
+执行失败
+</td>
+</tr>
+<tr>
+<td>
+423
+</td>
+<td>
+锁定的错误
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.5">5xx - 服务器错误</h2>
+<table>
+<tr>
+<th>
+错误码
+</th>
+<th>
+描述
+</th>
+</tr>
+<tr>
+<td>
+500 - Internal Server Error
+</td>
+<td>
+内部服务器错误
+</td>
+</tr>
+<tr>
+<td>
+500.11
+</td>
+<td>
+服务器关闭
+</td>
+</tr>
+<tr>
+<td>
+500.12
+</td>
+<td>
+应用程序正忙于在Web服务器上重新启动
+</td>
+</tr>
+<tr>
+<td>
+500.13
+</td>
+<td>
+Web服务器太忙
+</td>
+</tr>
+<tr>
+<td>
+500.14
+</td>
+<td>
+应用程序无效
+</td>
+</tr>
+<tr>
+<td>
+500.15
+</td>
+<td>
+不允许直接请求Global.asa
+</td>
+</tr>
+<tr>
+<td>
+500.16
+</td>
+<td>
+UNC授权凭据不正确。这个错误代码为IIS 6.0所专用
+</td>
+</tr>
+<tr>
+<td>
+500.18
+</td>
+<td>
+URL授权存储不能打开。这个错误代码为IIS 6.0所专用
+</td>
+</tr>
+<tr>
+<td>
+500.100
+</td>
+<td>
+内部ASP错误
+</td>
+</tr>
+<tr>
+<td>
+501 - Not Implemented
+</td>
+<td>
+页眉值指定了未实现的配置
+</td>
+</tr>
+<tr>
+<td>
+502 - Bad Gateway
+</td>
+<td>
+Web服务器用作网关或代理服务器时收到了无效响应
+</td>
+</tr>
+<tr>
+<td>
+502.1
+</td>
+<td>
+CGI应用程序超时
+</td>
+</tr>
+<tr>
+<td>
+502.2
+</td>
+<td>
+CGI应用程序出错
+</td>
+</tr>
+<tr>
+<td>
+503 - Service Unavailable
+</td>
+<td>
+服务不可用。这个错误代码为IIS 6.0所专用
+</td>
+</tr>
+<tr>
+<td>
+504 - Gateway Time-out
+</td>
+<td>
+网关超时
+</td>
+</tr>
+<tr>
+<td>
+505 - HTTP Version not supported
+</td>
+<td>
+HTTP版本不受支持
+</td>
+</tr>
+</table>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>编译Android SDK</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,65 +47,82 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">编译SDK</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">编译SDK</a></li>
+<li><a href="#toc_1">编译SDK</a>
 <ul>
-<li><a href="#toc_1.1">加入自定义的SDK</a></li>
+<li><a href="#toc_1.1">加入自定义的SDK</a>
 <ul>
-<li><a href="#toc_1.1.1">1.编写自定义的Android.mk</a></li>
-<li><a href="#toc_1.1.2">2.运行编译命令</a></li>
-<li><a href="#toc_1.1.3">3.生成SDK</a></li>
+<li><a href="#toc_1.1.1">1.修改Android.mk</a>
+<li><a href="#toc_1.1.2">2.运行编译命令</a>
+<li><a href="#toc_1.1.3">3.生成SDK</a>
 </ul>
 </ul>
 </ul>
 </div>
 
 <h2 id="toc_1.1">加入自定义的SDK</h2>
-<h3 id="toc_1.1.1">1.编写自定义的Android.mk</h3>
-<pre class="brush:">
+<h3 id="toc_1.1.1">1.修改Android.mk</h3>
+<pre class="brush: bash">
 $ vim framework/base/Android.mk
 
-在non_base_dirs变量后加入自定义的包名，如:
+# 在non_base_dirs变量后加入自定义包的目录，如:
 non_base_dirs := \
 	../../external/apache-http/src/org/apache/http
-	../../vender/mokoid/frameworks/base/core/service/java
+    ../../vender/mokoid/frameworks/base/core/service/java
+
+# 在packages_to_document变量后加入自定义包的目录
+# 编译系统会遍历FRAMEWORKS_BASE_JAVA_SRC_DIRS变量指定的目录，
+# 该变量在build/core/pathmap.mk中定义
+packages_to_document := \
+    android \
+    javax/microedition/khronos \
+	com/foxconn/ebook/widget
+	
+# Search through the base framework dirs for these packages.
+# The result will be relative to frameworks/base.
+fwbase_dirs_to_document := \
+	test-runner/src \
+	$(patsubst $(LOCAL_PATH)/%,%, \
+	  $(wildcard \
+	    $(foreach dir, $(FRAMEWORKS_BASE_JAVA_SRC_DIRS), \
+	      $(addprefix $(dir)/, $(packages_to_document)) \
+	     ) \
+	   ) \
+	 )
 </pre>
 
 <h3 id="toc_1.1.2">2.运行编译命令</h3>
 <pre class="brush: bash">
-$lunch sdk-eng
-$make sdk
-或者
-$make PRODUCT-dma6410xp-sdk
+# 更新api，需要在make clean之后运行此命令
+$ make update-api TARGET_PRODUCT=dma6410xp
+
+# 在源码根目录执行以下命令
+$ lunch sdk-eng
+$ make sdk
+# 或者
+$ make PRODUCT-dma6410xp-sdk
 </pre>
 
 <h3 id="toc_1.1.3">3.生成SDK</h3>
-<pre class="brush:text">
-生成的SDK目录:out/host/linux-x86/sdk/
+<pre class="brush:bash">
+# 生成的SDK目录
+out/host/linux-x86/sdk/
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

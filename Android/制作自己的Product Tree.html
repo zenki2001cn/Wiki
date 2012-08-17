@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>制作自己的Product Tree</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,34 +47,35 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">如何制作自己的Product Tree</h1>
 <div class="toc">
 <ul>
-<li><a href="#toc_1">如何制作自己的Product Tree</a></li>
+<li><a href="#toc_1">如何制作自己的Product Tree</a>
 <ul>
-<li><a href="#toc_1.1">三个重要的Makefile</a></li>
-<li><a href="#toc_1.2">基本流程</a></li>
+<li><a href="#toc_1.1">三个重要的Makefile</a>
+<li><a href="#toc_1.2">基本流程</a>
 <ul>
-<li><a href="#toc_1.2.1">1.拷贝sample目录</a></li>
-<li><a href="#toc_1.2.2">2.创建product-specific文件</a></li>
-<li><a href="#toc_1.2.3">3.修改AndroidProducts.mk</a></li>
-<li><a href="#toc_1.2.4">4.创建board-specific目录</a></li>
-<li><a href="#toc_1.2.5">5.创建BoardConfig.mk</a></li>
-<li><a href="#toc_1.2.6">6.创建system.prop(可选)</a></li>
-<li><a href="#toc_1.2.7">7.创建板子的Android.mk(可选)</a></li>
-<li><a href="#toc_1.2.8">8.编写A0007.mk(可继承的mk)</a></li>
-<li><a href="#toc_1.2.9">9.继承A0007.mk</a></li>
-<li><a href="#toc_1.2.10">10.修改AndroidProducts.mk</a></li>
-<li><a href="#toc_1.2.11">*.添加第二个product(可选)</a></li>
+<li><a href="#toc_1.2.1">1.拷贝sample目录</a>
+<li><a href="#toc_1.2.2">2.创建product-specific文件</a>
+<li><a href="#toc_1.2.3">3.修改AndroidProducts.mk</a>
+<li><a href="#toc_1.2.4">4.创建board-specific目录</a>
+<li><a href="#toc_1.2.5">5.创建BoardConfig.mk</a>
+<li><a href="#toc_1.2.6">6.创建system.prop(可选)</a>
+<li><a href="#toc_1.2.7">7.创建板子的Android.mk(可选)</a>
+<li><a href="#toc_1.2.8">8.编写A0007.mk(可继承的mk)</a>
+<li><a href="#toc_1.2.9">9.继承A0007.mk</a>
+<li><a href="#toc_1.2.10">10.修改AndroidProducts.mk</a>
+<li><a href="#toc_1.2.11">*.添加第二个product(可选)</a>
 <ul>
-<li><a href="#toc_1.2.11.1">添加second_product_name.mk</a></li>
-<li><a href="#toc_1.2.11.2">修改AndroidProducts.mk</a></li>
+<li><a href="#toc_1.2.11.1">添加second_product_name.mk</a>
+<li><a href="#toc_1.2.11.2">修改AndroidProducts.mk</a>
 </ul>
-<li><a href="#toc_1.2.12">*.添加环境设置脚本(可选)</a></li>
+<li><a href="#toc_1.2.12">*.添加环境设置脚本(可选)</a>
 </ul>
-<li><a href="#toc_1.3">最终目录结构</a></li>
-<li><a href="#toc_1.4">编译镜像</a></li>
+<li><a href="#toc_1.3">最终目录结构</a>
+<li><a href="#toc_1.4">编译镜像</a>
 </ul>
 </ul>
 </div>
@@ -95,7 +96,7 @@ A0007.mk(自定义)
 <ul>
 <li>
 拷贝一份device中的sample目录，该为公司相关的名称
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -106,7 +107,7 @@ $ cp -r sample &lt;company_name&gt;
 <ul>
 <li>
 创建一个product相关的mk文件，取名为<code>device/&lt;company_name&gt;/products/&lt;first_product_name&gt;.mk</code>，并包含以下内容
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -121,7 +122,7 @@ PRODUCT_DEVICE := &lt;board_name&gt;
 <ul>
 <li>
 修改products目录下的AndroidProducts.mk，添加以下内容，将PRODUCT_MAKEFILES指向上一步所添加的&lt;first_product_name&gt;.mk
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -134,7 +135,7 @@ PRODUCT_MAKEFILES := \
 <ul>
 <li>
 创建一个board相关的目录，取名为board_name——PRODUCT_DEVICE定义
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -145,7 +146,7 @@ $ mkdir device/&lt;company_name&gt;/&lt;board_name&gt;
 <ul>
 <li>
 在device/&lt;company_name&gt;/&lt;board_name&gt;下创建<code>BoardConfig.mk</code>，该文件由编译系统自动搜索并加载
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -167,7 +168,7 @@ BOARD_USES_GENERIC_AUDIO := true
 <ul>
 <li>
 这个步骤是可选的，如果你需要设置一些系统属性，则在device/&lt;company_name&gt;/&lt;board_name&gt;下创建<code>system.prop</code>文件，并加入以下内容
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -182,7 +183,7 @@ BOARD_USES_GENERIC_AUDIO := true
 <ul>
 <li>
 这个步骤是可选的，如果你需要编译内核，则在device/&lt;company_name&gt;/&lt;board_name&gt;下创建<code>Android.mk</code>文件，并加入以下内容
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -213,16 +214,16 @@ include $(CLEAR_VARS)
 <ul>
 <li>
 将products目录下sample_addon.mk改名为A0007.mk，并修改相关内容。这样做的目的是创建一个产品相关的基类mk，其他型号相关mk可以直接继承它
-</li>
+
 <li>
 device/&lt;company_name&gt;/products/&lt;first_product_name&gt;.mk作为具体的产品mk，需要inherit-product该文件
-</li>
+
 <li>
 也可以将以下内容拷贝进first_product_name.mk，这种做法不适合扩展
-</li>
+
 <li>
 相关变量设置参见<a href="Build环境变量.html">Build环境变量</a>
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -232,19 +233,17 @@ $(call inherit-product, $(SRC_TARGET_DIR)/products/generic.mk)
 # 按照规则查找需要build的文件夹，注意命名规则
 # 参考device/sample示例
 PRODUCT_PACKAGES := \
-    PlatformLibraryClient \                     =》当前目录apps下的PlatformLibraryClient文件夹
-    com.example.android.platform_library \      =》当前目录frameworks下的PlatformLibrary文件夹
-    libplatform_library_jni                     =》当前目录frameworks下的PlatformLibrary下的jni文件夹
+    PlatformLibraryClient \                 =》当前目录apps下名字为PlatformLibraryClient的应用
+    com.example.android.platform_library \  =》当前目录frameworks下名字为com.example.android.platform_library的jar包
+    libplatform_library_jni                 =》当前目录frameworks下名字为libplatform_library_jni的C/C++共享库
     
 # 拷贝命令，定义需要拷贝的文件源与路径
 PRODUCT_COPY_FILES := \
     vendor/mstar/etc/vold.conf:system/etc/vold.conf \
     vendor/mstar/bin/bash:system/bin/bash \
-    vendor/mstar/em1/help.epub:system/usr/help.epub \
     vendor/mstar/em1/help.pdf:system/usr/help.pdf \
-    vendor/mstar/etc/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
 
-# 拷贝jar库
+# 拷贝jar库作为导出的APIs
 PRODUCT_SDK_ADDON_COPY_MODULES := \
     com.example.android.platform_library:libs/platform_library.jar
 
@@ -252,12 +251,14 @@ PRODUCT_SDK_ADDON_COPY_MODULES := \
 PRODUCT_PACKAGES := \
     mg-capacitive.kcm
         
-#set correct hardware
+# 添加属性设置
 ADDITIONAL_DEFAULT_PROPERTIES += ro.hardware=3622
 
 # 这组变量定义了编译出来的产品名称
 # Use 'make PRODUCT-&lt;PRODUCT_NAME&gt;-eng' to build the A0007.
 PRODUCT_BRAND := A0007
+
+# 产品特定的语言
 PRODUCT_LOCALES := \
     zh_CN \
     zh_TW \
@@ -268,7 +269,7 @@ PRODUCT_LOCALES := \
 <ul>
 <li>
 在device/&lt;company_name&gt;/products/&lt;first_product_name&gt;.mk中添加以下内容，用来继承A0007.mk
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -278,7 +279,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic.mk)
 $(call inherit-product, device/&lt;company_name&gt;/products/A0007.mk)
 
 # Overrides
-PRODUCT_BRAND := <brand_name&gt;
+PRODUCT_BRAND := &lt;brand_name&gt;
 PRODUCT_MANUFACTURER := &lt;manufacturer_name&gt;
 PRODUCT_MODEL := &lt;model_name&gt;
 </pre>
@@ -293,10 +294,10 @@ PRODUCT_MAKEFILES := \
 <ul>
 <li>
 至此我们已经添加了一个product，如果需要添加其他product，可以从步骤2开始，创建second_product_name.mk
-</li>
+
 <li>
 在AndroidProducts.mk中加入second_product_name.mk，并重复以上步骤
-</li>
+
 </ul>
 
 <h4 id="toc_1.2.11.1">添加second_product_name.mk</h4>
@@ -322,67 +323,97 @@ PRODUCT_MAKEFILES := \
 <ul>
 <li>
 创建device/&lt;company_name&gt;/products/vendorsetup.sh，并添加以下内容
-</li>
-<li>
-build系统会扫描以下文件
-</li>
-<ul>
-<li>
-vendor/*/vendorsetup.sh 
-</li>
-<li>
-vendor/*/build/vendorsetup.sh 
-</li>
-<li>
-device/<strong>/</strong>/vendorsetup.sh
-</li>
-</ul>
-</ul>
-
 <pre class="brush:bash">
 add_lunch_combo A0007-user
 </pre>
+
+</ul>
+
+<ul>
+<li>
+build系统会扫描以下文件
+
+<ul>
+<li>
+vendor/*/vendorsetup.sh 
+
+<li>
+vendor/*/build/vendorsetup.sh 
+
+<li>
+device/<strong>/</strong>/vendorsetup.sh
+
+</ul>
+</ul>
 
 <h2 id="toc_1.3">最终目录结构</h2>
 <ul>
 <li>
 &lt;company_name&gt;
-</li>
+
 <ul>
 <li>
 &lt;board_name&gt;
-</li>
+
 <ul>
 <li>
 Android.mk
-</li>
+
 <li>
 product_config.mk
-</li>
+
 <li>
 system.prop
-</li>
+
+</ul>
+<li>
+apps
+
+<ul>
+<li>
+custom_app
+
+<li>
+Android.mk
+
+</ul>
+<li>
+frameworks
+
+<ul>
+<li>
+custom_framework
+
+<li>
+Android.mk
+
 </ul>
 <li>
 products
-</li>
+
 <ul>
 <li>
 AndroidProducts.mk
-</li>
+
 <li>
 first_product_name.mk
-</li>
+
 <li>
 second_product_name.mk
-</li>
+
 <li>
 A0007.mk
-</li>
+
 <li>
 vendorsetup.sh
-</li>
+
 </ul>
+<li>
+Android.mk
+
+<li>
+CleanSpec.mk
+
 </ul>
 </ul>
 
@@ -390,7 +421,7 @@ vendorsetup.sh
 <ul>
 <li>
 编译时需要设置TARGET_PRODUCT变量，变量名为A0007.mk中的PRODUCT_NAME定义
-</li>
+
 </ul>
 
 <pre class="brush:bash">
@@ -404,25 +435,16 @@ $ make PRODUCT-A0007-user
 或
 $ make TARGET_PRODUCT=A0007 TARGET_BUILD_VARIANT=user
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>
