@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>嵌入Python</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">嵌入Python</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">嵌入Python</a>
+<ul>
+<li><a href="#toc_1.1">包含Python语句块</a>
+<li><a href="#toc_1.2">vim模块预览</a>
+<ul>
+<li><a href="#toc_1.2.1"><em>vim.command</em></a>
+<li><a href="#toc_1.2.2"><em>vim.eval</em></a>
+<li><a href="#toc_1.2.3">vim.error</a>
+<li><a href="#toc_1.2.4">vim.buffers</a>
+<li><a href="#toc_1.2.5">vim.windows</a>
+<li><a href="#toc_1.2.6">vim.current</a>
+<li><a href="#toc_1.2.7">buffer</a>
+<ul>
+<li><a href="#toc_1.2.7.1">方法</a>
+</ul>
+<li><a href="#toc_1.2.8">range</a>
+<ul>
+<li><a href="#toc_1.2.8.1">属性</a>
+<li><a href="#toc_1.2.8.2">方法</a>
+</ul>
+<li><a href="#toc_1.2.9">window</a>
+<ul>
+<li><a href="#toc_1.2.9.1">属性</a>
+</ul>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">包含Python语句块</h2>
+<ul>
+<li>
+在方法中包含Python的语法，需要使用<code>python &lt;&lt; EOF</code>开头，并使用<code>EOF</code>结尾。<code>EOF</code>可换成其他大写的字串。
+
+<li>
+注意<code>python &lt;&lt; EOF</code>、<code>import</code>、<code>class</code>、<code>EOF</code>必须在一行的顶端，<code>不能有缩进和空格</code>。
+<pre class="brush:python">
+function! IcecreamInitialize()
+python &lt;&lt; EOF
+import os
+
+class StrawberryIcecream:
+    def __call__(self):
+        print 'EAT ME'
+EOF
+endfunction
+</pre>
+
+</ul>
+
+<h2 id="toc_1.2">vim模块预览</h2>
+<ul>
+<li>
+<code>vim.command</code>：执行vim命令。
+
+<li>
+<code>vim.eval</code>：返回vim变量值。
+
+<li>
+<code>vim.error</code>：vim异常。
+
+<li>
+<code>vim.buffers</code>：所有buffer的列表。
+
+<li>
+<code>vim.windows</code>：所有窗口的列表。
+
+<li>
+<code>vim.current</code>：当前显示的对象。
+
+<li>
+<code>vim.current.line</code>：当前行对象。
+
+<li>
+<code>vim.current.buffer</code>：当前buffer对象。
+
+<li>
+<code>vim.current.window</code>：当前窗口对象。
+
+<li>
+<code>vim.current.range</code>：当前行的范围。
+
+</ul>
+
+<h3 id="toc_1.2.1"><em>vim.command</em></h3>
+<pre class="brush:python">
+import vim
+
+# 变量赋值
+vim.command("let var = %d" % val)
+vim.command("let var = '%s'" % val)
+# 设置tw属性
+vim.command("set tw=72")
+# 字符串替换
+vim.command("%s/aaa/bbb/g")
+</pre>
+
+<h3 id="toc_1.2.2"><em>vim.eval</em></h3>
+<pre class="brush:python">
+import vim
+
+text_width = vim.eval("&amp;tw")
+str = vim.eval("12+12")
+</pre>
+
+<h3 id="toc_1.2.3">vim.error</h3>
+<pre class="brush:python">
+try:
+    vim.command("put a")
+except vim.error:
+	# nothing in register a
+</pre>
+
+<h3 id="toc_1.2.4">vim.buffers</h3>
+<pre class="brush:python">
+import vim
+
+# 索引buffers（只读）
+b = vim.buffers[i]
+
+# 测试buffer
+b in vim.buffers
+
+# 返回buffers数量
+n = len(vim.buffers)
+	    
+# 遍历buffers
+for b in vim.buffers:
+</pre>
+
+<h3 id="toc_1.2.5">vim.windows</h3>
+<pre class="brush:python">
+import vim
+
+# 索引windows（只读）
+w = vim.windows[i]
+
+# 测试windows
+w in vim.windows
+
+# 返回windows数量
+n = len(vim.windows)
+
+# 遍历windows
+for w in vim.windows:
+</pre>
+
+<h3 id="toc_1.2.6">vim.current</h3>
+<pre class="brush:python">
+import vim
+
+vim.current.line	    # The current line (RW)		String
+vim.current.buffer	    # The current buffer (RO)		Buffer
+vim.current.window	    # The current window (RO)		Window
+vim.current.range	    # The current line range (RO)	Range
+</pre>
+
+<h3 id="toc_1.2.7">buffer</h3>
+<h4 id="toc_1.2.7.1">方法</h4>
+<ul>
+<li>
+buffer.append(str)：添加一行到buffer
+
+<li>
+buffer.append(list)：添加多行到buffer
+
+<li>
+buffer.mark(name)：返回名为name的标记，其所在的坐标(row,col)
+
+<li>
+buffer.range(s,e)：返回start,end标记的范围对象
+
+</ul>
+
+<pre class="brush:python">
+# 打印buffer名称
+print b.name		
+
+# 替换第一行内容
+b[0] = "hello!!!"
+	
+# 删除整个buffer
+b[:] = None	
+	
+# 删除整个buffer
+del b[:]
+	
+# 在开头插入一行
+b[0:0] = [ "a line" ]
+	
+# 删除第三行
+del b[2]
+	
+# 在末尾插入一行
+b.append("bottom")
+	
+# 返回行数
+n = len(b)
+	
+# 返回标记名字为a的一行
+(row,col) = b.mark('a')
+	
+# 返回range对象
+r = b.range(1,5)
+</pre>
+
+<h3 id="toc_1.2.8">range</h3>
+<h4 id="toc_1.2.8.1">属性</h4>
+<ul>
+<li>
+range.start：标记buffer的开始位置。	
+
+<li>
+range.end：标记buffer的结束位置。	
+
+</ul>
+<h4 id="toc_1.2.8.2">方法</h4>
+<ul>
+<li>
+range.append(str)：添加一行到range对象。	
+
+<li>
+range.append(list)：添加多行到range对象。	
+
+</ul>
+
+<pre class="brush:python">
+vim.command("%d,%dhardcopy!" % (r.start+1,r.end+1))
+</pre>
+
+<h3 id="toc_1.2.9">window</h3>
+<h4 id="toc_1.2.9.1">属性</h4>
+<ul>
+<li>
+window.buffer：(只读) 当前窗口显示的内容	
+
+<li>
+window.cursor：(读写) 当前光标位置，返回(row,col)	
+
+<li>
+window.height：(读写) 当前窗口的高度，返回rows
+
+<li>
+window.width：(读写) 当前窗口的宽度，返回columns	
+
+</ul>
+
+<pre class="brush:python">
+import vim
+
+(row, col) = vim.current.window.cursor
+line = vim.current.buffer[row-1]
+prevChar, nextChar = line[col-1], line[col]
+
+vim.current.window.cursor = (1, 0)      # move to top left
+vim.current.buffer[0] = "hello, world"  # change first line
+vim.current.buffer.append("last line!")
+del vim.current.buffer[3]
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
