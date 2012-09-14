@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Vim脚本语法学习</title>
+    <title>Unicode字符串</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,65 +49,82 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">Vim脚本语法学习</h1>
+<h1 id="toc_1">Unicode字符串</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Vim脚本语法学习</a>
+<li><a href="#toc_1">Unicode字符串</a>
 <ul>
-<li><a href="#toc_1.1">安装</a>
-<li><a href="#toc_1.2">语法</a>
-<li><a href="#toc_1.3">Tips</a>
+<li><a href="#toc_1.1">unicode赋值</a>
+<li><a href="#toc_1.2">unichr内置函数</a>
+<li><a href="#toc_1.3">unicodedata模块</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">安装</h2>
-<pre class="brush:bash">
-# 1. 下载工具和库
-$ sudo apt-get install mercurial libncurses* libncurses5-dev \
-               ruby-dev python2.6-dev libperl-dev
+<h2 id="toc_1.1">unicode赋值</h2>
+<pre class="brush:python">
+# 字符串声明
+&gt;&gt;&gt; a = u'hello'
+u'hello'
+&gt;&gt;&gt; a = unicode('hello')
+u'hello'
 
-# 2. 下载vim源码
-$ hg clone https://vim.googlecode.com/hg/ vim
+# 获取第一个元素
+&gt;&gt;&gt; a[0]
+u'h'
+# 转换成十进制
+&gt;&gt;&gt; ord(a[0])
+104
 
-# 3. 编译vim
-# 可选的参数：--enable-python3interp=yes --enable-sniff=yes --enable-hangulinput=yes
-#             --with-local-dir=/usr/local
-$ cd vim
-$ ./configure --enable-multibyte --with-features=huge --enable-xim=yes --enable-pythoninterp=yes \
-              --enable-gui=yes --enable-cscope=yes --enable-fontset=yes --enable-perlinterp=yes \
-              --enable-mzschemeinterp=yes --enable-luainterp=yes --enable-rubyinterp=yes \
-              --enable-tclinterp=yes --with-vim-name=vim7.3
-
-# 4. 安装vim
-$ make
-$ sudo make install
+# 中文赋值
+&gt;&gt;&gt; a = '你好'
+&gt;&gt;&gt; a
+'\xe4\xbd\xa0\xe5\xa5\xbd'
+&gt;&gt;&gt; print a
+你好
+# UTF-8解码成unicode
+&gt;&gt;&gt; a.decode('utf8')
+u'\u4f60\u597d'
 </pre>
 
-<h2 id="toc_1.2">语法</h2>
+<h2 id="toc_1.2">unichr内置函数</h2>
 <ul>
 <li>
-<a href="变量定义.html">变量定义</a>
+该内置函数将unicode的数字编码值转换成对应的字符。
 
 <li>
-<a href="逻辑控制.html">逻辑控制</a>
-
-<li>
-<a href="函数.html">函数</a>
-
-<li>
-<a href="执行命令.html">执行命令</a>
-
-<li>
-<a href="嵌入Python.html">嵌入Python</a>
+参数范围在<code>0~0x10ffff</code>。
+<pre class="brush:python">
+&gt;&gt;&gt; unichr(104)
+u'h'
+&gt;&gt;&gt; unichr(104000)
+u'\U00019640'
+</pre>
 
 </ul>
 
-<h2 id="toc_1.3">Tips</h2>
+<h2 id="toc_1.3">unicodedata模块</h2>
 <ul>
 <li>
-<a href="vimwiki示例.html">vimwiki示例</a>
+该模块提供各种方法显示对应的unicode信息。
+<pre class="brush:python">
+&gt;&gt;&gt; import unicodedata
+&gt;&gt;&gt; unicodedata.lookup('LEFT CURLY BRACKET')
+u'{'
+&gt;&gt;&gt; unicodedata.name(u'/')
+'SOLIDUS'
+&gt;&gt;&gt; unicodedata.decimal(u'9')
+9
+&gt;&gt;&gt; unicodedata.decimal(u'a')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in ?
+ValueError: not a decimal
+&gt;&gt;&gt; unicodedata.category(u'A')  # 'L'etter, 'u'ppercase
+'Lu'
+&gt;&gt;&gt; unicodedata.bidirectional(u'\u0660') # 'A'rabic, 'N'umber
+'AN'
+</pre>
 
 </ul>
 

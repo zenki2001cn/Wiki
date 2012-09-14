@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>fastboot烧录</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">fastboot烧录</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">fastboot烧录</a>
+<ul>
+<li><a href="#toc_1.1">准备工作</a>
+<li><a href="#toc_1.2">PC端烧录指令</a>
+<ul>
+<li><a href="#toc_1.2.1">fastboot用法简介</a>
+<li><a href="#toc_1.2.2">flash uboot</a>
+<li><a href="#toc_1.2.3">flash kernel</a>
+<li><a href="#toc_1.2.4">flash ramdisk</a>
+<li><a href="#toc_1.2.5">flash system</a>
+<li><a href="#toc_1.2.6">flash recovery</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">准备工作</h2>
+<pre class="brush:bash">
+    1. 使用串口连接device和PC，通过minicom进入串口调试界面。
+    2. 启动device进入uboot界面。
+    3. 在uboot界面输入fastboot，进入fastboot模式。
+    4. 在PC端指令fastboot烧录指令。
+</pre>
+<p>
+<img src="http:pic/fastboot_mode.png" />
+</p>
+
+<h2 id="toc_1.2">PC端烧录指令</h2>
+<h3 id="toc_1.2.1">fastboot用法简介</h3>
+<pre class="brush:bash">
+usage: fastboot [ &lt;option&gt; ] &lt;command&gt;
+
+commands:
+  update &lt;filename&gt;                        reflash device from update.zip
+  flashall                                 flash boot + recovery + system
+  flash &lt;partition&gt; [ &lt;filename&gt; ]         write a file to a flash partition
+  erase &lt;partition&gt;                        erase a flash partition
+  format &lt;partition&gt;                       format a flash partition 
+  getvar &lt;variable&gt;                        display a bootloader variable
+  boot &lt;kernel&gt; [ &lt;ramdisk&gt; ]              download and boot kernel
+  flash:raw boot &lt;kernel&gt; [ &lt;ramdisk&gt; ]    create bootimage and flash it
+  devices                                  list all connected devices
+  continue                                 continue with autoboot
+  reboot                                   reboot device normally
+  reboot-bootloader                        reboot device into bootloader
+  help                                     show this help message
+
+options:
+  -w                                       erase userdata and cache
+  -s &lt;serial number&gt;                       specify device serial number
+  -p &lt;product&gt;                             specify product name
+  -c &lt;cmdline&gt;                             override kernel commandline
+  -i &lt;vendor id&gt;                           specify a custom USB vendor id
+  -b &lt;base_addr&gt;                           specify a custom kernel base address
+  -n &lt;page size&gt;                           specify the nand page size. default: 2048
+</pre>
+
+<h3 id="toc_1.2.2">flash uboot</h3>
+<pre class="brush:bash">
+# 烧录uboot
+$ fastboot flash uboot uboot.bin
+# 重启device
+$ fastboot reboot
+</pre>
+
+<h3 id="toc_1.2.3">flash kernel</h3>
+<pre class="brush:bash">
+# 烧录kernel
+$ fastboot flash kernel arch/arm/boot/uImage
+# 重启device
+$ fastboot reboot
+</pre>
+
+<h3 id="toc_1.2.4">flash ramdisk</h3>
+<pre class="brush:bash">
+# 烧录ramdisk
+$ fastboot flash uramdisk uramdisk.img
+</pre>
+
+<h3 id="toc_1.2.5">flash system</h3>
+<pre class="brush:bash">
+# 烧录system
+$ fastboot flash system $OUT/system.img
+</pre>
+
+<h3 id="toc_1.2.6">flash recovery</h3>
+<pre class="brush:bash">
+# 烧录recovery
+$ fastboot flash recovery $OUT/recovery.img
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
