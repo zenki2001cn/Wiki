@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Vim脚本语法学习</title>
+    <title>设备驱动程序模型</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,67 +49,73 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">Vim脚本语法学习</h1>
+<h1 id="toc_1">设备驱动程序模型</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Vim脚本语法学习</a>
+<li><a href="#toc_1">设备驱动程序模型</a>
 <ul>
-<li><a href="#toc_1.1">安装</a>
-<li><a href="#toc_1.2">语法</a>
-<li><a href="#toc_1.3">Tips</a>
+<li><a href="#toc_1.1">相关文件</a>
+<li><a href="#toc_1.2">概述</a>
+<li><a href="#toc_1.3">Kobjects、Ksets和Subsystems</a>
+<ul>
+<li><a href="#toc_1.3.1">kobject</a>
+</ul>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">安装</h2>
-<pre class="brush:bash">
-# 1. 下载工具和库
-$ sudo apt-get install mercurial libncurses* libncurses5-dev \
-               ruby-dev python2.6-dev libperl-dev
-
-# 2. 下载vim源码
-$ hg clone https://vim.googlecode.com/hg/ vim
-
-# 3. 编译vim
-# 可选的参数：--enable-python3interp=yes --enable-sniff=yes --enable-hangulinput=yes
-#             --with-local-dir=/usr/local --enable-gui=gnome2
-$ cd vim
-$ ./configure --enable-multibyte=yes --with-features=huge --enable-xim=yes --enable-pythoninterp=yes \
-              --enable-gui=yes --enable-cscope=yes --enable-fontset=yes --enable-perlinterp=yes \
-              --enable-mzschemeinterp=yes --enable-luainterp=yes --enable-rubyinterp=yes \
-              --enable-tclinterp=yes --with-vim-name=vim7.3
-
-# 4. 安装vim
-$ make
-$ sudo make install
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:c">
+#include &lt;linux/kobject.h&gt;
 </pre>
 
-<h2 id="toc_1.2">语法</h2>
+<h2 id="toc_1.2">概述</h2>
 <ul>
 <li>
-<a href="变量定义.html">变量定义</a>
+设备驱动模型提供了一种抽象，来支持以下这些功能：
 
-<li>
-<a href="逻辑控制.html">逻辑控制</a>
-
-<li>
-<a href="函数.html">函数</a>
-
-<li>
-<a href="执行命令.html">执行命令</a>
-
-<li>
-<a href="嵌入Python.html">嵌入Python</a>
-
-</ul>
-
-<h2 id="toc_1.3">Tips</h2>
 <ul>
 <li>
-<a href="vimwiki示例.html">vimwiki示例</a>
+1.电源管理和系统关机。
+
+<li>
+2.与用户空间通讯。
+
+<li>
+3.可热拔插设备。
+
+<li>
+4.设备类别。
+
+<li>
+5.对象生命周期。
 
 </ul>
+</ul>
+
+<h2 id="toc_1.3">Kobjects、Ksets和Subsystems</h2>
+<ul>
+<li>
+kobject是基础的数据结构，它组成了整个设备模型，它的主要功能包括：
+
+<ul>
+<li>
+对象引用计数：一种跟踪对象生命周期的方法，通过引用计数实现。
+
+<li>
+sysfs表示：sysfs中出现的每个对象，都包含一个kobject。
+
+<li>
+数据结构粘合：粘合设备模型中复杂的多级对象。
+
+<li>
+热拔插处理：kobject子系统处理事件的产生，通知用户空间关于硬件的热拔插。
+
+</ul>
+</ul>
+
+<h3 id="toc_1.3.1">kobject</h3>
 
 
 <footer>
