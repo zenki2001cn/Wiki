@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>什么是kobject</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">什么是kobject</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">什么是kobject</a>
+<ul>
+<li><a href="#toc_1.1">相关文件</a>
+<li><a href="#toc_1.2">Kobjects、Ksets和Subsystems</a>
+<li><a href="#toc_1.3">kobject</a>
+<ul>
+<li><a href="#toc_1.3.1">kobject初始化</a>
+<li><a href="#toc_1.3.2">kobject的引用计数</a>
+<li><a href="#toc_1.3.3">cdev转换kobject示例</a>
+<li><a href="#toc_1.3.4">kobj_type</a>
+<li><a href="#toc_1.3.5">kobject的释放</a>
+<ul>
+<li><a href="#toc_1.3.5.1">释放kobject函数示例</a>
+</ul>
+</ul>
+<li><a href="#toc_1.4">kset</a>
+<ul>
+<li><a href="#toc_1.4.1">kset初始化和释放</a>
+<li><a href="#toc_1.4.2">kset的引用计数</a>
+</ul>
+<li><a href="#toc_1.5">子系统(subsys)</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">相关文件</h2>
+<pre class="brush:c">
+#include &lt;linux/kobject.h&gt;
+#include &lt;linux/types.h&gt;
+</pre>
+
+<h2 id="toc_1.2">Kobjects、Ksets和Subsystems</h2>
+<ul>
+<li>
+kobject是基础的数据结构，它组成了整个设备模型，它的主要功能包括：
+
+<ul>
+<li>
+对象引用计数：一种跟踪对象生命周期的方法，通过引用计数实现。
+
+<li>
+sysfs表示：sysfs中出现的每个对象，都包含一个kobject。
+
+<li>
+数据结构粘合：粘合设备模型中复杂的多级对象。
+
+<li>
+热拔插处理：kobject子系统处理事件的产生，通知用户空间关于硬件的热拔插。
+
+</ul>
+</ul>
+
+<h2 id="toc_1.3">kobject</h2>
+<ul>
+<li>
+struct kobject通常被嵌入到其他结构中，它可被看作是一个顶级的抽象类。
+<pre class="brush:c">
+struct kobject {
+	const char		    *name;
+	struct list_head	entry;
+	struct kobject		*parent;
+	struct kset		    *kset;
+	struct kobj_type	*ktype;
+	struct sysfs_dirent	*sd;
+	struct kref		    kref;
+	unsigned int state_initialized:1;
+	unsigned int state_in_sysfs:1;
+	unsigned int state_add_uevent_sent:1;
+	unsigned int state_remove_uevent_sent:1;
+	unsigned int uevent_suppress:1;
+};
+</pre>
+
+</ul>
+
+<ul>
+<li>
+例如，struct cdev中会嵌入一个kobject结构：
+<pre class="brush:c">
+struct cdev {
+    struct kobject kobj;
+    struct module *owner;
+    const struct file_operations *ops;
+    struct list_head list;
+    dev_t dev;
+    unsigned int count;
+};    
+</pre>
+
+</ul>
+
+<ul>
+<li>
+当需要从kobject对象转换成cdev对象时，使用container_of宏。参见<a href="container_of指针转换.html">container_of指针转换</a>。
+<pre class="brush:c">
+struct cdev *device = container_of(kp, struct cdev, kobj);
+</pre>
+
+</ul>
+
+<h3 id="toc_1.3.1">kobject初始化</h3>
+<ul>
+<li>
+使用<code>kobject_init</code>初始化kobject对象。
+
+<li>
+使用<code>kobject_set_name</code>设置kobject对象的名称，该名称也是sysfs文件系统节点的名称。
+
+</ul>
+
+<h3 id="toc_1.3.2">kobject的引用计数</h3>
+<ul>
+<li>
+kobject保持一个struct kref结构的成员作为引用计数，只要该引用计数存在，那么该kobject对象就必须存在。
+<pre class="brush:c">
+struct kref {
+	atomic_t refcount;
+};
+</pre>
+
+</ul>
+
+<ul>
+<li>
+<code>kobject_get</code>调用会递增kobject的引用计数。
+
+<li>
+<code>kobject_put</code>调用会递减kobject的引用计数。
+
+</ul>
+
+<h3 id="toc_1.3.3">cdev转换kobject示例</h3>
+<ul>
+<li>
+通过kobject增加一个cdev对象的引用计数：
+<pre class="brush:c">
+static struct kobject *cdev_get(struct cdev *p)
+{
+	struct module *owner = p-&gt;owner;
+	struct kobject *kobj;
+
+	if (owner &amp;&amp; !try_module_get(owner))
+		return NULL;
+	kobj = kobject_get(&amp;p-&gt;kobj);
+	if (!kobj)
+		module_put(owner);
+	return kobj;
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.3.4">kobj_type</h3>
+<ul>
+<li>
+通过引入另一个结构体struct kobj_type来描述kobject对象，由相同的kobj_type表示的kobject通常是同一类型的对象。
+<pre class="brush:c">
+struct kobj_type {
+	void (*release)(struct kobject *kobj);      // 释放kobject的函数指针
+	const struct sysfs_ops *sysfs_ops;
+	struct attribute **default_attrs;
+	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+	const void *(*namespace)(struct kobject *kobj);
+};
+</pre>
+
+</ul>
+
+<h3 id="toc_1.3.5">kobject的释放</h3>
+<ul>
+<li>
+kobject对象的引用计数为0时，需要一个函数来释放kobject对象，该方法包含在kobj_type结构中。
+
+<li>
+kobj_type对象通常被嵌入到kobject结构体中，通过<code>get_ktype</code>获取kobj_type对象。
+<pre class="brush:c">
+static inline struct kobj_type *get_ktype(struct kobject *kobj)
+{
+    return kobj-&gt;ktype;
+}
+</pre>
+
+</ul>
+
+<h4 id="toc_1.3.5.1">释放kobject函数示例</h4>
+<pre class="brush:c">
+void my_object_release(struct kobject *kobj) {
+    struct my_object *mine = container_of(kobj, struct my_object, kobj); 
+
+    // 释放mine
+    kfree(mine);
+}
+</pre>
+
+<h2 id="toc_1.4">kset</h2>
+<ul>
+<li>
+从上面的kobject结构体中，我们可以看见其中的两个成员<code>parent</code>和<code>kset</code>，通过这两个成员将整个驱动模型划分成不同的层次，并相互连接。
+
+<ul>
+<li>
+parent指向当前层次中的上一级。
+
+<li>
+kset指向当前层次的kobject集合。
+
+</ul>
+<li>
+kset是kobject对象的容器，它包含同一类型的kobject对象集合。每一个kset对象都会对应一个sysfs中的目录。
+
+<li>
+kset和kobject的关系可参见下图：
+
+</ul>
+<p>
+<img src="http:pic/kset.png" />
+</p>
+ 
+<h3 id="toc_1.4.1">kset初始化和释放</h3>
+<ul>
+<li>
+<code>kset_init</code>调用初始化一个kset对象，
+
+<li>
+<code>kobject_add</code>调用可以关联两个kobject对象，使这两个kobject产生层级关系。
+
+<li>
+<code>kset_register</code>调用是kobject_init和kobject_add的结合。
+
+<li>
+<code>kobject_del</code>调用用来移除一个kobject对象。
+
+<li>
+<code>kset_unregister</code>调用是kobject_del和kobject_put的结合。
+<pre class="brush:c">
+struct kset {
+    struct list_head list;
+	spinlock_t list_lock;
+	struct kobject kobj;
+	const struct kset_uevent_ops *uevent_ops;
+};
+</pre>
+
+</ul>
+
+<h3 id="toc_1.4.2">kset的引用计数</h3>
+<ul>
+<li>
+kset同样有一组方法来管理引用计数，它们实际上是对kobject对象方法的一层封装。
+
+<li>
+<code>kset_get</code>调用会递增kobject的引用计数。
+<pre class="brush:c">
+static inline struct kset *kset_get(struct kset *k)
+{
+    // 调用kobject_get递增引用计数
+	return k ? to_kset(kobject_get(&amp;k-&gt;kobj)) : NULL;
+}
+</pre>
+
+<li>
+<code>kset_put</code>调用会递减kobject的引用计数。
+<pre class="brush:c">
+static inline void kset_put(struct kset *k)
+{
+    // 调用kobject_put递减引用计数
+	kobject_put(&amp;k-&gt;kobj);
+}
+</pre>
+
+</ul>
+
+<h2 id="toc_1.5">子系统(subsys)</h2>
+<ul>
+<li>
+子系统通常出现在sysfs的顶级（但不总是）。如/sys/block（块设备），/sys/devices（核心设备）。
+
+<li>
+子系统是对kset的一层封装，它用来帮助建立kset在系统层级中的位置，并通过一个读写信号量（参见<a href="内核同步.html">内核同步</a>）管理同步操作。
+
+</ul>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

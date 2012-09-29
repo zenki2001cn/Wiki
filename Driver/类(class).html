@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>container_of指针转换</title>
+    <title>类(class)</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,89 +49,45 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">container_of指针转换</h1>
+<h1 id="toc_1">类(class)</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">container_of指针转换</a>
+<li><a href="#toc_1">类(class)</a>
 <ul>
-<li><a href="#toc_1.1">相关文件</a>
-<li><a href="#toc_1.2">container_of宏</a>
-<ul>
-<li><a href="#toc_1.2.1">offsetof宏</a>
-</ul>
-<li><a href="#toc_1.3">示例说明</a>
+<li><a href="#toc_1.1">类相关的数据结构</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">相关文件</h2>
+<h2 id="toc_1.1">类相关的数据结构</h2>
+
 <pre class="brush:c">
-#include &lt;linux/kernel.h&gt;
-</pre>
+struct class {
+	const char		    *name;
+	struct module		*owner;
 
-<h2 id="toc_1.2">container_of宏</h2>
-<ul>
-<li>
-通常C语言通过在struct中包含另一个struct来实现继承。如何根据父类对象指针获取子类的对象呢？Linux Kernel中使用<code>container_of</code>宏定义。
-<pre class="brush:c">
-/**
- * container_of - cast a member of a structure out to the containing structure
- * @ptr:	the pointer to the member.
- * @type:	the type of the container struct this is embedded in.
- * @member:	the name of the member within the struct.
- *
- */
-#define container_of(ptr, type, member) ({			\
-	const typeof( ((type *)0)-&gt;member ) *__mptr = (ptr);	\
-	(type *)( (char *)__mptr - offsetof(type,member) );})
-</pre>
+	struct class_attribute		*class_attrs;
+	struct device_attribute		*dev_attrs;
+	struct kobject			    *dev_kobj;
 
-</ul>
-	
-<h3 id="toc_1.2.1">offsetof宏</h3>
-<pre class="brush:c">
-#undef offsetof
-#ifdef __compiler_offsetof
-#define offsetof(TYPE,MEMBER) __compiler_offsetof(TYPE,MEMBER)
-#else
-#define offsetof(TYPE, MEMBER) ((size_t) &amp;((TYPE *)0)-&gt;MEMBER)
-#endif
-</pre>
+	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
+	char *(*devnode)(struct device *dev, mode_t *mode);
 
-<h2 id="toc_1.3">示例说明</h2>
-<ul>
-<li>
-该示例中，struct scull_dev包含struct cdev对象，并且对象名是m_cdev。
+	void (*class_release)(struct class *class);
+	void (*dev_release)(struct device *dev);
 
-<ul>
-<li>
-container_of宏接收的第一个参数是指向m_cdev成员的指针。
+	int (*suspend)(struct device *dev, pm_message_t state);
+	int (*resume)(struct device *dev);
 
-<li>
-第二个参数是需要返回的对象类型。
+	const struct kobj_ns_type_operations *ns_type;
+	const void *(*namespace)(struct device *dev);
 
-<li>
-第三个参数是一个成员变量名，由于container_of是宏定义，它可以将该变量名和第二个参数组合，返回其地址。
+	const struct dev_pm_ops *pm;
 
-</ul>
-<li>
-container_of最终将m_cdev的指针转换，得到了继承子类struct scull_dev对象的指针。
-<pre class="brush:c">
-# scull_dev结构描述
-struct scull_dev { 
-    struct cdev m_cdev;
-    // ...... 
+	struct class_private *p;
 };
-
-# 指针转换方法
-void convert() {
-    struct scull_dev *dev; 
-    dev = container_of(inode-&gt;i_cdev, struct scull_dev, m_cdev);
-}
 </pre>
-
-</ul>
 
 
 <footer>

@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>设备驱动(device_driver)</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">设备驱动(device_driver)</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">设备驱动(device_driver)</a>
+<ul>
+<li><a href="#toc_1.1">设备驱动相关的数据结构</a>
+<ul>
+<li><a href="#toc_1.1.1">struct device_driver</a>
+<li><a href="#toc_1.1.2">struct driver_private</a>
+</ul>
+<li><a href="#toc_1.2">设备驱动的属性</a>
+<ul>
+<li><a href="#toc_1.2.1">struct driver_attribute</a>
+<li><a href="#toc_1.2.2">DRIVER_ATTR辅助宏</a>
+<li><a href="#toc_1.2.3">创建设备驱动属性</a>
+</ul>
+<li><a href="#toc_1.3">设备驱动的注册和移除</a>
+<ul>
+<li><a href="#toc_1.3.1">示例代码</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">设备驱动相关的数据结构</h2>
+<h3 id="toc_1.1.1">struct device_driver</h3>
+<ul>
+<li>
+设备的驱动由struct device_driver来描述。
+
+<li>
+该结构可视为从device_type中分离出来的一个设备驱动的抽象，而一些关于电源管理相关的方法由该结构来处理。
+
+<li>
+它主要包含以下几个重要的成员：
+
+<ul>
+<li>
+name：设备驱动的名称，在sysfs驱动模型中来描述该驱动。
+
+<li>
+bus：与该驱动相关的总线类型。
+
+<li>
+owner：驱动使用的模块对象。
+
+<li>
+mod_name：模块的名称。
+
+</ul>
+<li>
+同时它还包含一组设备驱动相关的操作：
+
+<ul>
+<li>
+probe：设备驱动被加载时调用。
+
+<li>
+remove：设备驱动被移除时调用。
+
+<li>
+shutdown：关闭设备时被调用。
+
+<li>
+suspend：系统休眠时被调用。
+
+<li>
+resume：系统唤醒时被调用。
+
+<li>
+pm：电源管理相关的操作。
+
+</ul>
+</ul>
+
+<pre class="brush:c">
+struct device_driver {
+	const char		    *name;
+	struct bus_type		*bus;
+
+	struct module		*owner;
+	const char		    *mod_name;	            /* used for built-in modules */
+
+	bool                suppress_bind_attrs;	/* disables bind/unbind via sysfs */
+
+	int (*probe) (struct device *dev);
+	int (*remove) (struct device *dev);
+	void (*shutdown) (struct device *dev);
+	int (*suspend) (struct device *dev, pm_message_t state);
+	int (*resume) (struct device *dev);
+	
+	const struct attribute_group **groups;
+	const struct dev_pm_ops *pm;
+
+	struct driver_private *p;
+};
+</pre>
+
+<h3 id="toc_1.1.2">struct driver_private</h3>
+<ul>
+<li>
+与bus_type_private结构一样，一些底层驱动模型相关的数据结构被独立出来，由driver_private结构来描述。
+<pre class="brush:c">
+struct driver_private {
+	struct kobject kobj;
+	struct klist klist_devices;
+	struct klist_node knode_bus;
+	struct module_kobject *mkobj;
+	struct device_driver *driver;
+};
+</pre>
+
+</ul>
+
+<h2 id="toc_1.2">设备驱动的属性</h2>
+<ul>
+<li>
+设备驱动的属性表示了其在sysfs中的文件节点，由struct driver_attribute来描述。
+
+</ul>
+
+<h3 id="toc_1.2.1">struct driver_attribute</h3>
+<pre class="brush:c">
+struct driver_attribute {
+	struct attribute attr;
+	ssize_t (*show)(struct device_driver *driver, char *buf);
+	ssize_t (*store)(struct device_driver *driver, const char *buf,
+			 size_t count);
+};
+</pre>
+
+<h3 id="toc_1.2.2">DRIVER_ATTR辅助宏</h3>
+<ul>
+<li>
+内核同样提供了一个宏来帮助创建设备驱动的属性，它使用了_ATTR宏，可参见其<a href="如何创建sysfs.html">如何创建sysfs</a>中的定义。
+<pre class="brush:c">
+#define DRIVER_ATTR(_name, _mode, _show, _store)	\
+struct driver_attribute driver_attr_##_name =		\
+    __ATTR(_name, _mode, _show, _store)
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.3">创建设备驱动属性</h3>
+<ul>
+<li>
+<code>driver_create_file</code>用来创建一个对应设备驱动属性的文件。
+
+<li>
+<code>driver_remove_file</code>用来移除一个对应设备驱动属性的文件。
+
+</ul>
+
+<h2 id="toc_1.3">设备驱动的注册和移除</h2>
+<ul>
+<li>
+<code>driver_register</code>方法用来注册一个设备驱动，通常需要对设备驱动对象做一些初始化。
+<pre class="brush:c">
+int driver_register(struct device_driver *drv)
+{
+	int ret;
+	struct device_driver *other;
+
+	BUG_ON(!drv-&gt;bus-&gt;p);
+
+	if ((drv-&gt;bus-&gt;probe &amp;&amp; drv-&gt;probe) ||
+	    (drv-&gt;bus-&gt;remove &amp;&amp; drv-&gt;remove) ||
+	    (drv-&gt;bus-&gt;shutdown &amp;&amp; drv-&gt;shutdown))
+		printk(KERN_WARNING "Driver '%s' needs updating - please use "
+			"bus_type methods\n", drv-&gt;name);
+
+	other = driver_find(drv-&gt;name, drv-&gt;bus);
+	if (other) {
+		put_driver(other);
+		return -EBUSY;
+	}
+
+	ret = bus_add_driver(drv);
+	if (ret)
+		return ret;
+	ret = driver_add_groups(drv, drv-&gt;groups);
+	if (ret)
+		bus_remove_driver(drv);
+	return ret;
+}
+</pre>
+
+</ul>
+
+<ul>
+<li>
+<code>driver_unregister</code>方法用来移除一个设备驱动。
+<pre class="brush:c">
+void driver_unregister(struct device_driver *drv)
+{
+	if (!drv || !drv-&gt;p) {
+		return;
+	}
+	driver_remove_groups(drv, drv-&gt;groups);
+	bus_remove_driver(drv);
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.3.1">示例代码</h3>
+<pre class="brush:c">
+// 声明一个device_driver实例
+struct device_driver ldd_driver = {
+    .name = "ldd_driver",
+    .bus = &amp;ldd_bus_type,
+    .module = THIS_MODULE,
+};
+
+// 注册一个设备驱动
+int register_driver() {
+   int ret = driver_register(&amp;ldd_driver); 
+   return ret;
+}
+
+// 移除一个设备驱动
+void unregister_driver() {
+    driver_unregister(&amp;ldd_driver);
+}
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
