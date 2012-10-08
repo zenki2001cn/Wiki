@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>sysfs中的高级模型</title>
+    <title>如何使用驱动模型</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,78 +49,13 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">sysfs中的高级模型</h1>
+<h1 id="toc_1">如何使用驱动模型</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">sysfs中的高级模型</a>
-<ul>
-<li><a href="#toc_1.1">相关文件</a>
-<li><a href="#toc_1.2">基本概念</a>
-<ul>
-<li><a href="#toc_1.2.1">总线(bus)</a>
-<li><a href="#toc_1.2.2">设备(device)</a>
-<li><a href="#toc_1.2.3">设备驱动(device_driver)</a>
-<li><a href="#toc_1.2.4">类(class)</a>
-</ul>
-<li><a href="#toc_1.3">如何使用驱动模型</a>
-</ul>
+<li><a href="#toc_1">如何使用驱动模型</a>
 </ul>
 </div>
-
-<h2 id="toc_1.1">相关文件</h2>
-<pre class="brush:c">
-#include &lt;linux/device.h&gt;
-#include &lt;linux/pm.h&gt;
-</pre>
-
-<h2 id="toc_1.2">基本概念</h2>
-<h3 id="toc_1.2.1">总线(bus)</h3>
-<ul>
-<li>
-总线是处理器与一个或多个设备之间的通道，驱动模型中通过struct bus_type描述总线类型。
-
-<li>
-<a href="总线(bus).html">总线(bus)</a>
-
-</ul>
-
-<h3 id="toc_1.2.2">设备(device)</h3>
-<ul>
-<li>
-设备是对真实世界中设备的抽象，驱动模型通过struct device描述设备类型。
-
-<li>
-<a href="设备(device).html">设备(device)</a>
-
-</ul>
-
-<h3 id="toc_1.2.3">设备驱动(device_driver)</h3>
-<ul>
-<li>
-驱动模型跟踪所有系统已知的驱动，并使用struct device_driver来描述设备驱动类型。
-
-<li>
-<a href="设备驱动(device_driver).html">设备驱动(device_driver)</a>
-
-</ul>
-
-<h3 id="toc_1.2.4">类(class)</h3>
-<ul>
-<li>
-类按照设备类型来给设备分类，比如SCSI磁盘和SATA磁盘，在类的级别，它们都是磁盘。它以一种直观的分类方式给用户空间提供信息。
-
-<li>
-<a href="类(class).html">类(class)</a>
-
-</ul>
-
-<h2 id="toc_1.3">如何使用驱动模型</h2>
-<ul>
-<li>
-<a href="如何使用驱动模型.html">如何使用驱动模型</a>
-
-</ul>
 
 
 <footer>

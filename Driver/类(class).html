@@ -56,11 +56,45 @@
 <li><a href="#toc_1">类(class)</a>
 <ul>
 <li><a href="#toc_1.1">类相关的数据结构</a>
+<ul>
+<li><a href="#toc_1.1.1">struct class</a>
+</ul>
+<li><a href="#toc_1.2">类的属性</a>
+<ul>
+<li><a href="#toc_1.2.1">struct class_attribute</a>
+<li><a href="#toc_1.2.2">CLASS_ATTR辅助宏</a>
+<li><a href="#toc_1.2.3">创建类属性</a>
+</ul>
+<li><a href="#toc_1.3">类的接口</a>
+<ul>
+<li><a href="#toc_1.3.1">struct class_interface</a>
+<li><a href="#toc_1.3.2">注册类接口</a>
+</ul>
 </ul>
 </ul>
 </div>
 
 <h2 id="toc_1.1">类相关的数据结构</h2>
+<h3 id="toc_1.1.1">struct class</h3>
+<ul>
+<li>
+类包含以下几个重要的成员：
+
+<ul>
+<li>
+name：类的名称，它出现在/sys/class/目录下。
+
+<li>
+class_attrs：类属性。
+
+<li>
+dev_attrs：设备属性。
+
+<li>
+p：类相关的底层数据结构。
+
+</ul>
+</ul>
 
 <pre class="brush:c">
 struct class {
@@ -88,6 +122,85 @@ struct class {
 	struct class_private *p;
 };
 </pre>
+
+<h2 id="toc_1.2">类的属性</h2>
+<ul>
+<li>
+类的属性表示了其在sysfs中的文件节点，由struct class_attribute来描述。
+
+</ul>
+
+<h3 id="toc_1.2.1">struct class_attribute</h3>
+<pre class="brush:c">
+struct class_attribute {
+	struct attribute attr;
+	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+			        char *buf);
+	ssize_t (*store)(struct class *class, struct class_attribute *attr,
+			        const char *buf, size_t count);
+};
+</pre>
+
+<h3 id="toc_1.2.2">CLASS_ATTR辅助宏</h3>
+<ul>
+<li>
+内核同样提供了一个宏来帮助创建类的属性，它使用了_ATTR宏，可参见其<a href="如何创建sysfs.html">如何创建sysfs</a>中的定义。
+<pre class="brush:c">
+#define CLASS_ATTR(_name, _mode, _show, _store)			\
+struct class_attribute class_attr_##_name =             \
+    __ATTR(_name, _mode, _show, _store)
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.3">创建类属性</h3>
+<ul>
+<li>
+<code>class_create_file</code>用来创建一个对应类属性的文件。
+
+<li>
+<code>class_remove_file</code>用来移除一个对应类属性的文件。
+
+</ul>
+
+<h2 id="toc_1.3">类的接口</h2>
+<ul>
+<li>
+类的接口是一种触发机制，可用来在设备进入或离开时得到通知。它通过struct class_interface结构来描述。
+
+<ul>
+<li>
+<code>add_dev</code>方法是当设备被加入时调用。
+
+<li>
+<code>remove_dev</code>方法是当设备被移除时调用。
+
+</ul>
+<li>
+可注册多个类接口，并通过<code>node</code>链表管理。
+
+</ul>
+
+<h3 id="toc_1.3.1">struct class_interface</h3>
+<pre class="brush:c">
+struct class_interface {
+	struct list_head	node;
+	struct class		*class;
+
+	int (*add_dev)		(struct device *, struct class_interface *);
+	void (*remove_dev)	(struct device *, struct class_interface *);
+};
+</pre>
+
+<h3 id="toc_1.3.2">注册类接口</h3>
+<ul>
+<li>
+<code>class_interface_register</code>方法用来注册一个类的接口。
+
+<li>
+<code>class_interface_unregister</code>方法用来注销一个类的接口。
+
+</ul>
 
 
 <footer>
