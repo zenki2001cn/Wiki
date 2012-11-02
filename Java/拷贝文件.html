@@ -69,6 +69,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.ByteBuffer;
 </pre>
@@ -76,23 +77,41 @@ import java.nio.ByteBuffer;
 <h2 id="toc_1.2">古老的方式</h2>
 <pre class="brush:java">
 public static void forJava(File f1,File f2) throws Exception{
-    int length=2097152;
+    int length = 2097152;
     
-    FileInputStream in=new FileInputStream(f1);
-    FileOutputStream out=new FileOutputStream(f2);
-    byte[] buffer=new byte[length];
+    FileInputStream is = new FileInputStream(f1);
+    FileOutputStream os = new FileOutputStream(f2);
+    int count = 0;
+    byte[] buffer = new byte[length];
     
-    while(true){
-        int ins=in.read(buffer);
-        
-        if(ins==-1){
-            in.close();
-            out.flush();
-            out.close();
+    try {
+        while (true) {
+            count = is.read(buffer);
             
-            return;
-        } else
-            out.write(buffer,0,ins);
+            if (count &lt; 0) {
+                break;
+            } else {
+                os.write(buffer, 0, count);
+            }
+        }
+    } catch (Exception e) {
+		e.printStackTrace();
+    } finally {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+            }
+            is = null;
+        }
+
+        if (os != null) {
+            try {
+                os.flush();
+                os.close();
+            } catch (Exception e2) {
+            }
+            os = null;
         }
     }
 }
@@ -201,9 +220,9 @@ public static void forChannel(File f1,File f2) throws Exception {
 
 
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
