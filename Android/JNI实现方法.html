@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>JNI实现方法</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,27 +47,28 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">JNI实现方法</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">JNI实现方法</a></li>
+<li><a href="#toc_1">JNI实现方法</a>
 <ul>
-<li><a href="#toc_1.1">示例代码解析</a></li>
-<li><a href="#toc_1.2">使用和编译</a></li>
+<li><a href="#toc_1.1">示例代码解析</a>
+<li><a href="#toc_1.2">使用和编译</a>
 <ul>
-<li><a href="#toc_1.2.1">JAVA部分</a></li>
+<li><a href="#toc_1.2.1">JAVA部分</a>
 <ul>
-<li><a href="#toc_1.2.1.1">创建JAVA方法入口</a></li>
-<li><a href="#toc_1.2.1.2">使用javah生成.h头文件</a></li>
+<li><a href="#toc_1.2.1.1">创建JAVA方法入口</a>
+<li><a href="#toc_1.2.1.2">使用javah生成.h头文件</a>
 </ul>
-<li><a href="#toc_1.2.2">C部分</a></li>
+<li><a href="#toc_1.2.2">C部分</a>
 <ul>
-<li><a href="#toc_1.2.2.1">编译386平台的库</a></li>
-<li><a href="#toc_1.2.2.2">编译ARM平台的库</a></li>
-<li><a href="#toc_1.2.2.3">编写Android.mk</a></li>
-<li><a href="#toc_1.2.2.4">执行Android编译命令</a></li>
+<li><a href="#toc_1.2.2.1">编译386平台的库</a>
+<li><a href="#toc_1.2.2.2">编译ARM平台的库</a>
+<li><a href="#toc_1.2.2.3">编写Android.mk</a>
+<li><a href="#toc_1.2.2.4">执行Android编译命令</a>
 </ul>
 </ul>
 </ul>
@@ -78,13 +79,13 @@
 <ul>
 <li>
 <a href="加入JNI图解.html">加入JNI图解</a>
-</li>
+
 <li>
 <a href="Java和C数据类型接口.html">Java和C数据类型接口</a>
-</li>
+
 <li>
 <a href="jni使用范例.html">jni使用范例</a>
-</li>
+
 </ul>
 
 <h2 id="toc_1.2">使用和编译</h2>
@@ -92,13 +93,13 @@
 <ul>
 <li>
 创建java类，声明C的调用接口，通常是native类型的方法声明
-</li>
+
 <li>
 使用javac编译生成.class文件
-</li>
+
 <li>
 使用javah生成.h文件
-</li>
+
 </ul>
 
 <h4 id="toc_1.2.1.1">创建JAVA方法入口</h4>
@@ -130,6 +131,12 @@ public class Test {
 </pre>
 
 <h4 id="toc_1.2.1.2">使用javah生成.h头文件</h4>
+<ul>
+<li>
+javah根据class文件生成相应的C头文件：javah Test/hello
+
+</ul>
+
 <pre class="brush:c">
 #include &lt;jni.h&gt;
 /* Header for class Test */
@@ -161,39 +168,39 @@ JNIEXPORT void JNICALL Java_Test_hello
 <ul>
 <li>
 根据javah生成的.h文件，实现其.c文件的代码
-</li>
+
 <li>
 编译.c文件生成.so文件
-</li>
+
 </ul>
 
 <h4 id="toc_1.2.2.1">编译386平台的库</h4>
 <ul>
 <li>
 编写makefile，将.c文件编译成.o，注意包含jni.h头文件路径
-</li>
+
 <li>
 使用gcc -shared -fPIC a.o -o a.so 生成动态库
-</li>
+
 <li>
 确认动态库在java.library.path搜索目录中
-</li>
+
 </ul>
 
 <h4 id="toc_1.2.2.2">编译ARM平台的库</h4>
 <ul>
 <li>
 <code>在Android下编译时，java类中最好只包含native方法声明，去除冗余代码</code>
-</li>
+
 <li>
 将工程目录拷贝到Android源代码的development目录下，编写Android.mk文件
-</li>
+
 <li>
 在源码顶层目录使用<code>make module-name</code>编译生成.so文件，文件生成的目录为out/target/product/generic/obj/SHARED_LIBRARIES/中
-</li>
+
 <li>
 Android.mk中加入<code>LOCAL_PRELINK_MODULE := false</code>防止prelink操作导致编译失败
-</li>
+
 </ul>
 
 <h4 id="toc_1.2.2.3">编写Android.mk</h4>
@@ -225,25 +232,16 @@ make libtest
 # 清除命令
 make clean-libtest
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

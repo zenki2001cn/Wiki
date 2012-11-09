@@ -599,12 +599,16 @@ int registerMethods(JNIEnv* env) {
     jclass clazz;
 
     // 查找指定类
+    // 如果是C语言实现，则需要改成下面的形式，参见jin.h
+    // clazz = (*env)-&gt;FindClass(env, kClassName); 
     clazz = env-&gt;FindClass(kClassName);
     if (clazz == NULL) {
         return -1;
     }
 
     // 将方法列表注册给指定的类
+    // 如果是C语言实现，则需要改成下面的形式，参见jin.h
+    // (*env)-&gt;RegisterNatives(env, clazz, gMethods, sizeof(gMethods) / sizeof(gMethods[0]))
     if (env-&gt;RegisterNatives(clazz, gMethods,
             sizeof(gMethods) / sizeof(gMethods[0])) != JNI_OK) {
         return -1;
@@ -629,6 +633,8 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     JNIEnv* env = NULL;
     jint result = -1;
 
+    // 如果是C语言实现，则需要改成下面的形式，参见jin.h
+    // (*vm)-&gt;GetEnv(vm, (void**) &amp;env, JNI_VERSION_1_4)
     if (vm-&gt;GetEnv((void**) &amp;env, JNI_VERSION_1_4) != JNI_OK) {
 	    goto bail;
     }
@@ -865,9 +871,9 @@ jstring Java_setLineBreaksForCharArray(JNIEnv *env,
 
 
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
