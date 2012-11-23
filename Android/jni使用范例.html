@@ -72,7 +72,7 @@
 <li><a href="#toc_1.4.1">Java对象和成员的操作</a>
 <li><a href="#toc_1.4.2">Java类方法调用</a>
 <li><a href="#toc_1.4.3">创建和释放Java对象的引用</a>
-<li><a href="#toc_1.4.4">解析Java参数</a>
+<li><a href="#toc_1.4.4">Java参数解析</a>
 <li><a href="#toc_1.4.5">给Java传递返回值</a>
 <li><a href="#toc_1.4.6">JNI层的异常处理</a>
 </ul>
@@ -664,14 +664,15 @@ jobject Java_setLineBreaksForCharArray(JNIEnv *env,
                                      jint length, 
                                      jstring lang, 
                                      jbyteArray breaks) {
-    // 获取Java类
+    // 根据参数获取Java类
     jclass cls;
     cls = env-&gt;GetObjectClass(thiz);
+    // 或根据类名获取Java类
     cls = env-&gt;FindClass("com/foxconn/example/reader");
-    
-    // 获取Java对象
-    jobject obj;
-    obj = env-&gt;GetObjectField(thiz, reader);
+    // 如果是内部类，则必须以$号隔开
+    cls = env-&gt;FindClass("com/foxconn/example/reader$inner");
+    // 获取父类对象
+    jclass supercls = env-&gt;GetSuperclass(cls);
     
     // 获取类并通过构造函数生成的新对象, &lt;init&gt;为构造函数, V为返回值类型签名, I为参数类型签名
     jmethodID constr;
@@ -683,9 +684,12 @@ jobject Java_setLineBreaksForCharArray(JNIEnv *env,
     // 获取java对象成员的ID标识
     // 第一个参数：jclass对象
     // 第二个参数：成员变量名
-    // 第三个参数：变量类型
+    // 第三个参数：变量类型签名，如果是内部类，需要使用$标识，方法同上
     jfieldID fid;
     fid = env-&gt;GetFieldID(cls, "retbytes", "[B"]);
+    // 获取成员对象，此处是获取jbyte类型为例
+    jbyte byte;
+    byte = env-&gt;GetObjectField(thiz, fid);
     
     // 给该ID标识的变量赋值
     // 第一个参数：jobject对象
@@ -706,9 +710,9 @@ void Java_setLineBreaksForCharArray(JNIEnv *env,
                                  jstring lang, 
                                  jbyteArray breaks) {
     // 获取对象方法ID
-    // 第一个参数：jclass对象
+    // 第一个参数：jclass对象，参见上面java类的获取
     // 第二个参数：方法名
-    // 第三个参数：(I)V，参数和返回类型签名                                                                     
+    // 第三个参数：(I)V，参数和返回类型签名。内部类可参照上面的方法                                                                     
     int mid = GetMethodID(clazz, "getD1", "(I)V");
     if(mid == 0) {
         return;
@@ -786,7 +790,7 @@ void Java_setLineBreaksForCharArray(JNIEnv *env,
     env-&gt;DeleteWeakGlobalRef(jref);
 </pre>
 
-<h3 id="toc_1.4.4">解析Java参数</h3>
+<h3 id="toc_1.4.4">Java参数解析</h3>
 <pre class="brush:c">
 void Java_setLineBreaksForCharArray(JNIEnv *env, 
                                  jobject thiz, 
@@ -802,6 +806,9 @@ void Java_setLineBreaksForCharArray(JNIEnv *env,
     // 转换Java的byte数组类型, 用完后释放内存
     jbyte* breaksArray = env-&gt;GetByteArrayElements(breaks, 0);
     env-&gt;ReleaseByteArrayElements(breaks, breaksArray, 0);
+    
+    // 获取数组的长度
+    jsize len = env-&gt;GetArrayLength(breaks);
 	
     // 转换Java的string类型, 用完后释放内存
     const char *langArray = (lang != 0) ? env-&gt;GetStringUTFChars(lang, 0) : 0;
@@ -811,7 +818,6 @@ void Java_setLineBreaksForCharArray(JNIEnv *env,
 
     // 将转换后的类型可与C类型兼容
     set_linebreaks_utf16(dataArray + offset, length, langArray, (char*)breaksArray);
-
 </pre>
 
 <h3 id="toc_1.4.5">给Java传递返回值</h3>
@@ -848,22 +854,22 @@ jstring Java_setLineBreaksForCharArray(JNIEnv *env,
                                      jint length, 
                                      jstring lang, 
                                      jbyteArray breaks) {
-    jbyteArray bytearray; 
-    bytearray = env-&gt;NewByteArray(len);
-    const char* const kClassName = "com/mokoid/server/LedService";
-    jclass clazz;
-    clazz = env-&gt;FindClass(kClassName);
-
+    // 检查是否出现异常
+    jboolean hasExcept = env-&gt;ExceptionCheck(env);
+    if (hasExcept) {
+        printf("Has Exception!!!\n");
+    }
+    
     // 获取当前的异常对象
-    jthrowable jthrow = ExceptionOccurred();
+    jthrowable jthrow = env-&gt;ExceptionOccurred();
     if (jthrow != null) {
         // 抛出异常
-        Throw(jthrow);
-        ThrowNew(clazz, "send exception message to java");
+        env-&gt;Throw(jthrow);
+        env-&gt;ThrowNew(clazz, "send exception message to java");
     }
     
     // 清除异常
-    ExceptionClear();
+    env-&gt;ExceptionClear();
     
     return bytearray;
 }
