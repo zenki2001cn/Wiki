@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>泛型编程</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">泛型编程</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">泛型编程</a>
+<ul>
+<li><a href="#toc_1.1">语法规则</a>
+<ul>
+<li><a href="#toc_1.1.1">泛型数组</a>
+<li><a href="#toc_1.1.2">泛型类</a>
+<li><a href="#toc_1.1.3">泛型接口</a>
+<li><a href="#toc_1.1.4">泛型方法</a>
+<li><a href="#toc_1.1.5">泛型可变参数</a>
+<li><a href="#toc_1.1.6">泛型类继承</a>
+<li><a href="#toc_1.1.7">泛型通配符</a>
+</ul>
+<li><a href="#toc_1.2">泛型的陷阱</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">语法规则</h2>
+<ul>
+<li>
+Java语法要求使用<code>&lt;&gt;</code>符号，并使用一个占位符，如<code>T</code>，来声明一个参数化的类型。
+
+<li>
+声明一个泛型方法时，需要在返回值的关键字前加入类型<code>&lt;T&gt;</code>的声明。
+
+<li>
+泛型同样支持可变参数的声明。
+
+<li>
+不能创建一个泛型的数组，通常使用<code>ArrayList&lt;T&gt;</code>来实现。
+
+</ul>
+
+<h3 id="toc_1.1.1">泛型数组</h3>
+<pre class="brush:java">
+// 泛型数组需要由ArrayList&lt;T&gt;来辅助创建。
+public class ListOfGenerics&lt;T&gt; {
+    private List&lt;T&gt; array = new ArrayList&lt;T&gt;();
+    
+    public void add(T item) { 
+        array.add(item); 
+    }
+    
+    public T get(int index) {
+        return array.get(index);
+    }
+}
+</pre>
+
+<h3 id="toc_1.1.2">泛型类</h3>
+<pre class="brush:java">
+// 示例一
+public class GenericTest&lt;T&gt; {
+    private T mObj; 
+
+    public GenericTest(T arg) {
+        mObj = arg;
+    }
+}
+</pre>
+
+<h3 id="toc_1.1.3">泛型接口</h3>
+<pre class="brush:java">
+public interface GenericInterface&lt;T&gt; {
+    public T showTypeInfo();
+}
+
+/**
+ * @Synopsis 实现一个泛型的接口，需要指定一个具体的类型作为参数
+ */
+public class GenericTest&lt;T&gt; implements GenericInterface&lt;String&gt; {
+    // 方法返回值需要和泛型参数类型对应
+    public String showTypeInfo() {
+        // do something
+    }
+}
+</pre>
+
+<h3 id="toc_1.1.4">泛型方法</h3>
+<pre class="brush:java">
+public &lt;T&gt; void sayHello() {
+    // do something 
+}
+</pre>
+
+<h3 id="toc_1.1.5">泛型可变参数</h3>
+<pre class="brush:java">
+public &lt;T&gt; void showArgInfo(T... ts) {
+    // do something 
+}
+</pre>
+
+<h3 id="toc_1.1.6">泛型类继承</h3>
+<pre class="brush:java">
+// 泛型接口
+interface HasColor {
+    Color getColor();
+}
+
+// 泛型基类
+class HoldItem&lt;T&gt; {
+    T mItem;
+    HoldItem(T item) {
+        this.mItem = item;
+    }
+    T getItem() {
+        return mItem;
+    }
+}
+
+// 泛型继承的子类
+class Together&lt;T extends HasColor&gt; extends HoldItem&lt;T&gt; {
+    Together(T item) {
+        super(item);
+    }
+    
+    Color getColor() {
+        return item.getColor();
+    }
+}
+</pre>
+
+<h3 id="toc_1.1.7">泛型通配符</h3>
+<pre class="brush:java">
+class Fruit {}
+class Apple extends Fruit {}
+
+List&lt;? extends Fruit&gt; list = new ArrayList&lt;Apple&gt;();   
+list.add(new Apple());          // Error   
+list.add(new Fruit());          // Error   
+  
+List&lt;? super Fruit&gt; list = new ArrayList&lt;Apple&gt;();   
+list.add(new Apple());          // OK
+list.add(new Fruit());          // OK
+</pre>
+
+<h2 id="toc_1.2">泛型的陷阱</h2>
+<ul>
+<li>
+在泛型代码内部，无法获得任何有关泛型参数类型的信息。此行为称为<code>擦除</code>。
+
+<ul>
+<li>
+因为在Java1.0以前，并没有关于泛型的设计，为了保持对大量类库的向后兼容，采用了这种折衷方式。
+
+<li>
+所以针对List&lt;String&gt;和List&lt;Integer&gt;两种类型而言，在运行时期没有任何区别，<code>它们都被认为是List类型，而T被转化为Object</code>，也就是说<code>无法编写String或Integer类的相关方法</code>。
+
+</ul>
+<li>
+如下例所示，无法在运行期决定参数arg是否属于T类型的实例，并创建一个T类型的对象。
+<pre class="brush:java">
+public class GenericTest&lt;T&gt; {
+    public GenericCompare(Object arg) {
+        if (arg instanceof T) {                 // Error
+            T var = new T();                    // Error
+            T[] array = new T[10];              // Error
+            T[] array2 = (T) new Object[10];    // Error
+        }
+    }
+}
+</pre>
+
+</ul>
+
+<ul>
+<li>
+解决这种擦除的一种方法是可以通过继承一个类型，来限定擦除的边界，如下面的示例：
+<pre class="brush:java">
+// 类型T被限定在MyObj的子类
+public class GenericTest&lt;T extends MyObj&gt; {
+    private T mObj; 
+
+    public GenericTest(T arg) {
+        mObj = arg;
+    }
+}
+</pre>
+
+</ul>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
