@@ -57,15 +57,19 @@
 <ul>
 <li><a href="#toc_1.1">语法规则</a>
 <ul>
-<li><a href="#toc_1.1.1">泛型数组</a>
-<li><a href="#toc_1.1.2">泛型类</a>
-<li><a href="#toc_1.1.3">泛型接口</a>
-<li><a href="#toc_1.1.4">泛型方法</a>
-<li><a href="#toc_1.1.5">泛型可变参数</a>
-<li><a href="#toc_1.1.6">泛型类继承</a>
-<li><a href="#toc_1.1.7">泛型通配符</a>
+<li><a href="#toc_1.1.1">泛型数组(List&lt;T&gt;)</a>
+<li><a href="#toc_1.1.2">泛型类(class&lt;T&gt;)</a>
+<li><a href="#toc_1.1.3">泛型接口(interface&lt;T&gt;)</a>
+<li><a href="#toc_1.1.4">泛型方法(&lt;T&gt; function)</a>
+<li><a href="#toc_1.1.5">泛型可变参数(T... arg)</a>
+<li><a href="#toc_1.1.6">泛型类继承(T extends)</a>
+<li><a href="#toc_1.1.7">泛型通配符(&lt;? super&gt;)</a>
 </ul>
 <li><a href="#toc_1.2">泛型的陷阱</a>
+<ul>
+<li><a href="#toc_1.2.1">类型限定和擦除</a>
+<li><a href="#toc_1.2.2">超类型通配符和无界通配符</a>
+</ul>
 </ul>
 </ul>
 </div>
@@ -84,9 +88,12 @@ Java语法要求使用<code>&lt;&gt;</code>符号，并使用一个占位符，�
 <li>
 不能创建一个泛型的数组，通常使用<code>ArrayList&lt;T&gt;</code>来实现。
 
+<li>
+任何基本类型，都不能作为类型参数。如<code>int</code>, <code>byte</code>等等。
+
 </ul>
 
-<h3 id="toc_1.1.1">泛型数组</h3>
+<h3 id="toc_1.1.1">泛型数组(List&lt;T&gt;)</h3>
 <pre class="brush:java">
 // 泛型数组需要由ArrayList&lt;T&gt;来辅助创建。
 public class ListOfGenerics&lt;T&gt; {
@@ -102,7 +109,7 @@ public class ListOfGenerics&lt;T&gt; {
 }
 </pre>
 
-<h3 id="toc_1.1.2">泛型类</h3>
+<h3 id="toc_1.1.2">泛型类(class&lt;T&gt;)</h3>
 <pre class="brush:java">
 // 示例一
 public class GenericTest&lt;T&gt; {
@@ -114,7 +121,7 @@ public class GenericTest&lt;T&gt; {
 }
 </pre>
 
-<h3 id="toc_1.1.3">泛型接口</h3>
+<h3 id="toc_1.1.3">泛型接口(interface&lt;T&gt;)</h3>
 <pre class="brush:java">
 public interface GenericInterface&lt;T&gt; {
     public T showTypeInfo();
@@ -131,21 +138,21 @@ public class GenericTest&lt;T&gt; implements GenericInterface&lt;String&gt; {
 }
 </pre>
 
-<h3 id="toc_1.1.4">泛型方法</h3>
+<h3 id="toc_1.1.4">泛型方法(&lt;T&gt; function)</h3>
 <pre class="brush:java">
 public &lt;T&gt; void sayHello() {
     // do something 
 }
 </pre>
 
-<h3 id="toc_1.1.5">泛型可变参数</h3>
+<h3 id="toc_1.1.5">泛型可变参数(T... arg)</h3>
 <pre class="brush:java">
 public &lt;T&gt; void showArgInfo(T... ts) {
     // do something 
 }
 </pre>
 
-<h3 id="toc_1.1.6">泛型类继承</h3>
+<h3 id="toc_1.1.6">泛型类继承(T extends)</h3>
 <pre class="brush:java">
 // 泛型接口
 interface HasColor {
@@ -175,7 +182,7 @@ class Together&lt;T extends HasColor&gt; extends HoldItem&lt;T&gt; {
 }
 </pre>
 
-<h3 id="toc_1.1.7">泛型通配符</h3>
+<h3 id="toc_1.1.7">泛型通配符(&lt;? super&gt;)</h3>
 <pre class="brush:java">
 class Fruit {}
 class Apple extends Fruit {}
@@ -190,6 +197,7 @@ list.add(new Fruit());          // OK
 </pre>
 
 <h2 id="toc_1.2">泛型的陷阱</h2>
+<h3 id="toc_1.2.1">类型限定和擦除</h3>
 <ul>
 <li>
 在泛型代码内部，无法获得任何有关泛型参数类型的信息。此行为称为<code>擦除</code>。
@@ -228,6 +236,55 @@ public class GenericTest&lt;T extends MyObj&gt; {
 
     public GenericTest(T arg) {
         mObj = arg;
+    }
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.2">超类型通配符和无界通配符</h3>
+<ul>
+<li>
+当创建一个基于派生类的泛型类型时，需要使用超类型通配符<code>&lt;? super&gt;</code>。
+
+<li>
+无界通配符<code>&lt;?&gt;</code>可以指向超类型通配符的引用。
+<pre class="brush:java">
+public class GenericPatten {
+    class Fruit {
+    }    
+
+    class Apple extends Fruit {
+    }
+
+    class Jonathan extends Apple {
+    }
+
+    List&lt;? super Fruit&gt;     mListSuper;
+    List&lt;?&gt;                 mListUnbound;
+
+    public GenericPatten() {
+        // 创建Fruit的泛型列表
+        mListSuper = new ArrayList&lt;Fruit&gt;();
+        mListSuper.add(new Apple());
+        mListSuper.add(new Jonathan());
+        mListSuper.add(new Fruit());
+
+        // 使用无界通配符
+        mListUnbound = mListSuper;
+    }
+    
+    // 遍历列表，可以在运行时获得每个列表成员的类型
+    public void showFruit() {
+        int len = mListSuper.size();
+        int i;
+        for (i = 0; i &lt; len; i++) {
+            System.out.println("List&lt;? super Fruit&gt; item class: " + mListSuper.get(i).getClass().getName());
+        }
+
+        for (i = 0; i &lt; len; i++) {
+            System.out.println("List&lt;?&gt; item class: " + mListUnbound.get(i).getClass().getName());
+        }
     }
 }
 </pre>
