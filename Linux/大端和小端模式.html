@@ -57,6 +57,12 @@
 <ul>
 <li><a href="#toc_1.1">端模式的由来</a>
 <li><a href="#toc_1.2">大端和小端示例</a>
+<li><a href="#toc_1.3">测试大小端的方法</a>
+<ul>
+<li><a href="#toc_1.3.1">方法一 - 结构体位模式</a>
+<li><a href="#toc_1.3.2">方法二 - 指针强制转换</a>
+<li><a href="#toc_1.3.3">方法三 - 宏定义</a>
+</ul>
 </ul>
 </ul>
 </div>
@@ -82,6 +88,7 @@
 <code>大端</code>模式将<code>高位字节存放在内存的低位，低位字节存放在内存的高位</code>，有利于内存地址从左到右按照由低到高的顺序输出。
 
 </ul>
+
 <table>
 <tr>
 <th>
@@ -145,11 +152,66 @@
 </tr>
 </table>
 
+<h2 id="toc_1.3">测试大小端的方法</h2>
+<h3 id="toc_1.3.1">方法一 - 结构体位模式</h3>
+<pre class="brush:c">
+struct little_big_endian_t {
+    unsigned int a:2;
+    unsigned int b:2;
+    unsigned int c:3;
+    unsigned int d:1;
+};
+
+/**
+ * @Synopsis 11110001 =&gt; 241, 小端模式会按照a,b,c,d的顺序从低到高存储数据。
+ */
+void test_little_big_endian()
+{
+    struct little_big_endian_t lb = {
+        .a = 01,
+        .b = 00,
+        .c = 111,
+        .d = 1
+    };
+
+    printf("lb = %d\n", *(int*)&amp;lb); 
+}
+</pre>
+
+<h3 id="toc_1.3.2">方法二 - 指针强制转换</h3>
+<pre class="brush:c">
+void test_little_big_endian2()
+{
+    static const int v = 1;
+    char *endian = *(char*)&amp;v == 1 ? "this is little endian" : "this is big endian";
+
+    printf("%s\n", endian);
+}
+</pre>
+
+<h3 id="toc_1.3.3">方法三 - 宏定义</h3>
+<pre class="brush:c">
+void test_little_big_endian3()
+{
+#if BYTE_ORDER == LITTLE_ENDIAN
+    printf("this is little endian\n");
+#endif
+
+#if BYTE_ORDER == BIG_ENDIAN
+    printf("this is big endian\n");
+#endif
+
+#if BYTE_ORDER == PDP_ENDIAN
+    printf("this is pdp endian\n");
+#endif
+}
+</pre>
+
 
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
