@@ -57,10 +57,11 @@
 <ul>
 <li><a href="#toc_1.1">相关类</a>
 <li><a href="#toc_1.2">基本处理流程</a>
-<li><a href="#toc_1.3">示例代码</a>
+<li><a href="#toc_1.3">配置junit.jar</a>
+<li><a href="#toc_1.4">示例代码</a>
 <ul>
-<li><a href="#toc_1.3.1">测试用例类</a>
-<li><a href="#toc_1.3.2">使用测试类</a>
+<li><a href="#toc_1.4.1">测试用例类</a>
+<li><a href="#toc_1.4.2">使用测试类</a>
 </ul>
 </ul>
 </ul>
@@ -87,9 +88,24 @@ import junit.textui.TestRunner;
 
 </ul>
 
-<h2 id="toc_1.3">示例代码</h2>
+<h2 id="toc_1.3">配置junit.jar</h2>
+<ul>
+<li>
+此处点击下载<a href="http:pic/junit-4.8.jar.zip">junit-4.8版本Zip包</a>。
 
-<h3 id="toc_1.3.1">测试用例类</h3>
+<li>
+将junit.jar拷贝到当前的jre目录，在编译时需要包含该jar包。
+
+<li>
+在环境变量CLASSPATH中加入junit.jar
+<pre class="brush:bash">
+$ export CLASSPATH=$CLASSPATH:/path/to/junit.jar
+</pre>
+
+</ul>
+
+<h2 id="toc_1.4">示例代码</h2>
+<h3 id="toc_1.4.1">测试用例类</h3>
 <pre class="brush:java">
 public class JunitTest extends TestCase {
 
@@ -103,12 +119,22 @@ public class JunitTest extends TestCase {
 
     // 初始化方法
     protected void setUp() {
+        try {
+            super.setUp();
+        } catch(Exception e) {
+        }
+        
         System.out.println("JunitTest setUp");
     }
 
     // 析构方法
     protected void tearDown() {
         System.out.println("JunitTest tearDown");
+        
+        try {
+            super.tearDown();
+        } catch(Exception e) {
+        }
     }
 
     // 静态方法，返回测试组件
@@ -138,7 +164,7 @@ public class JunitTest extends TestCase {
 }
 </pre>
 
-<h3 id="toc_1.3.2">使用测试类</h3>
+<h3 id="toc_1.4.2">使用测试类</h3>
 <pre class="brush:java">
 // 使用junit.textui.TestRunner.run方法运行测试用例类
 static private void testJunit() {

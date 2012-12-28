@@ -274,10 +274,13 @@ Connection to localhost closed.
 <h3 id="toc_1.4.1">创建项目</h3>
 <ul>
 <li>
-可以通过web页面创建一个新的项目，也可以通过命令行创建：
+可以通过命令行创建：
 <pre class="brush:bash">
 $ ssh -p 29418 zenki@localhost gerrit create-project --name example.git
 </pre>
+
+<li>
+也可以通过web页面创建一个新的项目：
 
 </ul>
 <p>
@@ -290,6 +293,8 @@ $ ssh -p 29418 zenki@localhost gerrit create-project --name example.git
 $ git clone ssh://Zenki.J.Zha@127.0.0.1:29418/Gerrit_project_test.git
 # http方式
 $ git clone http://Zenki.J.Zha@127.0.0.1:8080/Gerrit_project_test.git
+# https方式，如果之前配置了SSL加密
+$ git clone https://Zenki.J.Zha@127.0.0.1:8080/Gerrit_project_test.git
 </pre>
 
 <h3 id="toc_1.4.3">提交代码</h3>

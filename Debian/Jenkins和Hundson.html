@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>代码管理工具</title>
+    <title>Jenkins和Hundson</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,22 +49,89 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">代码管理工具</h1>
+<h1 id="toc_1">Jenkins和Hundson</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">代码管理工具</a>
+<li><a href="#toc_1">Jenkins和Hundson</a>
+<ul>
+<li><a href="#toc_1.1">安装准备</a>
+<li><a href="#toc_1.2">配置管理</a>
+<ul>
+<li><a href="#toc_1.2.1">安装插件</a>
+<li><a href="#toc_1.2.2">新建任务和配置</a>
+</ul>
+</ul>
 </ul>
 </div>
 
+<h2 id="toc_1.1">安装准备</h2>
 <ul>
 <li>
-<a href="Gerrit.html">Gerrit</a> --- CodeReview系统
+首先下载Jenkins(<a href="http://jenkins-ci.org/">下载地址</a>)和Hundson(<a href="http://hudson-ci.org/">下载地址</a>)安装包。
 
 <li>
-<a href="Jenkins和Hundson.html">Jenkins和Hundson</a> --- 代码构建系统
+执行以下命令启动服务器：
+<pre class="brush:bash">
+# 默认的端口为8080，需要改变端口，添加参数--httpPort
+$ java -jar jenkins.war --httpPort=1234
+</pre>
 
 </ul>
+
+<h2 id="toc_1.2">配置管理</h2>
+<h3 id="toc_1.2.1">安装插件</h3>
+<ul>
+<li>
+打开<a href="http://localhost:1234">http://localhost:1234</a> 登录Jenkins主页面，进入《系统管理》-&gt;《插件管理》-&gt;《可选插件》，下载“Gerrit Trigger”插件，与Gerrit集成。
+
+</ul>
+
+<h3 id="toc_1.2.2">新建任务和配置</h3>
+<ul>
+<li>
+点击<a href="http://localhost:1234/view/All/newJob">新任务</a>按钮后，填写任务的配置信息。
+
+</ul>
+<p>
+<img src="http:pic/jenkins_new.png" />
+</p>
+
+<ul>
+<li>
+新建项目名称
+
+</ul>
+<p>
+<img src="http:pic/jenkins_project.png" />
+</p>
+
+<ul>
+<li>
+源码管理
+
+</ul>
+<p>
+<img src="http:pic/jenkins_scm.png" />
+</p>
+
+<ul>
+<li>
+Gerrit选项
+
+</ul>
+<p>
+<img src="http:pic/jenkins_gerrit_trigger.png" />
+</p>
+
+<ul>
+<li>
+构建选项
+
+</ul>
+<p>
+<img src="http:pic/jenkins_build.png" />
+</p>
 
 
 <footer>
