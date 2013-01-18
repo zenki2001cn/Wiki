@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>画面位置移动效果</title>
+    <title>绘图的特殊效果</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,81 +49,37 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">画面位置移动效果</h1>
+<h1 id="toc_1">绘图的特殊效果</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">画面位置移动效果</a>
-<ul>
-<li><a href="#toc_1.1">相关类</a>
-<li><a href="#toc_1.2">基本处理流程</a>
-<li><a href="#toc_1.3">示例代码</a>
-<ul>
-<li><a href="#toc_1.3.1">anim/translate.xml</a>
-<li><a href="#toc_1.3.2">使用XML动画效果</a>
-<li><a href="#toc_1.3.3">在JAVA代码中定义</a>
-</ul>
-</ul>
+<li><a href="#toc_1">绘图的特殊效果</a>
 </ul>
 </div>
 
-<h2 id="toc_1.1">相关类</h2>
-<pre class="brush:java">
-import android.view.animation.TranslateAnimation;
-
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-</pre>
-
-<h2 id="toc_1.2">基本处理流程</h2>
 <ul>
 <li>
-定义动画资源的XML
-
-<li>
-通过AnimationUtils.loadAnimation()方法生成Animation对象
-
-<li>
-使用一个ViewGroup类对象作为动画的目标容器，并使用startAnimation()方法应用动画效果
+使用BlurMaskFilter类实现绘画的特殊效果
 
 </ul>
 
-<h2 id="toc_1.3">示例代码</h2>
-<h3 id="toc_1.3.1">anim/translate.xml</h3>
-<pre class="brush:xml">
-&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;set xmlns:android="http://schemas.android.com/apk/res/android"&gt;
-    &lt;translate
-        android:fromXDelta="30" &lt;!!--动画开始时，X坐标的位置--&gt;
-        android:toXDelta="-80"  &lt;!!--动画结束时，X坐标的位置--&gt;
-        android:fromYDelta="30" &lt;!!--动画开始时，Y坐标的位置--&gt;
-        android:toYDelta="300"  &lt;!!--动画结束时，Y坐标的位置--&gt;
-        android:duration="2000" &lt;!!--动画持续时间--&gt;
-    /&gt;
-&lt;/set&gt;
-</pre>
-
-<h3 id="toc_1.3.2">使用XML动画效果</h3>
 <pre class="brush:java">
-// 加载XML资源
-Animation mAnim = AnimationUtils.loadAnimation(context, R.anim.translate);
-// 获取动画对象
-ViewGroup view = (ViewGroup) findViewById(R.id.container);
-// 开始动画
-view.startAnimation(mAnim);
-</pre>
+private Bitmap drawImageDropShadow(Bitmap originalBitmap) {
+    BlurMaskFilter blurFilter = new BlurMaskFilter(1, BlurMaskFilter.Blur.NORMAL);
+    Paint shadowPaint = new Paint();
+    shadowPaint.setAlpha(50);
+    shadowPaint.setColor(activity.getResources().getColor(R.color.solid_red));
+    shadowPaint.setMaskFilter(blurFilter);
 
-<h3 id="toc_1.3.3">在JAVA代码中定义</h3>
-<pre class="brush:java">
-//第一个参数fromXDelta为动画起始时 X坐标上的移动位置   
-//第二个参数toXDelta为动画结束时 X坐标上的移动位置      
-//第三个参数fromYDelta为动画起始时Y坐标上的移动位置     
-//第四个参数toYDelta为动画结束时Y坐标上的移动位置 
-TranslateAnimation myAnimation_Translate = new TranslateAnimation(10, 100, 10, 100);
+    int[] offsetXY = new int[2];
+    Bitmap shadowBitmap = originalBitmap.extractAlpha(shadowPaint, offsetXY);
 
-//设置时间持续时间为 2000毫秒
-myAnimation_Translate.setDuration(2000);
+    Bitmap shadowImage32 = shadowBitmap.copy(Bitmap.Config.ARGB_8888, true);
+    Canvas c = new Canvas(shadowImage32);
+    c.drawBitmap(originalBitmap, offsetXY[0], offsetXY[1], null);
+
+    return shadowImage32;
+}
 </pre>
 
 

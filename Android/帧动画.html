@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>帧动画</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,19 +47,20 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">帧动画</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">帧动画</a></li>
+<li><a href="#toc_1">帧动画</a>
 <ul>
-<li><a href="#toc_1.1">相关类</a></li>
-<li><a href="#toc_1.2">基本流程</a></li>
-<li><a href="#toc_1.3">示例代码</a></li>
+<li><a href="#toc_1.1">相关类</a>
+<li><a href="#toc_1.2">基本流程</a>
+<li><a href="#toc_1.3">示例代码</a>
 <ul>
-<li><a href="#toc_1.3.1">anim/animation.xml</a></li>
-<li><a href="#toc_1.3.2">装载并播放帧动画</a></li>
+<li><a href="#toc_1.3.1">anim/animation.xml</a>
+<li><a href="#toc_1.3.2">装载并播放帧动画</a>
 </ul>
 </ul>
 </ul>
@@ -80,16 +81,16 @@ import android.widget.ImageView;
 <ul>
 <li>
 定义图片资源
-</li>
+
 <li>
 定义动画列表资源
-</li>
+
 <li>
 通过ImageView.setBackgroundResource()方法设置动画列表，并通过getBackground()方法获取动画绘画对象
-</li>
+
 <li>
 使用AnimationDrawable.start()方法开始动画，AnimationDrawable.stop()方法停止动画
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">示例代码</h2>
@@ -127,25 +128,16 @@ public void onClick(View view) {
     }
 }
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

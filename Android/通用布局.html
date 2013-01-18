@@ -51,6 +51,32 @@
 
 <h1 id="toc_1">通用布局</h1>
 
+<div class="toc">
+<ul>
+<li><a href="#toc_1">通用布局</a>
+<ul>
+<li><a href="#toc_1.1">继承关系</a>
+<li><a href="#toc_1.2">布局类型</a>
+<ul>
+<li><a href="#toc_1.2.1">FrameLayout</a>
+<li><a href="#toc_1.2.2">LinearLayout</a>
+<li><a href="#toc_1.2.3">TableLayout</a>
+<li><a href="#toc_1.2.4">RelativeLayout</a>
+</ul>
+<li><a href="#toc_1.3">生成布局</a>
+<ul>
+<li><a href="#toc_1.3.1">相关类</a>
+<li><a href="#toc_1.3.2">在Activity中通过XML来加载视图</a>
+<li><a href="#toc_1.3.3">从XML膨胀视图</a>
+<li><a href="#toc_1.3.4">在Activity中用代码生成视图</a>
+<li><a href="#toc_1.3.5">当子视图被创建完成</a>
+<li><a href="#toc_1.3.6">当子视图的位置和大小被调整</a>
+<li><a href="#toc_1.3.7">调整视图大小</a>
+</ul>
+</ul>
+</ul>
+</div>
+
 <h2 id="toc_1.1">继承关系</h2>
 
 <p>
@@ -183,7 +209,7 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 </pre>
 
-<h3 id="toc_1.3.5">在View中獲取子视图</h3>
+<h3 id="toc_1.3.5">当子视图被创建完成</h3>
 <ul>
 <li>
 重写onFinishInflate()方法,此方法在完成视图的创建時回調
@@ -205,11 +231,52 @@ protected void onFinishInflate() {
 }
 </pre>
 
+<h3 id="toc_1.3.6">当子视图的位置和大小被调整</h3>
+<pre class="brush:java">
+protected void onLayout(boolean changed, int l, int t, int r, int b) { 
+    childCount = getChildCount();       // 获取子视图数 
+    childWidth = childCount &gt; 0 ? getChildAt(0).getMeasuredWidth();     // 获取字节点的宽度 
+    
+    if (!setContentViewtShareWindowFlag &amp;&amp; defaultWindow &gt;= 0 &amp;&amp; defaultWindow &lt;= childCount-1) { 
+        //设置默认窗口的左端距离 
+        offset = -1 * defaultWindow * childWidth; 
+        setShareWindowFlag = true; 
+    } 
+    
+    //设置距离(0,0)点X轴方向的距离 
+    int left = 0 + offset; 
+    for (int i = 0; i &lt; childCount; i++){ 
+        //设置每个子视图在布局中的位置 
+        View child = getChildAt(i); 
+        if (child.getVisibility() != View.GONE) { 
+            childCount.layout(left, 0, childWidth+left, child.getMeasuredHeight()); 
+            left = left + childWidth; 
+        } 
+    } 
+}
+</pre>
+            
+<h3 id="toc_1.3.7">调整视图大小</h3>
+<pre class="brush:java">
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) { 
+    super.onMeasure(widthMeasureSpec,heightMeasureSpec); 
+
+    // 调整子视图的大小
+    int childCount = getChildCount(); 
+    for (int i = 0; i &lt; childCountnt; i++) { 
+        getChildAt(i).measure(widthMeasureSpec,heightMeasureSpecMeasureSpec); 
+    } 
+    
+    // 调整自身的大小
+    setMeasuredDimension(800, 600);
+} 
+</pre>
+
 
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
