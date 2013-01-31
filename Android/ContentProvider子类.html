@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ContentProvider子类</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,20 +47,30 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">ContentProvider子类</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">ContentProvider子类</a></li>
+<li><a href="#toc_1">ContentProvider子类</a>
 <ul>
-<li><a href="#toc_1.1">相关类</a></li>
-<li><a href="#toc_1.2">基本流程</a></li>
-<li><a href="#toc_1.3">示例代码</a></li>
+<li><a href="#toc_1.1">相关类</a>
+<li><a href="#toc_1.2">基本流程</a>
+<li><a href="#toc_1.3">示例代码</a>
 <ul>
-<li><a href="#toc_1.3.1">继承ContentProvider子类</a></li>
-<li><a href="#toc_1.3.2">添加ContentProvider配置</a></li>
-<li><a href="#toc_1.3.3">外部应用使用ContentProvider</a></li>
+<li><a href="#toc_1.3.1">MyProvider类</a>
+<li><a href="#toc_1.3.2">bulkInsert</a>
+<li><a href="#toc_1.3.3">insert</a>
+<li><a href="#toc_1.3.4">delete</a>
+<li><a href="#toc_1.3.5">query</a>
+<li><a href="#toc_1.3.6">update</a>
+<li><a href="#toc_1.3.7">getType</a>
+</ul>
+<li><a href="#toc_1.4">使用MyProvider</a>
+<ul>
+<li><a href="#toc_1.4.1">添加ContentProvider配置</a>
+<li><a href="#toc_1.4.2">外部应用使用ContentProvider</a>
 </ul>
 </ul>
 </ul>
@@ -79,26 +89,29 @@ import android.net.Uri;
 <ul>
 <li>
 从ContentProvider派生子类，添加URI数据路径
-</li>
+
 <li>
 实现insert、delete、update、query等数据操作方法
-</li>
+
 <li>
 在XML文件中添加provider节点
-</li>
+
 <li>
 在访问Provider时通过获取ContentResolver对象实例进行访问。
-</li>
+
 </ul>
 
 <h2 id="toc_1.3">示例代码</h2>
-<h3 id="toc_1.3.1">继承ContentProvider子类</h3>
 <ul>
 <li>
+定义MyProvider并继承ContentProvider。
+
+<li>
 数据库创建参见<a href="SQLiteDatabase.html">SQLiteDatabase</a>
-</li>
+
 </ul>
 
+<h3 id="toc_1.3.1">MyProvider类</h3>
 <pre class="brush:java">
 public class MyProvider extends ContentProvider {
 
@@ -140,6 +153,12 @@ public class MyProvider extends ContentProvider {
         return false;
     }
     
+    // ......
+}
+</pre>
+
+<h3 id="toc_1.3.2">bulkInsert</h3>
+<pre class="brush:java">
     // 插入数组类型
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
@@ -176,7 +195,10 @@ public class MyProvider extends ContentProvider {
         }
         return i;
     }
+</pre>
 
+<h3 id="toc_1.3.3">insert</h3>
+<pre class="brush:java">
     // 重载insert方法，该方法用来插入数据
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -225,7 +247,10 @@ public class MyProvider extends ContentProvider {
         
         return ret;
     }
+</pre>
 
+<h3 id="toc_1.3.4">delete</h3>
+<pre class="brush:java">
     // 重载delete方法，该方法用来删除数据
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -256,7 +281,10 @@ public class MyProvider extends ContentProvider {
 
         return result;
     }
+</pre>
 
+<h3 id="toc_1.3.5">query</h3>
+<pre class="brush:java">
     // 重载query方法，该方法用来查询数据
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -280,7 +308,10 @@ public class MyProvider extends ContentProvider {
         
         return cursor;
     }
-
+</pre>
+    
+<h3 id="toc_1.3.6">update</h3>
+<pre class="brush:java">
     // 重载update方法，该方法用来更新数据
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
@@ -310,7 +341,10 @@ public class MyProvider extends ContentProvider {
         
         return result;
     }
+</pre>
     
+<h3 id="toc_1.3.7">getType</h3>
+<pre class="brush:java">
     // 重载getType方法，该方法用来返回MIME类型
     @Override
     public String getType(Uri uri) {
@@ -327,13 +361,14 @@ public class MyProvider extends ContentProvider {
 }
 </pre>
 
-<h3 id="toc_1.3.2">添加ContentProvider配置</h3>
+<h2 id="toc_1.4">使用MyProvider</h2>
+<h3 id="toc_1.4.1">添加ContentProvider配置</h3>
 <pre class="brush:xml">
 &lt;provider android:name=".MyProvider"  
     android:authorities="com.zenki.myprovider"/&gt;
 </pre>
 
-<h3 id="toc_1.3.3">外部应用使用ContentProvider</h3>
+<h3 id="toc_1.4.2">外部应用使用ContentProvider</h3>
 <pre class="brush:java">
 // 获取ContentResolver对象
 ContentResolver contentResolver = this.getContext().getContentResolver();
@@ -367,25 +402,16 @@ while(!cursor.isAfterLast()) {
     }
 }
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

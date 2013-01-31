@@ -54,15 +54,13 @@
 <div class="toc">
 <ul>
 <li><a href="#toc_1">绘图的特殊效果</a>
+<ul>
+<li><a href="#toc_1.1">BlurMaskFilter</a>
+</ul>
 </ul>
 </div>
 
-<ul>
-<li>
-使用BlurMaskFilter类实现绘画的特殊效果
-
-</ul>
-
+<h2 id="toc_1.1">BlurMaskFilter</h2>
 <pre class="brush:java">
 private Bitmap drawImageDropShadow(Bitmap originalBitmap) {
     BlurMaskFilter blurFilter = new BlurMaskFilter(1, BlurMaskFilter.Blur.NORMAL);

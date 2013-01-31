@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>安装fcitx输入法</title>
+    <title>Drawable和Bitmap转换</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,68 +49,61 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">安装fcitx输入法</h1>
+<h1 id="toc_1">Drawable、Bitmap、byte[]转换</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">安装fcitx输入法</a>
+<li><a href="#toc_1">Drawable、Bitmap、byte[]转换</a>
 <ul>
-<li><a href="#toc_1.1">安装</a>
+<li><a href="#toc_1.1">示例代码</a>
 <ul>
-<li><a href="#toc_1.1.1">下载源码包</a>
-<li><a href="#toc_1.1.2">下载相关工具</a>
-<li><a href="#toc_1.1.3">安装流程</a>
-</ul>
-<li><a href="#toc_1.2">Tips</a>
-<ul>
-<li><a href="#toc_1.2.1">图形界面无法打开的问题</a>
+<li><a href="#toc_1.1.1">Drawable -&gt; Bitmap</a>
+<li><a href="#toc_1.1.2">Resource -&gt; Bitmap</a>
+<li><a href="#toc_1.1.3">Bitmap -&gt; byte[]</a>
+<li><a href="#toc_1.1.4">byte[] -&gt; Bitmap</a>
 </ul>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">安装</h2>
-<h3 id="toc_1.1.1">下载源码包</h3>
-<pre class="brush:bash">
-$ wget -c http://fcitx.googlecode.com/files/fcitx-4.1.1_all.tar.bz2
-
-# 或者从源安装
-$ sudo add-apt-repository ppa:fcitx-team/nightly
-$ sudo apt-get update
-$ sudo apt-get install fcitx
+<h2 id="toc_1.1">示例代码</h2>
+<h3 id="toc_1.1.1">Drawable -&gt; Bitmap</h3>
+<pre class="brush:java">
+public static Bitmap drawableToBitmap(Drawable drawable) {   
+    Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),   
+                                        drawable.getIntrinsicHeight(),   
+                                        drawable.getOpacity() != PixelFormat.OPAQUE 
+                                        ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);   
+    Canvas canvas = new Canvas(bitmap);
+    drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());   
+    drawable.draw(canvas);   
+    return bitmap;   
+}
 </pre>
 
-<h3 id="toc_1.1.2">下载相关工具</h3>
-<pre class="brush:bash">
-$ sudo apt-get install libunique-dev
-$ sudo apt-get install intltool
+<h3 id="toc_1.1.2">Resource -&gt; Bitmap</h3>
+<pre class="brush:java">
+Resources res = getResources();  
+Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.pic);
 </pre>
 
-<h3 id="toc_1.1.3">安装流程</h3>
-<pre class="brush:bash">
-# 解压并进入目录：
-$ tar xvf fcitx-4.1.1_all.tar.bz2
-$ cd fcitx-4.1.1
-
-# 编译
-$ mkdir build
-$ cd build
-
-# 支持GTK3可设置ENABLE_GTK3_IM_MODULE=On
-$ cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_GTK3_IM_MODULE=Off
-$ make
-$ sudo make install
+<h3 id="toc_1.1.3">Bitmap -&gt; byte[]</h3>
+<pre class="brush:java">
+private byte[] Bitmap2Bytes(Bitmap bm){  
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();    
+    bm.compress(Bitmap.CompressFormat.PNG, 100, baos);    
+    return baos.toByteArray();  
+}
 </pre>
 
-<h2 id="toc_1.2">Tips</h2>
-<h3 id="toc_1.2.1">图形界面无法打开的问题</h3>
-<pre class="brush:bash">
-# 编辑/etc/profile，加入以下内容
-export XMODIFIERS="@im=fcitx"
-export XIM=fcitx
-export XIM_PROGRAM=fcitx
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
+<h3 id="toc_1.1.4">byte[] -&gt; Bitmap</h3>
+<pre class="brush:java">
+private Bitmap Bytes2Bimap(byte[] b){  
+    if (b.length == 0){  
+        return null;  
+    }  
+    return BitmapFactory.decodeByteArray(b, 0, b.length);  
+}
 </pre>
 
 
