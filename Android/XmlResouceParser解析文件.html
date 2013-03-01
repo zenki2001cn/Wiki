@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>XmlPullParser解析文件</title>
+    <title>XmlResouceParser解析文件</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,11 +49,11 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">XmlPullParser解析</h1>
+<h1 id="toc_1">使用XmlResouceParser解析文件</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">XmlPullParser解析</a>
+<li><a href="#toc_1">使用XmlResouceParser解析文件</a>
 <ul>
 <li><a href="#toc_1.1">相关类</a>
 <li><a href="#toc_1.2">基本处理流程</a>
@@ -65,22 +65,25 @@
 
 <h2 id="toc_1.1">相关类</h2>
 <pre class="brush:java">
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException.html;
-import org.xmlpull.v1.XmlPullParserFactory;
+import android.content.res.XmlResourceParser;
 import android.util.Xml;
 </pre>
 
 <h2 id="toc_1.2">基本处理流程</h2>
 <ul>
 <li>
-使用XmlPullParserFactory.newInstance()方法生成<code>XmlPullParserFactory</code>对象工厂实例。
+通过资源ID获取<code>XmlResouceParser</code>类对象，XmlResouceParser类是XmlPullParser类的子类：
+
+<ul>
+<li>
+getResouce.getXml(int id)
 
 <li>
-通过XmlPullParserFactory对象的newPullParser()方法生成<code>XmlPullParser</code>对象，该对象用来处理xml数据。
+getRawResouce(int id)
 
+</ul>
 <li>
-通过XmlPullParser对象的<code>setInput()</code>方法读取数据流，并通过<code>getEventType()</code>方法和<code>next()</code>方法遍历整个xml模型树。
+通过<code>getEventType()</code>方法和<code>next()</code>方法遍历整个xml模型树。
 
 </ul>
 
@@ -159,84 +162,59 @@ TEXT
 
 <h2 id="toc_1.4">示例程序</h2>
 <pre class="brush:java">
-public static List&lt;Person&gt; ReadXmlByPull (InputStream inputStream) throws Exception {
-    List &lt;Person&gt; personList = null;
-    /**
-     * 通过对象工厂创建XmlPullParser对象
-     */
-    XmlPullParser xmlpull = Xml.newPullParser();
-    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-    factory.setNamespaceAware(true);
-    XmlPullParser xpp = factory.newPullParser();
-
-    /**
-     * 传入输入流并设定编码方式
-     */
-    xmlpull.setInput(inputStream, "utf-8");
-    
-    /**
-     * pull读到xml后 返回数字
-     * 读取到xml的声明返回START_DOCUMENT 0
-     * 读取到xml的结束返回END_DOCUMENT   1  
-     * 读取到xml的开始标签返回START_TAG  2
-     * 读取到xml的结束标签返回END_TAG    3
-     * 读取到xml的文本返回TEXT           4
-     */
-    int eventCode = xmlpull.getEventType();
-    
-    /**
-     * 只要这个事件返回的不是1 我们就一直读取xml文件
-     */
-    Person person = null;
-    while(eventCode!=XmlPullParser.END_DOCUMENT) {
-        switch (eventCode) {
-            // 开始文档时创建数据列表
-            case XmlPullParser.START_DOCUMENT:
-            {   
-                personList =new  ArrayList&lt;Person&gt;();
-                break;
-            }
-            
-            // 标签开始时创建数据项
-            case XmlPullParser.START_TAG:
-            {
-                if("person".equals(xmlpull.getName())) {
-                    person =  new Person();
-                    person.setId(xmlpull.getAttributeValue(0));
-                }
-                else if (person!=null) {
-                    if(("name".equals(xmlpull.getName()))) {
-                        /**
-                         * 如果当前元素的下一个元素是文本节点 就可以直接用nextText()这个方法来得到文本节点的内容
-                         */
-                        person.setName(xmlpull.nextText());
-                    }
-                    else if ("age".equals(xmlpull.getName())) {
-                        /**
-                         * 如果当前元素的下一个元素是文本节点 就可以直接用nextText()这个方法来得到文本节点的内容
-                         */
-                        person.setAge(xmlpull.nextText());
-                    }
-                }
-                break;
-            }
-                
-            // 标签结束时加入数据项到列表
-            case XmlPullParser.END_TAG:
-            { 
-                if("person".equals(xmlpull.getName())&amp;&amp;person!=null) {
-                    personList.add(person);
-                    person = null;
-                }
-                break;
-            }
-        }
+public void parseXml() {
+    // 获取res/xml下的原生XML文件
+    XmlResourceParser parser = getResources().getXml(R.xml.persons);
+    try {
+        StringBuilder sb = new StringBuilder();
+        // 获取eventType
+        int eventType = parser.getEventType();
         
-        //没有结束xml文件就进行下一个解析
-        eventCode = xmlpull.next();
+        // 获取TAG层级，outside层级为0，root层级为1，依次递增。
+        // &lt;!-- outside --&gt;     0
+        // &lt;root&gt;               1
+        // sometext             1
+        //   &lt;foobar&gt;           2
+        //   &lt;/foobar&gt;          2
+        // &lt;/root&gt;              1
+        // &lt;!-- outside --&gt;     0
+        final int depth = parser.getDepth();
+        
+        while (eventType != XmlResourceParser.END_DOCUMENT) {
+            switch (eventType) {
+                case XmlResourceParser.START_TAG:
+                    String tagName = parser.getName();
+
+                    if (("person").equals(tagName)) {
+                        // 得到person属性
+                        String personid = parser.getAttributeValue(0);
+                        sb.append("ID:" + personid);
+                    } else if ("name".equals(parser.getName())) {
+                        // 得到name属性
+                        String name = parser.nextText();
+                        sb.append("姓名:" + name);
+                    } else if ("age".equals(parser.getName())) {
+                        // 得到age属性
+                        String age = parser.nextText();
+                        sb.append("年龄:" + age);
+                    }
+                    break;
+                case XmlResourceParser.END_TAG:
+                    // 结束时加空行
+                    if ("person".equals(parser.getName())) {
+                        sb.append("\n");
+                    }
+                    break;
+                default:
+                    break;
+            }
+            // 解析下一个事件
+            eventType = parser.next();
+        }
+        // 将解析的结果放在文本编辑框
+        edtContent.setText(sb.toString());
+    } catch (Exception e) {
     }
-    
-    return personList;
 }
 </pre>
 
