@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>自定义控件属性</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">自定义控件属性</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">自定义控件属性</a>
+<ul>
+<li><a href="#toc_1.1">声明自定义属性的名称</a>
+<li><a href="#toc_1.2">添加自定义属性</a>
+<li><a href="#toc_1.3">解析自定义属性方法一</a>
+<li><a href="#toc_1.4">解析自定义属性方法二</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">声明自定义属性的名称</h2>
+<ul>
+<li>
+在res/attrs.xml中添加自定义属性的名称。
+
+<li>
+<code>MyView</code>是自定义控件的类名。
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;resources&gt;
+    &lt;!-- MyView是自定义控件类名 --&gt;
+    &lt;declare-styleable name="MyView"&gt;
+        &lt;attr name="TextAttrExt" format="reference|string"&gt;&lt;/attr&gt;
+        &lt;attr name="OrientalAttrExt"&gt;
+            &lt;enum name="Horizontal" value="1"&gt;&lt;/enum&gt;
+            &lt;enum name="Vertical" value="0"&gt;&lt;/enum&gt;
+        &lt;/attr&gt;
+        &lt;attr name="BackgroundAttrExt" format="reference|color"&gt;&lt;/attr&gt;
+    &lt;/declare-styleable&gt;
+&lt;/resources&gt;
+</pre>
+
+</ul>
+
+<h2 id="toc_1.2">添加自定义属性</h2>
+<ul>
+<li>
+在定义控件的布局文件中，添加自定义属性的值。
+
+<ul>
+<li>
+首先要定一个XML的名字空间：xmlns:zenki="<a href="http://schemas.android.com/apk/res-auto"">http://schemas.android.com/apk/res-auto"</a>
+
+<li>
+每个自定义属性前都需要添加名字空间的标识。
+<pre class="brush:xml">
+&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    &lt;!-- res-auto可改成res/package_name的形式 --&gt;
+    xmlns:zenki="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" &gt;
+
+    &lt;com.example.testcustomattrbuite.MyView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        &lt;!-- 以下是自定义属性 --&gt;
+        zenki:TextAttrExt="@string/hello_world" 
+        zenki:OrientalAttrExt="Horizontal"
+        zenki:BackgroundAttrExt="@drawable/my_view_background"/&gt;
+
+&lt;/RelativeLayout&gt;
+</pre>
+
+</ul>
+</ul>
+
+<h2 id="toc_1.3">解析自定义属性方法一</h2>
+<pre class="brush:java">
+private void getAttrMethod(AttributeSet attrs) {
+    int resourceId = -1;
+    
+    // 获取TypedArray对象
+    TypedArray typeArray = getContext().obtainStyledAttributes(attrs, R.styleable.MyView);
+    // 获取属性值的数量
+    int count = typeArray.getIndexCount();
+    for (int i = 0; i &lt; count; i++) {
+        // 获取属性ID
+        int attr = typeArray.getIndex(i);
+        // 获取资源ID
+        resourceId = typeArray.getResourceId(attr, 0);
+        
+        switch (attr) {
+        case R.styleable.MyView_TextAttrExt:
+            mText = typeArray.getResources().getText(resourceId).toString();
+            break;
+        case R.styleable.MyView_OrientalAttrExt:
+            mOriental = typeArray.getInt(attr, 0);
+            break;
+        case R.styleable.MyView_BackgroundAttrExt:
+            mBitmap = BitmapFactory.decodeResource(typeArray.getResources(), resourceId);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    typeArray.recycle();
+}
+</pre>
+
+<h2 id="toc_1.4">解析自定义属性方法二</h2>
+<ul>
+<li>
+使用构造函数传递的<code>AttributeSet</code>对象获取属性列表。
+<pre class="brush:java">
+private void getAttrMethod(Context context, AttributeSet attrs) {
+    // 获取属性个数
+    int count = attrs.getAttributeCount();
+    String name;
+    for (int i = 0; i &lt; count; i++) {
+        // 按照序号，获取属性名字
+        name = attrs.getAttributeName(i);
+        if (name.equals("text")) {
+            // 调用getAttributeValue方法获取资源ID
+            int resouceId = Integer.valueOf(attrs.getAttributeValue(i).substring(1));
+            if (resouceId &gt; 0) {
+                // 根据资源ID获取属性值
+                mTextContent = context.getResources().getText(resouceId).toString();
+            }
+        }
+    }
+}
+</pre>
+
+</ul>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

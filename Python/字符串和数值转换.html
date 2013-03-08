@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Python学习笔记</title>
+    <title>字符串和数值转换</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,46 +49,69 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">Python学习笔记</h1>
+<h1 id="toc_1">字符串和数值转换</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Python学习笔记</a>
+<li><a href="#toc_1">字符串和数值转换</a>
 <ul>
-<li><a href="#toc_1.1">基本语法和技巧</a>
-<li><a href="#toc_1.2">代码片段</a>
+<li><a href="#toc_1.1">str - 数字=&gt;字符串</a>
+<li><a href="#toc_1.2">int、float - 字符串=&gt;数字</a>
+<li><a href="#toc_1.3">ord - 字符=&gt;数字</a>
+<li><a href="#toc_1.4">hex - 数字=&gt;十六进制字符串</a>
+<li><a href="#toc_1.5">float.fromhex - 十六进制字符串=&gt;数字</a>
+<li><a href="#toc_1.6">oct - 数字=&gt;八进制字符串</a>
+<li><a href="#toc_1.7">binascii - 二进制&lt;=&gt;十六进制字符串</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">基本语法和技巧</h2>
-<ul>
-<li>
-<a href="内置数据类型.html">内置数据类型</a>
+<h2 id="toc_1.1">str - 数字=&gt;字符串</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; str(100)
+'100'
+</pre>
 
-<li>
-<a href="方法对象.html">方法对象</a>
+<h2 id="toc_1.2">int、float - 字符串=&gt;数字</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; int('100')
+100
+&gt;&gt;&gt; float('100.00')
+100.0
+</pre>
 
-<li>
-<a href="内置函数.html">内置函数</a>
+<h2 id="toc_1.3">ord - 字符=&gt;数字</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; ord('a')
+97
+</pre>
 
-<li>
-<a href="包，类和对象.html">包，类和对象</a>
+<h2 id="toc_1.4">hex - 数字=&gt;十六进制字符串</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; hex(97)
+'0x61'
+</pre>
 
-<li>
-<a href="正则表达式.html">正则表达式</a>
+<h2 id="toc_1.5">float.fromhex - 十六进制字符串=&gt;数字</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; float.fromhex('0x61')
+97.0
+</pre>
 
-<li>
-<a href="Unicode字符串.html">Unicode字符串</a>
+<h2 id="toc_1.6">oct - 数字=&gt;八进制字符串</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; oct(97)
+'0141'
+</pre>
 
-</ul>
-
-<h2 id="toc_1.2">代码片段</h2>
-<ul>
-<li>
-<a href="字符串和数值转换.html">字符串和数值转换</a>
-
-</ul>
+<h2 id="toc_1.7">binascii - 二进制&lt;=&gt;十六进制字符串</h2>
+<pre class="brush:python">
+&gt;&gt;&gt; import binascii
+&gt;&gt;&gt; repr(binascii.a2b_hex('0099'))
+"'\\x00\\x99'"
+&gt;&gt;&gt; binascii.b2a_hex('\x00\x99')
+'0099'
+</pre>
 
 
 <footer>
