@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ExtendableListView</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">ExtendableListView</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">ExtendableListView</a>
+<ul>
+<li><a href="#toc_1.1">定义XMl布局文件</a>
+<ul>
+<li><a href="#toc_1.1.1">main.xml</a>
+<li><a href="#toc_1.1.2">group.xml</a>
+<li><a href="#toc_1.1.3">subchild.xml</a>
+</ul>
+<li><a href="#toc_1.2">加载控件</a>
+<ul>
+<li><a href="#toc_1.2.1">定义分组数据</a>
+<li><a href="#toc_1.2.2">定义适配器</a>
+<li><a href="#toc_1.2.3">自定义扩展和收缩的监听事件</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">定义XMl布局文件</h2>
+<h3 id="toc_1.1.1">main.xml</h3>
+<pre class="brush:xml">
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" &gt;
+
+    &lt;com.pateo.as.extendablelistview.AsExtendableListView
+        android:id="@+id/id_ExpandableListView"
+        android:layout_width="437dip"
+        android:layout_height="800dip"
+        android:clickable="true"
+        android:scrollbarAlwaysDrawHorizontalTrack="true" &gt;
+    &lt;/com.pateo.as.extendablelistview.AsExtendableListView&gt;
+
+&lt;/LinearLayout&gt;
+</pre>
+
+<h3 id="toc_1.1.2">group.xml</h3>
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" &gt;
+
+    &lt;ImageView
+        android:id="@+id/id_group_ImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp" &gt;
+    &lt;/ImageView&gt;
+
+    &lt;TextView
+        android:id="@+id/id_group_TextView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center" &gt;
+    &lt;/TextView&gt;
+&lt;/LinearLayout&gt;
+</pre>
+
+<h3 id="toc_1.1.3">subchild.xml</h3>
+<pre class="brush:xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" &gt;
+
+    &lt;TextView
+        android:id="@+id/id_child_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:text="@string/hello_world" &gt;
+    &lt;/TextView&gt;
+
+    &lt;RelativeLayout
+        android:id="@+id/id_hide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="300dip"
+        android:visibility="gone" &gt;
+        &lt;TextView
+        android:id="@+id/id_child_TextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" &gt;
+    &lt;/TextView&gt;
+    &lt;/RelativeLayout&gt;
+&lt;/LinearLayout&gt;
+</pre>
+
+<h2 id="toc_1.2">加载控件</h2>
+<h3 id="toc_1.2.1">定义分组数据</h3>
+<pre class="brush:java">
+AsExtendableListView mExpandListView;
+public String[] mStrGroupTitles = { "第一组", "第二组" };
+public String[] mStrChildContentOne =ExtendableListView { "child1" };
+public String[] mStrChildContentTwo = { "child6", "child1d7", "child8", "child9" };
+</pre>
+
+<h3 id="toc_1.2.2">定义适配器</h3>
+<ul>
+<li>
+继承BaseExpandableListAdapter，通过getGroupView和getChildView返回自定义的视图布局
+<pre class="brush:java">
+public class TreeViewAdapter extends BaseExpandableListAdapter {
+    private LayoutInflater inflater;
+    private Context mContext;
+    private TextView textView;
+
+    class ViewHolder {
+        ImageView imageView;
+        TextView textView;
+    }
+
+    public TreeViewAdapter(Context context) {
+        this.inflater = LayoutInflater.from(context);
+        this.mContext = context;
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return 0;
+    }
+
+    // 返回子项目的视图布局
+    @Override
+    public View getChildView(int groupPosition, int childPosition,
+            boolean isLastChild, View convertView, ViewGroup parent) {
+        final View myView = inflater.inflate(R.layout.subchild, null);
+        final int groupPos = groupPosition;
+        final int childPos = childPosition;
+
+        textView = (TextView) myView.findViewById(R.id.id_child_TextView);
+
+        final RelativeLayout relativeLayout = (RelativeLayout) myView
+                .findViewById(R.id.id_hide_layout);
+        TextView itemView = (TextView) relativeLayout
+                .findViewById(R.id.id_child_TextView2);
+        itemView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "itemView.setOnClickListener");
+            }
+        });
+
+        textView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Log.i("getChildView", "groupPosition= " + groupPos);
+                Log.i("getChildView", "childPosition= " + childPos);
+            }
+        });
+        
+        if (groupPosition == 0) {
+            textView.setText(mStrChildContentOne[childPosition]);
+        } else if (groupPosition == 1) {
+            textView.setText(mStrChildContentTwo[childPosition]);
+        }
+
+        return myView;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        if (groupPosition == 0) {
+            return mStrChildContentOne.length;
+        } else if (groupPosition == 1) {
+            return mStrChildContentTwo.length;
+        }
+
+        return 0;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return "getGroup=" + groupPosition;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return mStrGroupTitles.length;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    // 返回第一级可扩展的视图布局
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded,
+            View convertView, ViewGroup parent) {
+        View myView = convertView;
+        if (null == myView) {
+            myView = inflater.inflate(R.layout.group, null);
+        }
+
+        ViewHolder viewHolder = (ViewHolder) myView.getTag();
+
+        if (null == viewHolder) {
+            viewHolder = new ViewHolder();
+            viewHolder.imageView = (ImageView) myView
+                    .findViewById(R.id.id_group_ImageView);
+            viewHolder.textView = (TextView) myView
+                    .findViewById(R.id.id_group_TextView);
+            myView.setTag(viewHolder);
+        }
+
+        viewHolder.textView.setText(mStrGroupTitles[groupPosition]);
+
+        return myView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
+    }
+
+    @Override
+    public void onGroupCollapsed(int groupPosition) {
+        Log.d(TAG, "getGroupView onGroupCollapsed=" + groupPosition);
+        super.onGroupCollapsed(groupPosition);
+    }
+
+    @Override
+    public void onGroupExpanded(int groupPosition) {
+        Log.d(TAG, "getGroupView onGroupExpanded=" + groupPosition);
+        super.onGroupExpanded(groupPosition);
+    }
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.3">自定义扩展和收缩的监听事件</h3>
+<pre class="brush:java">
+private void initCustomExtendableListView() {
+    this.setGroupIndicator(null);
+    this.setChildIndicator(null);
+    this.setCacheColorHint(0);
+    this.setChildIndicatorBounds(1, 1);
+    this.setSelector(R.drawable.button_selector);
+    this.setBackgroundColor(0xffffffff);
+    
+    AsExtendableListView.this
+            .setOnGroupExpandListener(mGroupExpandListener);
+    AsExtendableListView.this
+            .setOnGroupCollapseListener(mGroupCollapseListener);
+}
+
+// 当扩展一个Group时，自动收起其他的Group
+OnGroupExpandListener mGroupExpandListener = new OnGroupExpandListener() {
+
+    @Override
+    public void onGroupExpand(int groupPosition) {
+
+        final ExpandableListAdapter adapter = mAdapter;
+        final int groupCount = adapter.getGroupCount();
+
+        for (int i = 0; i &lt; groupCount; i++) {
+            if (groupPosition != i) {
+                AsExtendableListView.this.collapseGroup(i);
+            }
+        }
+    }
+};
+
+OnGroupCollapseListener mGroupCollapseListener = new OnGroupCollapseListener() {
+
+    @Override
+    public void onGroupCollapse(int groupPosition) {
+    }
+};
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
