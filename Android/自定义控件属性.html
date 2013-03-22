@@ -63,9 +63,10 @@
 </ul>
 <li><a href="#toc_1.2">解析自定义属性</a>
 <ul>
-<li><a href="#toc_1.2.1">方法一</a>
-<li><a href="#toc_1.2.2">方法二</a>
-<li><a href="#toc_1.2.3">方法三</a>
+<li><a href="#toc_1.2.1">方法一 - 仅设置主题风格</a>
+<li><a href="#toc_1.2.2">方法二 - 静态设置属性值</a>
+<li><a href="#toc_1.2.3">方法三 - 动态解析资源</a>
+<li><a href="#toc_1.2.4">方法四 - 动态解析资源</a>
 </ul>
 </ul>
 <li><a href="#toc_2">主题、风格和属性</a>
@@ -143,7 +144,7 @@
 在values/styles.xml中指定控件的默认属性值，名称定义为MyViewDefaultStyle。
 
 <li>
-解析属性值时，将R.style.MyViewDefaultStyle作为默认的风格资源，参见下面的解析自定义属性-方法一。
+解析属性值时，将R.style.MyViewDefaultStyle作为默认的风格资源，参见下面的<code>解析自定义属性-方法一</code>。
 <pre class="brush:xml">
 &lt;resources&gt;
     &lt;style name="MyViewDefaultStyle"&gt;
@@ -153,7 +154,9 @@
     &lt;/style&gt;
 
     &lt;style name="AppThemeDark" parent="@android:style/Theme.Black"&gt;
+		&lt;!-- myViewStyle是attrs.xml中定义的一个风格标签的引用 --&gt;
 		&lt;item name="myViewStyle"&gt;@style/MyViewDefaultStyle&lt;/item&gt;
+		
 		&lt;!-- 此处还可包含其他的风格定义 --&gt;
 	&lt;/style&gt;
 &lt;/resources&gt;
@@ -162,10 +165,27 @@
 </ul>
 
 <h2 id="toc_1.2">解析自定义属性</h2>
-<h3 id="toc_1.2.1">方法一</h3>
+<h3 id="toc_1.2.1">方法一 - 仅设置主题风格</h3>
 <ul>
 <li>
-该方法需要配置一个默认的style来描述控件的属性值，参见上面一节的内容。
+在构造函数中指定默认的风格。
+<pre class="brush:java">
+public MyText(Context context, AttributeSet attrs) {
+    // 第三个参数为attrs.xml文件中定义的属性值，它是一个风格的引用，
+    // 该属性必须在主题中定义它的引用值
+	this(context, attrs, R.attr.myViewStyle);
+}
+</pre>
+
+</ul>
+
+<h3 id="toc_1.2.2">方法二 - 静态设置属性值</h3>
+<ul>
+<li>
+该方法需要配置一个默认的style来描述控件的属性值，参见上面一节<code>通过定义风格文件指定属性值</code>的内容。
+
+<li>
+obtainStyledAttributes方法中第三个参数即为加载的style资源文件ID。
 
 <li>
 直接根据R文件中的属性ID获取属性值。
@@ -185,7 +205,7 @@ private void getAttrMethod(AttributeSet attrs, int defStyle) {
 
 </ul>
 
-<h3 id="toc_1.2.2">方法二</h3>
+<h3 id="toc_1.2.3">方法三 - 动态解析资源</h3>
 <ul>
 <li>
 一般分两步读取自定义属性：
@@ -233,7 +253,7 @@ private void getAttrMethod(AttributeSet attrs) {
 </ul>
 </ul>
 
-<h3 id="toc_1.2.3">方法三</h3>
+<h3 id="toc_1.2.4">方法四 - 动态解析资源</h3>
 <ul>
 <li>
 使用构造函数传递的<code>AttributeSet</code>对象获取属性列表。
@@ -268,6 +288,10 @@ private void getAttrMethod(Context context, AttributeSet attrs) {
 <li>
 通过以下格式声明属性：
 <pre class="brush:xml">
+&lt;!-- 作为主题的item属性 --&gt;
+&lt;attr name="myViewStyleInTheme" format="reference" /&gt;
+
+&lt;!-- 作为自定义控件的属性 --&gt;
 &lt;declare-styleable name="MyView"&gt;
     &lt;attr name="background" format="reference" /&gt;
 &lt;/declare-styleable&gt;
@@ -319,9 +343,18 @@ private void getAttrMethod(Context context, AttributeSet attrs) {
 <li>
 通过代码引用风格：
 <pre class="brush:java">
-// R.style.MyViewDefaultStyle为风格在R中的定义
-TypedArray typeArray = getContext().obtainStyledAttributes(attrs,
+// 在构造方法中引用
+public MyText(Context context, AttributeSet attrs) {
+    // 第三个参数为attrs.xml文件中定义的属性值，它是一个风格的引用，
+    // 该属性必须在主题中定义它的引用值
+	this(context, attrs, R.attr.myViewStyle);
+}
+
+public MyText(Context context, AttributeSet attrs, int defStyle) {
+    // R.style.MyViewDefaultStyle为风格在R中的定义
+    TypedArray typeArray = getContext().obtainStyledAttributes(attrs,
 				R.styleable.MyView, defStyle, R.style.MyViewDefaultStyle);
+}
 </pre>
 
 </ul>
