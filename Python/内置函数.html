@@ -69,6 +69,7 @@
 <li><a href="#toc_1.12">map（列表数据的批量处理）</a>
 <li><a href="#toc_1.13">filter（列表数据过滤处理）</a>
 <li><a href="#toc_1.14">reduce（列表数据递减处理）</a>
+<li><a href="#toc_1.15">print（打印输出）</a>
 </ul>
 </ul>
 </div>
@@ -385,6 +386,17 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 # 10为初始值，作为列表的第一个数，求解过程为：10 + 1 + 2 + 3 + 4 = 20
 &gt;&gt;&gt; reduce(lambda x, y : x + y, [1, 2, 3, 4], 10)
 20
+</pre>
+
+<h2 id="toc_1.15">print（打印输出）</h2>
+
+<pre class="brush:python">
+# 向标准输出打印
+&gt;&gt;&gt; print "%s %s" % ("hello", "world")
+hello world
+# 向错误输出打印
+&gt;&gt;&gt; print &gt;&gt;sys.stderr, "%s %s" % ("hello", "world")
+hello world
 </pre>
 
 

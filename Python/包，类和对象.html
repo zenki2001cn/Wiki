@@ -68,25 +68,29 @@
 <li><a href="#toc_1.8.2">__<em>setitem</em>__</a>
 <li><a href="#toc_1.8.3">__<em>delitem</em>__</a>
 </ul>
-<li><a href="#toc_1.9">返回字符串值</a>
+<li><a href="#toc_1.9">反向引用</a>
 <ul>
 <li><a href="#toc_1.9.1">__<em>repr</em>__</a>
 </ul>
-<li><a href="#toc_1.10">对象比较</a>
+<li><a href="#toc_1.10">返回字符串</a>
 <ul>
-<li><a href="#toc_1.10.1">__<em>cmp</em>__</a>
+<li><a href="#toc_1.10.1">__<em>str</em>__</a>
 </ul>
-<li><a href="#toc_1.11">返回对象长度</a>
+<li><a href="#toc_1.11">对象比较</a>
 <ul>
-<li><a href="#toc_1.11.1">__<em>len</em>__</a>
+<li><a href="#toc_1.11.1">__<em>cmp</em>__</a>
 </ul>
-<li><a href="#toc_1.12">模块名称</a>
+<li><a href="#toc_1.12">返回对象长度</a>
 <ul>
-<li><a href="#toc_1.12.1">__<em>module</em>__</a>
+<li><a href="#toc_1.12.1">__<em>len</em>__</a>
 </ul>
-<li><a href="#toc_1.13">对象属性</a>
+<li><a href="#toc_1.13">模块名称</a>
 <ul>
-<li><a href="#toc_1.13.1">__<em>dict</em>__</a>
+<li><a href="#toc_1.13.1">__<em>module</em>__</a>
+</ul>
+<li><a href="#toc_1.14">对象属性</a>
+<ul>
+<li><a href="#toc_1.14.1">__<em>dict</em>__</a>
 </ul>
 </ul>
 </ul>
@@ -260,7 +264,7 @@ def __delitem__(self, key):
 
 </ul>
 
-<h2 id="toc_1.9">返回字符串值</h2>
+<h2 id="toc_1.9">反向引用</h2>
 <h3 id="toc_1.9.1">__<em>repr</em>__</h3>
 <ul>
 <li>
@@ -272,8 +276,20 @@ def __repr__(self):
 
 </ul>
 
-<h2 id="toc_1.10">对象比较</h2>
-<h3 id="toc_1.10.1">__<em>cmp</em>__</h3>
+<h2 id="toc_1.10">返回字符串</h2>
+<h3 id="toc_1.10.1">__<em>str</em>__</h3>
+<ul>
+<li>
+当str方法调用时，以一个字符串形式表示该对象。
+<pre class="brush:python">
+def __str__(self):
+    return self.name
+</pre>
+
+</ul>
+
+<h2 id="toc_1.11">对象比较</h2>
+<h3 id="toc_1.11.1">__<em>cmp</em>__</h3>
 <ul>
 <li>
 _<em>cmp</em>_ 在比较类实例时被调用。通常，你可以通过使用“==”比较任意两个Python对象，不只是类实例。
@@ -285,8 +301,8 @@ def __cmp__(self, dict):
 
 </ul>
 
-<h2 id="toc_1.11">返回对象长度</h2>
-<h3 id="toc_1.11.1">__<em>len</em>__</h3>
+<h2 id="toc_1.12">返回对象长度</h2>
+<h3 id="toc_1.12.1">__<em>len</em>__</h3>
 <ul>
 <li>
 _<em>len</em>_ 在调用len(instance)时被调用。len是一个内置函数，可以返回一个对象的长度。它可以用于任何被认为理应有长度的对象。对于类实例，定义_<em>len</em>_ 方法，接着自已编写长度的计算，然后调用len(instance)，Python将替你调用你的_<em>len</em>_专用方法。
@@ -297,8 +313,8 @@ def __len__(self):
 
 </ul>
 
-<h2 id="toc_1.12">模块名称</h2>
-<h3 id="toc_1.12.1">__<em>module</em>__</h3>
+<h2 id="toc_1.13">模块名称</h2>
+<h3 id="toc_1.13.1">__<em>module</em>__</h3>
 <ul>
 <li>
 每个Python类都拥有一个内置的类属性_<em>module</em>_，它定义了这个类的模块的名字。
@@ -318,8 +334,8 @@ def __len__(self):
 
 </ul>
 
-<h2 id="toc_1.13">对象属性</h2>
-<h3 id="toc_1.13.1">__<em>dict</em>__</h3>
+<h2 id="toc_1.14">对象属性</h2>
+<h3 id="toc_1.14.1">__<em>dict</em>__</h3>
 <ul>
 <li>
 每个类对象包含一个字典成员_<em>dict</em>_，它返回一组<code>成员名称：值</code>。
