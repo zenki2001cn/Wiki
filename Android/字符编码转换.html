@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>字符编码转换</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,8 +47,18 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">字符编码转换</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">字符编码转换</a>
+<ul>
+<li><a href="#toc_1.1">相关类</a>
+</ul>
+</ul>
+</div>
 
 <h2 id="toc_1.1">相关类</h2>
 <pre class="brush:java">
@@ -61,12 +71,9 @@ import org.apache.http.util.EncodingUtils;
 <ul>
 <li>
 String类的getBytes()将字符串转换成字节数组
-</li>
+
 <li>
 String类构造函数接受一个描述字符集的字符串参数
-</li>
-</ul>
-
 <pre class="brush:java">
 String str1 = "你好";
 System.out.println(str1);
@@ -78,34 +85,26 @@ String str3 = new String(str2.getBytes("GBK"), "UTF-8");
 System.out.println(str3);
 </pre>
 
+</ul>
+
 <ul>
 <li>
 使用EncodingUtils类.getString()方法
-</li>
-</ul>
-
 <pre class="brush:java">
 String str2 = EncodingUtils.getString(str1.getBytes(), "UTF-8");
 </pre>
+
+</ul>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>

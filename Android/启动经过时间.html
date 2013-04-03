@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>启动经过时间</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript">
         SyntaxHighlighter.all();
     </script>
-	<link type="text/css" rel="stylesheet" href="css_style/style_zenki.css"/>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
 
 </head>
 
@@ -47,44 +47,33 @@
 
 <article>
 
+<!-- wrap the vimwiki html -->
 
 <h1 id="toc_1">启动后经过时间</h1>
 
-<p>
-调用android.os.SystemClock类。
-</p>
-
 <ul>
 <li>
+调用android.os.SystemClock类。
+
+<li>
 调用SystemClock.uptimeMillis()方法，可以取得起动后经过的毫秒数。
-</li>
+
 </ul>
 
-<p>
-例程源码(Java)
-</p>
+<h2 id="toc_1.1">例程源码(Java)</h2>
 <pre class="brush:java">
 Log.v("Test", String.valueOf(SystemClock.uptimeMillis()));
 </pre>
+
+
 <footer>
-    <a href="index.html" id="back-home">首页</a>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
     <a href="index.html" id="back-about">关于</a>
-    <a href="http://www.163.com/" id="back-email">Email</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
 </footer>
 
 </article>
 </div>
-
-<!--<script type="text/javascript">-->
-<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
-<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
-<!--</script>-->
-<!--<script type="text/javascript">-->
-<!--try {-->
-<!--var pageTracker = _gat._getTracker("UA-15922433-1");-->
-<!--pageTracker._trackPageview();-->
-<!--} catch(err) {}-->
-<!--</script>-->
 
 </body>
 </html>
