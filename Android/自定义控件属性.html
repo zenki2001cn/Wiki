@@ -63,10 +63,11 @@
 </ul>
 <li><a href="#toc_1.2">如何解析自定义属性</a>
 <ul>
-<li><a href="#toc_1.2.1">方法一 - 通过指定主题风格</a>
-<li><a href="#toc_1.2.2">方法二 - 静态设置属性值</a>
-<li><a href="#toc_1.2.3">方法三 - 动态解析资源</a>
+<li><a href="#toc_1.2.1">方法一 - 布局XML中指定</a>
+<li><a href="#toc_1.2.2">方法二 - 通过指定主题风格</a>
+<li><a href="#toc_1.2.3">方法三 - 静态设置属性值</a>
 <li><a href="#toc_1.2.4">方法四 - 动态解析资源</a>
+<li><a href="#toc_1.2.5">方法五 - 动态解析资源</a>
 </ul>
 </ul>
 <li><a href="#toc_2">主题、风格和属性</a>
@@ -166,7 +167,16 @@
 </ul>
 
 <h2 id="toc_1.2">如何解析自定义属性</h2>
-<h3 id="toc_1.2.1">方法一 - 通过指定主题风格</h3>
+<h3 id="toc_1.2.1">方法一 - 布局XML中指定</h3>
+<pre class="brush:xml">
+&lt;MyView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/ASSwitchButton"
+&lt;/MyView&gt;
+</pre>
+
+<h3 id="toc_1.2.2">方法二 - 通过指定主题风格</h3>
 <ul>
 <li>
 在构造函数中指定默认的风格。
@@ -181,7 +191,7 @@ public MyText(Context context, AttributeSet attrs) {
 
 </ul>
 
-<h3 id="toc_1.2.2">方法二 - 静态设置属性值</h3>
+<h3 id="toc_1.2.3">方法三 - 静态设置属性值</h3>
 <ul>
 <li>
 该方法需要配置一个默认的style来描述控件的属性值，参见上面一节<code>通过定义风格文件指定属性值</code>的内容。
@@ -207,7 +217,7 @@ private void getAttrMethod(AttributeSet attrs, int defStyle) {
 
 </ul>
 
-<h3 id="toc_1.2.3">方法三 - 动态解析资源</h3>
+<h3 id="toc_1.2.4">方法四 - 动态解析资源</h3>
 <ul>
 <li>
 一般分两步读取自定义属性：
@@ -219,11 +229,12 @@ private void getAttrMethod(AttributeSet attrs, int defStyle) {
 <li>
 Resource对象根据属性名称在R文件中的定义——即属性ID，查找对应的资源ID，获取资源。
 <pre class="brush:java">
-private void getAttrMethod(AttributeSet attrs) {
+private void getAttrMethod(AttributeSet attrs, int defStyle) {
     int resourceId = -1;
     
     // 获取TypedArray对象
-    TypedArray typeArray = getContext().obtainStyledAttributes(attrs, R.styleable.MyView);
+    TypedArray typeArray = getContext().obtainStyledAttributes(attrs, R.styleable.MyView, defStyle, 0);
+    
     // 获取属性值的数量
     int count = typeArray.getIndexCount();
     for (int i = 0; i &lt; count; i++) {
@@ -255,7 +266,7 @@ private void getAttrMethod(AttributeSet attrs) {
 </ul>
 </ul>
 
-<h3 id="toc_1.2.4">方法四 - 动态解析资源</h3>
+<h3 id="toc_1.2.5">方法五 - 动态解析资源</h3>
 <ul>
 <li>
 使用构造函数传递的<code>AttributeSet</code>对象获取属性列表。

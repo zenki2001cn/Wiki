@@ -401,9 +401,11 @@ path
 <li>
 运行Java程序
 <pre class="brush:xml">
-&lt;target name="run" depends="compile"&gt;
+&lt;target jar="${some.jar}" fork="true" spawn="false" name="run" depends="compile"&gt;
     &lt;java classname="HelloWorld"&gt;
         &lt;classpath&gt;
+            &lt;arg value="${some.arg1}" /&gt;
+            &lt;arg value="${some.arg2}" /&gt;
             &lt;pathelement path="build/classes"/&gt;
         &lt;/classpath&gt;
     &lt;/java&gt;
@@ -561,6 +563,54 @@ path
         &lt;/copy&gt;
 
     &lt;/target&gt;
+    
+    &lt;!--
+     ===================================================================
+        条件判断的使用
+     ===================================================================
+    --&gt;
+    &lt;target name="-signapk" description="Sign the target APK"&gt;
+        &lt;condition property="signplatform" value="true" else="false"&gt;
+            &lt;equals arg1="${sign.key.type}" arg2="platform" /&gt;
+        &lt;/condition&gt;
+        &lt;condition property="signpateo" value="true" else="false"&gt;
+            &lt;equals arg1="${sign.key.type}" arg2="pateo" /&gt;
+        &lt;/condition&gt;
+        &lt;if condition="${signplatform}"&gt;
+            &lt;then&gt;
+                &lt;echo&gt;sign apk [platform]:${out.packaged.sign.file}&lt;/echo&gt;    
+			    &lt;java jar="${signapk.file.jar}" fork="true" spawn="false" output="selenium.log"&gt;
+				    &lt;arg value="${platform.x509.pem}" /&gt;
+				    &lt;arg value="${platform.pk8}" /&gt;
+				    &lt;arg value="${out.packaged.file}" /&gt;
+				    &lt;arg value="${out.packaged.sign.file}" /&gt;
+			    &lt;/java&gt;
+            &lt;/then&gt;
+            &lt;else&gt;
+                &lt;if condition="${signpateo}"&gt;
+                &lt;then&gt;
+                    &lt;echo&gt;sign apk [pateo]:${out.packaged.sign.file}&lt;/echo&gt;    
+			        &lt;java jar="${signapk.file.jar}" fork="true" spawn="false" output="selenium.log"&gt;
+				    &lt;arg value="${pateo.x509.pem}" /&gt;
+				    &lt;arg value="${pateo.pk8}" /&gt;
+				    &lt;arg value="${out.packaged.file}" /&gt;
+				    &lt;arg value="${out.packaged.sign.file}" /&gt;
+			        &lt;/java&gt;
+                &lt;/then&gt;
+                &lt;else&gt;
+                    &lt;echo&gt;sign apk [shared]:${out.packaged.sign.file}&lt;/echo&gt;
+			        &lt;java jar="${signapk.file.jar}" fork="true" spawn="false" output="selenium.log"&gt;
+				    &lt;arg value="${shared.x509.pem}" /&gt;
+				    &lt;arg value="${shared.pk8}" /&gt;
+				    &lt;arg value="${out.packaged.file}" /&gt;
+				    &lt;arg value="${out.packaged.sign.file}" /&gt;
+			        &lt;/java&gt;
+                &lt;/else&gt;
+                &lt;/if&gt;
+            &lt;/else&gt;
+        &lt;/if&gt;
+    &lt;/target&gt;
+    
     &lt;!--
      ===================================================================
       Cleans everything(File Tasks)
