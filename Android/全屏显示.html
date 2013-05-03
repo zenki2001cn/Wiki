@@ -57,6 +57,10 @@
 <ul>
 <li><a href="#toc_1.1">相关类</a>
 <li><a href="#toc_1.2">例程源码(Java)</a>
+<ul>
+<li><a href="#toc_1.2.1">进入全屏</a>
+<li><a href="#toc_1.2.2">退出全屏</a>
+</ul>
 </ul>
 </ul>
 </div>
@@ -78,22 +82,30 @@ import android.view.WindowManager.LayoutParams;
 </ul>
 
 <h2 id="toc_1.2">例程源码(Java)</h2>
+<h3 id="toc_1.2.1">进入全屏</h3>
 <pre class="brush: java">
-public class FullScreenTestActivity extends Activity {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        // 全屏无标题
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
-        // 替换系统锁屏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        
-        setContentView(R.layout.main);
-    }
+public void enterFullScreen() {
+    // 全屏无标题
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().requestWindowFeature(Window.FEATURE_NO_TITLE);
+    
+    // 替换系统锁屏
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+    
+    setContentView(R.layout.main);
+}
+</pre>
+
+<h3 id="toc_1.2.2">退出全屏</h3>
+<pre class="brush:java">
+public void exitFullScreen() {
+    final WindowManager.LayoutParams attrs = getWindow().getAttributes();
+    attrs.flags &amp;= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().setAttributes(attrs);
+    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    
+    mIsFullScreen = false;
 }
 </pre>
 
