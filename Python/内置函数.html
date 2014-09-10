@@ -319,6 +319,17 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 &gt;&gt;&gt; re = __import__('re')
 &gt;&gt;&gt; unittest = __import__('unittest')
 
+# 导入动态链接库
+&gt;&gt;&gt; cdll = __import__('pychartdir27')
+&gt;&gt;&gt; cdll.callMethod
+&gt;&gt;&gt; &lt;function pychartdir27.callMethod&gt;
+
+&gt;&gt;&gt; cdll.id
+&gt;&gt;&gt; 'pychartdir27'
+
+&gt;&gt;&gt; cdll.applyMethod
+&gt;&gt;&gt; &lt;function pychartdir27.applyMethod&gt;
+
 # 查看返回的变量
 &gt;&gt;&gt; sys
 &gt;&gt;&gt; &lt;module 'sys' (built-in)&gt;
