@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>高级图像处理函数</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">高级图像处理函数</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">高级图像处理函数</a>
+<ul>
+<li><a href="#toc_1.1">图像处理</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">图像处理</h2>
+<table>
+<tr>
+<th>
+函数名
+</th>
+<th>
+用法说明
+</th>
+<th>
+参数说明
+</th>
+<th>
+参考文档
+</th>
+</tr>
+<tr>
+<td>
+cvSmooth
+</td>
+<td>
+平滑处理，也称模糊处理，用来减少图像噪声或失真。
+</td>
+<td>
+模糊处理类型：简单模糊、中值模糊、高斯模糊、边缘模糊。
+</td>
+<td>
+<code>《学习Opencv》129页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvErode
+</td>
+<td>
+腐蚀操作，增大暗区域，用于消除图像中的“斑点”噪声。
+</td>
+<td>
+可使用<code>cvCreateStructuringElementEx</code>函数创建自定义核。
+</td>
+<td>
+<code>《学习Opencv》135页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvDilate
+</td>
+<td>
+膨胀操作，增大亮区域，用于融合噪声和阴影。
+</td>
+<td>
+可使用<code>cvCreateStructuringElementEx</code>函数创建自定义核。
+</td>
+<td>
+<code>《学习Opencv》135页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvMorphologyEx
+</td>
+<td>
+通用形态操作，用于突出图像的明暗区域或边缘。
+</td>
+<td>
+操作类型：开运算、闭运算、形态梯度、“礼帽”、“黑帽”。
+</td>
+<td>
+<code>《学习Opencv》139页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvFloodFill
+</td>
+<td>
+漫水填充，用于标记或分离图像的一部分。
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+<code>《学习Opencv》146页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvResize
+</td>
+<td>
+调整图像尺寸，对ROI区域同样有效。
+</td>
+<td>
+默认采用线性插值方法。
+</td>
+<td>
+<code>《学习Opencv》149页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvPyrDown
+</td>
+<td>
+向下降采样，在每个维度上缩小1/2。
+</td>
+<td>
+参考<code>cvPyrSegmentation</code>分割算法。
+</td>
+<td>
+<code>《学习Opencv》150页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvPyrUp
+</td>
+<td>
+向上采样，在每个维度上扩大两倍。
+</td>
+<td>
+参考<code>cvPyrSegmentation</code>分割算法。
+</td>
+<td>
+<code>《学习Opencv》150页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvThreshold
+</td>
+<td>
+阈值化，直接删除一些低于或高于设定值的像素。
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+<code>《学习Opencv》155页</code>
+</td>
+</tr>
+<tr>
+<td>
+cvAdaptiveThreshold
+</td>
+<td>
+自适应阈值化。
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+<code>《学习Opencv》159页</code>
+</td>
+</tr>
+</table>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

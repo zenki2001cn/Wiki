@@ -1,0 +1,784 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>基本数据结构和操作</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">基本数据结构和操作</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">基本数据结构和操作</a>
+<ul>
+<li><a href="#toc_1.1">Opencv图像类型定义</a>
+<li><a href="#toc_1.2">快速访问Mat所有元素</a>
+<li><a href="#toc_1.3">快速访问IplImage所有元素</a>
+<li><a href="#toc_1.4">矩阵和图像操作函数</a>
+<li><a href="#toc_1.5">绘图函数</a>
+<li><a href="#toc_1.6">数据存储和序列化</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">Opencv图像类型定义</h2>
+<pre class="brush:c">
+IPL_DEPTH_8U        无符号8位整型
+IPL_DEPTH_8S        有符号8位整型
+IPL_DEPTH_16S       有符号16位整型
+IPL_DEPTH_32S       有符号32位整型
+IPL_DEPTH_32F       32位浮点数
+IPL_DEPTH_64F       64位浮点数
+</pre>
+
+<h2 id="toc_1.2">快速访问Mat所有元素</h2>
+<pre class="brush:c">
+Mat mat;
+float s = 0.0f;
+
+// 遍历每一行元素
+for (int row = 0; row &lt; mat-&gt;rows; row++) {
+    // 获取指向每行的指针
+    const float *ptr = (const float*) (mat-&gt;data + row * mat-&gt;step);
+    
+    // 遍历每一行的每一列元素
+    for (int col = 0; col &lt; mat-&gt;cols; col ++) {
+        s = *ptr++;
+    }
+}
+</pre>
+
+<h2 id="toc_1.3">快速访问IplImage所有元素</h2>
+<pre class="brush:c">
+// 遍历每一行元素
+for (int y = 0; y &lt; image-&gt;height; y++) {
+    // 获取指向每行的指针
+    uchar *ptr = (uchar*) image-&gt;imageData + y * image-&gt;widthStep;
+
+    // 遍历每一行每一列的元素
+    for (int x = 0; x &lt; image-&gt;width; x++) {
+        // 3通道图像需要乘以3
+        ptr[3*x] = 255;
+        ptr[3*x+1] = 255;
+        ptr[3*x+2] = 255;
+    }
+}
+</pre>
+
+<h2 id="toc_1.4">矩阵和图像操作函数</h2>
+<table>
+<tr>
+<th>
+函数名
+</th>
+<th>
+说明
+</th>
+</tr>
+<tr>
+<td>
+cvAbs
+</td>
+<td>
+计算数组中所有元素的绝对值
+</td>
+</tr>
+<tr>
+<td>
+cvAbsDiff
+</td>
+<td>
+计算两个数组差值的绝对值
+</td>
+</tr>
+<tr>
+<td>
+cvAbsDiffS
+</td>
+<td>
+计算数组和标量差值的绝对值
+</td>
+</tr>
+<tr>
+<td>
+cvAdd
+</td>
+<td>
+两个数组元素级的加运算
+</td>
+</tr>
+<tr>
+<td>
+cvAddS
+</td>
+<td>
+一个数组和一个标量的元素级的加运算
+</td>
+</tr>
+<tr>
+<td>
+cvAddWeighted
+</td>
+<td>
+两个数组的元素级的加权相加运算
+</td>
+</tr>
+<tr>
+<td>
+cvAvg
+</td>
+<td>
+计算数组中所有元素的平均值
+</td>
+</tr>
+<tr>
+<td>
+cvAvgSdv
+</td>
+<td>
+计算数组中所有元素的绝对值和标量差
+</td>
+</tr>
+<tr>
+<td>
+cvCalcCovarMatrix
+</td>
+<td>
+计算一组n维空间向量的协方差
+</td>
+</tr>
+<tr>
+<td>
+cvCmp
+</td>
+<td>
+对两个数组中的所有元素运用设置的比较操作
+</td>
+</tr>
+<tr>
+<td>
+cvCmpS
+</td>
+<td>
+对数组和标量运用比较操作
+</td>
+</tr>
+<tr>
+<td>
+cvConvertScale
+</td>
+<td>
+用可选的缩放值转换数组类型
+</td>
+</tr>
+<tr>
+<td>
+cvConvertScaleAbs
+</td>
+<td>
+计算缩放的绝对值后，再转换数组类型
+</td>
+</tr>
+<tr>
+<td>
+cvCopy
+</td>
+<td>
+把数组的值复制到另一个数组中
+</td>
+</tr>
+<tr>
+<td>
+cvCountNonZero
+</td>
+<td>
+计算数组中非0值的个数
+</td>
+</tr>
+<tr>
+<td>
+cvCrossProduct
+</td>
+<td>
+计算两个三维向量的叉积
+</td>
+</tr>
+<tr>
+<td>
+cvCvtColor
+</td>
+<td>
+将数组通道转换到另一个色彩空间
+</td>
+</tr>
+<tr>
+<td>
+cvDet
+</td>
+<td>
+计算方阵的行列式
+</td>
+</tr>
+<tr>
+<td>
+cvDiv
+</td>
+<td>
+数组的元素级除法运算
+</td>
+</tr>
+<tr>
+<td>
+cvDotProduct
+</td>
+<td>
+两个向量的点积
+</td>
+</tr>
+<tr>
+<td>
+cvEigenVV
+</td>
+<td>
+计算方阵的特征值和特征向量
+</td>
+</tr>
+<tr>
+<td>
+cvFlip
+</td>
+<td>
+围绕选定轴翻转
+</td>
+</tr>
+<tr>
+<td>
+cvGEMM
+</td>
+<td>
+矩阵乘法
+</td>
+</tr>
+<tr>
+<td>
+cvGetCol
+</td>
+<td>
+从一个数组的列中复制数据
+</td>
+</tr>
+<tr>
+<td>
+cvGetCols
+</td>
+<td>
+从多列中复制数据
+</td>
+</tr>
+<tr>
+<td>
+cvGetDiag
+</td>
+<td>
+复制对角线上的所有元素
+</td>
+</tr>
+<tr>
+<td>
+cvGetDims
+</td>
+<td>
+返回数组的维数
+</td>
+</tr>
+<tr>
+<td>
+cvGetDimSize
+</td>
+<td>
+返回数组所有维的大小
+</td>
+</tr>
+<tr>
+<td>
+cvGetRow
+</td>
+<td>
+从数组行中复制元素值
+</td>
+</tr>
+<tr>
+<td>
+cvGetRows
+</td>
+<td>
+从多个行中复制元素值
+</td>
+</tr>
+<tr>
+<td>
+cvGetSize
+</td>
+<td>
+得到二维的数组尺寸，返回CvSize
+</td>
+</tr>
+<tr>
+<td>
+cvGetSubRect
+</td>
+<td>
+从一个数组的子区域复制元素
+</td>
+</tr>
+<tr>
+<td>
+cvInRange
+</td>
+<td>
+检查一个数组的元素是否在另外两个数组的值的范围内
+</td>
+</tr>
+<tr>
+<td>
+cvInRangeS
+</td>
+<td>
+检查一个标量值是否在两位两个标量的范围内
+</td>
+</tr>
+<tr>
+<td>
+cvInvert
+</td>
+<td>
+求矩阵的逆矩阵
+</td>
+</tr>
+<tr>
+<td>
+cvMahalonobis
+</td>
+<td>
+求两个向量见的马氏距离
+</td>
+</tr>
+<tr>
+<td>
+cvMax
+</td>
+<td>
+两个数组间元素级的求最大值
+</td>
+</tr>
+<tr>
+<td>
+cvMaxS
+</td>
+<td>
+一个数组和一个标量间取最大值操作
+</td>
+</tr>
+<tr>
+<td>
+cvMerge
+</td>
+<td>
+将几个单通道图像合并成一个多通道图像
+</td>
+</tr>
+<tr>
+<td>
+cvMin
+</td>
+<td>
+两个数组间元素级的求最小值
+</td>
+</tr>
+<tr>
+<td>
+cvMinS
+</td>
+<td>
+一个数组和一个标量间取最小值操作
+</td>
+</tr>
+<tr>
+<td>
+cvMinMaxLoc
+</td>
+<td>
+寻找数组中的最大最小值
+</td>
+</tr>
+<tr>
+<td>
+cvMul
+</td>
+<td>
+计算两个数组的元素级乘积
+</td>
+</tr>
+<tr>
+<td>
+cvNot
+</td>
+<td>
+按位对数组的每一个元素求反
+</td>
+</tr>
+<tr>
+<td>
+cvNorm
+</td>
+<td>
+计算两个数组的正态相关性
+</td>
+</tr>
+<tr>
+<td>
+cvNormalize
+</td>
+<td>
+将数组中元素归一化
+</td>
+</tr>
+<tr>
+<td>
+cvOr
+</td>
+<td>
+两个数组进行按位或操作
+</td>
+</tr>
+<tr>
+<td>
+cvOrS
+</td>
+<td>
+在数组与标量之间进行按位或操作
+</td>
+</tr>
+<tr>
+<td>
+cvReduce
+</td>
+<td>
+通过给定的操作符将二维数组约简为向量
+</td>
+</tr>
+<tr>
+<td>
+cvRepeat
+</td>
+<td>
+以平铺的方式进行数组复制
+</td>
+</tr>
+<tr>
+<td>
+cvSet
+</td>
+<td>
+用给定值初始化数组
+</td>
+</tr>
+<tr>
+<td>
+cvSetZero
+</td>
+<td>
+将数组所有元素初始化为0
+</td>
+</tr>
+<tr>
+<td>
+cvSetIdentity
+</td>
+<td>
+将数组对角线元素赋值为1，其他为0
+</td>
+</tr>
+<tr>
+<td>
+cvSolve
+</td>
+<td>
+求出线性方程组的解
+</td>
+</tr>
+<tr>
+<td>
+cvSplit
+</td>
+<td>
+将多通道数组分解成多个单通道数组
+</td>
+</tr>
+<tr>
+<td>
+cvSub
+</td>
+<td>
+两个数组元素级相减
+</td>
+</tr>
+<tr>
+<td>
+cvSubS
+</td>
+<td>
+元素级的从数组中减去标量
+</td>
+</tr>
+<tr>
+<td>
+cvSubRS
+</td>
+<td>
+元素级的从标量中减去数组
+</td>
+</tr>
+<tr>
+<td>
+cvSum
+</td>
+<td>
+数组中所有元素求和
+</td>
+</tr>
+<tr>
+<td>
+cvSVD
+</td>
+<td>
+二维矩阵的奇异值分解
+</td>
+</tr>
+<tr>
+<td>
+cvSVBkSb
+</td>
+<td>
+奇异值回代计算
+</td>
+</tr>
+<tr>
+<td>
+cvTrace
+</td>
+<td>
+计算矩阵迹
+</td>
+</tr>
+<tr>
+<td>
+cvTranspose
+</td>
+<td>
+矩阵的转置运算
+</td>
+</tr>
+<tr>
+<td>
+cvXor
+</td>
+<td>
+两个数组按位异或操作
+</td>
+</tr>
+<tr>
+<td>
+cvXorS
+</td>
+<td>
+数组和标量之间按位异或操作
+</td>
+</tr>
+<tr>
+<td>
+cvZero
+</td>
+<td>
+将数组所有元素置0
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.5">绘图函数</h2>
+<table>
+<tr>
+<th>
+函数名
+</th>
+<th>
+说明
+</th>
+</tr>
+<tr>
+<td>
+cvLine
+</td>
+<td>
+画直线
+</td>
+</tr>
+<tr>
+<td>
+cvRectangle
+</td>
+<td>
+画矩形
+</td>
+</tr>
+<tr>
+<td>
+cvCircle
+</td>
+<td>
+画圆
+</td>
+</tr>
+<tr>
+<td>
+cvFillPoly
+</td>
+<td>
+画多边形一
+</td>
+</tr>
+<tr>
+<td>
+cvFillConvexPoly
+</td>
+<td>
+画多边形二
+</td>
+</tr>
+<tr>
+<td>
+cvPolyLine
+</td>
+<td>
+画多边形三
+</td>
+</tr>
+<tr>
+<td>
+cvPutText
+</td>
+<td>
+绘制文字
+</td>
+</tr>
+<tr>
+<td>
+cvInitFont
+</td>
+<td>
+初始化文字类型
+</td>
+</tr>
+</table>
+
+<h2 id="toc_1.6">数据存储和序列化</h2>
+<pre class="brush:c">
+// 存储数据
+int store_data(const char *filename)
+{
+    FileStorage fs(filename, FileStorage::WRITE);
+
+    if (env != NULL) {
+        // 创建块
+        fs &lt;&lt; "data";
+        // 块开始
+        fs &lt;&lt; "{";
+        fs &lt;&lt; "rect_black_1" &lt;&lt; rect_black_1;
+        fs &lt;&lt; "rect_black_2" &lt;&lt; rect_black_2;
+        fs &lt;&lt; "rect_black_3" &lt;&lt; rect_black_3;
+        // 块结束
+        fs &lt;&lt; "}";
+    }
+
+    return 0;
+}
+
+// 读取数据
+int reload_data(const char *filename)
+{
+    if (access(filename, R_OK) &lt; 0) {
+        return -1;
+    }
+
+    FileStorage fs(filename, FileStorage::READ);
+    FileNode node;
+
+    if (env != NULL) {
+        // 读取指定的块
+        node = fs["data"];
+        vector&lt;int&gt; rc;
+        node["rect_black_1"] &gt;&gt; rect_black_1; 
+        node["rect_black_2"] &gt;&gt; rect_black_2; 
+        node["rect_black_3"] &gt;&gt; rect_black_3; 
+    }
+
+    return 0;
+}
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

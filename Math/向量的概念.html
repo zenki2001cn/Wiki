@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>机器视觉学习笔记</title>
+    <title>向量的概念</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,22 +49,87 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">机器视觉学习笔记</h1>
+<h1 id="toc_1">向量的概念</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">机器视觉学习笔记</a>
+<li><a href="#toc_1">向量的概念</a>
+<ul>
+<li><a href="#toc_1.1">向量加法的几何意义</a>
+<li><a href="#toc_1.2">向量內积的几何意义</a>
+<li><a href="#toc_1.3">向量外积的几何意义</a>
+<li><a href="#toc_1.4">向量混合运算的几何意义</a>
+<ul>
+<li><a href="#toc_1.4.1">向量加法的结合律的几何解释</a>
+<li><a href="#toc_1.4.2">向量数乘的分配律的几何解释</a>
+<li><a href="#toc_1.4.3">向量点积的分配律的几何解释</a>
+<li><a href="#toc_1.4.4">向量叉积的分配律的几何解释</a>
+<li><a href="#toc_1.4.5">二维向量的内积、外积和张量</a>
+</ul>
+</ul>
 </ul>
 </div>
 
+<h2 id="toc_1.1">向量加法的几何意义</h2>
 <ul>
 <li>
-<a href="相机标定原理.html">相机标定原理</a>
-
-<li>
-<a href="Opencv Tips.html">Opencv Tips</a>
+设两个向量a和b，它们的二维分量解析式为a = (ax, ay), b = (bx, by)；三维分量的解析表达式为a = (ax, ay, az), b = (bx, by, bz)。则我们定义这两个向量的加法为：
 
 </ul>
+<p>
+<img src="http:pic/2-1.png" />
+</p>
+
+<h2 id="toc_1.2">向量內积的几何意义</h2>
+<p>
+<img src="http:pic/2-2.png" />
+<img src="http:pic/2-3.png" />
+</p>
+<blockquote>
+如果一个向量如a是某个坐标轴的单位坐标向量，那么，两个向量的内积a ⋅ b
+就是向量b在此坐标轴上的坐标值。这个结论非常重要，这是傅立叶分析的理论基础。
+</blockquote>
+
+<h2 id="toc_1.3">向量外积的几何意义</h2>
+<p>
+<img src="http:pic/2-4.png" />
+</p>
+
+<p>
+<img src="http:pic/2-5.png" />
+</p>
+
+<h2 id="toc_1.4">向量混合运算的几何意义</h2>
+<h3 id="toc_1.4.1">向量加法的结合律的几何解释</h3>
+<p>
+<img src="http:pic/2-6.png" />
+</p>
+
+<h3 id="toc_1.4.2">向量数乘的分配律的几何解释</h3>
+<p>
+<img src="http:pic/2-7.png" />
+</p>
+
+<h3 id="toc_1.4.3">向量点积的分配律的几何解释</h3>
+<p>
+<img src="http:pic/2-8.png" />
+</p>
+
+<h3 id="toc_1.4.4">向量叉积的分配律的几何解释</h3>
+<p>
+<img src="http:pic/2-9.png" />
+</p>
+
+<p>
+<img src="http:pic/2-10.png" />
+</p>
+
+<h3 id="toc_1.4.5">二维向量的内积、外积和张量</h3>
+<p>
+<img src="http:pic/2-11.png" />
+<img src="http:pic/2-12.png" />
+<img src="http:pic/2-13.png" />
+</p>
 
 
 <footer>

@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>矩阵与线性变换的关系</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">矩阵与线性变换的关系</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">矩阵与线性变换的关系</a>
+<ul>
+<li><a href="#toc_1.1">矩阵与线性变换的关系</a>
+<ul>
+<li><a href="#toc_1.1.1">示例一：旋转变换</a>
+<li><a href="#toc_1.1.2">示例二：镜像变换</a>
+</ul>
+<li><a href="#toc_1.2">基本初等矩阵/初等变换的几何意义</a>
+<ul>
+<li><a href="#toc_1.2.1">基本初等矩阵(1)的几何意义</a>
+<li><a href="#toc_1.2.2">基本初等矩阵(2)的几何意义</a>
+<li><a href="#toc_1.2.3">基本初等矩阵(3)的几何意义</a>
+</ul>
+<li><a href="#toc_1.3">矩阵及其对应线性变换的几何图形</a>
+<li><a href="#toc_1.4">矩阵的乘法运算律的几何意义</a>
+<ul>
+<li><a href="#toc_1.4.1">两个矩阵相乘是两个线性变换的复合</a>
+<li><a href="#toc_1.4.2">矩阵的乘法不满足交换律</a>
+<li><a href="#toc_1.4.3">矩阵的乘法不满足消去律</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">矩阵与线性变换的关系</h2>
+
+<p>
+<img src="http:pic/8-1.png" />
+<img src="http:pic/8-2.png" />
+<img src="http:pic/8-3.png" />
+</p>
+<blockquote>
+上述定理阐述的是线性变换T，是相对于基做的变换。
+</blockquote>
+
+<h3 id="toc_1.1.1">示例一：旋转变换</h3>
+
+<p>
+<img src="http:pic/8-4.png" />
+<img src="http:pic/8-4-1.png" />
+<img src="http:pic/8-5.png" />
+</p>
+
+<h3 id="toc_1.1.2">示例二：镜像变换</h3>
+
+<p>
+<img src="http:pic/8-6.png" />
+<img src="http:pic/8-7.png" />
+</p>
+
+<p>
+<img src="http:pic/8-8.png" />
+</p>
+
+<h2 id="toc_1.2">基本初等矩阵/初等变换的几何意义</h2>
+<ul>
+<li>
+基本初等变换包括三种：
+
+<ul>
+<li>
+(1) 交换某两行的位置;
+
+<li>
+(2) 把某一行乘以一个非零数k ( k ∈ R );
+
+<li>
+(3) 把某一行的k ( k ∈ R )倍加到另一行上。
+
+</ul>
+</ul>
+
+<p>
+<img src="http:pic/8-9-0.png" />
+<img src="http:pic/8-9.png" />
+</p>
+
+<h3 id="toc_1.2.1">基本初等矩阵(1)的几何意义</h3>
+<p>
+<img src="http:pic/8-10.png" />
+<img src="http:pic/8-10-1.png" />
+</p>
+
+<h3 id="toc_1.2.2">基本初等矩阵(2)的几何意义</h3>
+<p>
+<img src="http:pic/8-11.png" />
+<img src="http:pic/8-11-1.png" />
+</p>
+
+<h3 id="toc_1.2.3">基本初等矩阵(3)的几何意义</h3>
+
+<p>
+<img src="http:pic/8-12.png" />
+<img src="http:pic/8-12-1.png" />
+</p>
+
+<ul>
+<li>
+根据上面提到的T(e1)，T(e2)定理推算如下：
+
+</ul>
+<p>
+<img src="http:pic/8-12-2.png" />
+</p>
+
+<p>
+<img src="http:pic/8-12-3.png" />
+<img src="http:pic/8-12-4.png" />
+</p>
+
+<h2 id="toc_1.3">矩阵及其对应线性变换的几何图形</h2>
+<p>
+<img src="http:pic/8-13.png" />
+<img src="http:pic/8-13-1.png" />
+<img src="http:pic/8-13-2.png" />
+<img src="http:pic/8-13-3.png" />
+<img src="http:pic/8-13-4.png" />
+<img src="http:pic/8-13-5.png" />
+<img src="http:pic/8-13-6.png" />
+</p>
+
+<h2 id="toc_1.4">矩阵的乘法运算律的几何意义</h2>
+<h3 id="toc_1.4.1">两个矩阵相乘是两个线性变换的复合</h3>
+<p>
+<img src="http:pic/8-14.png" />
+<img src="http:pic/8-14-1.png" />
+</p>
+
+<h3 id="toc_1.4.2">矩阵的乘法不满足交换律</h3>
+<p>
+<img src="http:pic/8-14-2.png" />
+<img src="http:pic/8-14-3.png" />
+</p>
+
+<h3 id="toc_1.4.3">矩阵的乘法不满足消去律</h3>
+<p>
+<img src="http:pic/8-14-4.png" />
+<img src="http:pic/8-14-5.png" />
+</p>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

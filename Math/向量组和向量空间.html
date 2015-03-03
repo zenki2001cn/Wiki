@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>向量组和向量空间</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">向量组和向量空间</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">向量组和向量空间</a>
+<ul>
+<li><a href="#toc_1.1">向量的线性表示和组合的几何意义</a>
+<li><a href="#toc_1.2">向量的线性相关和线性无关的几何意义</a>
+<li><a href="#toc_1.3">向量组的秩及极大无关向量组</a>
+<li><a href="#toc_1.4">向量空间的几何意义</a>
+<ul>
+<li><a href="#toc_1.4.1">子空间的几何意义</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">向量的线性表示和组合的几何意义</h2>
+<p>
+<img src="http:pic/5-1.png" />
+<img src="http:pic/5-2.png" />
+<img src="http:pic/5-3.png" />
+</p>
+
+<h2 id="toc_1.2">向量的线性相关和线性无关的几何意义</h2>
+<p>
+<img src="http:pic/5-4.jpg" />
+</p>
+
+<h2 id="toc_1.3">向量组的秩及极大无关向量组</h2>
+<blockquote>
+从几何意义上讲,在一个向量组里,如果有多个向量在一条直线上,哪么这些向量只要一个向量就可以了,
+其他的同直线的向量可以被代表了。这个向量代表可以是任意一个非零向量;进而,如果向量组里还有多
+个向量构成且存在于一个平面上,那么只要有两个非零非共线的向量就可以代表其他的共面向量了;继续,
+如果向量组里还有多个向量构成且存在于一个立体空间里,那么只要有三个非零非共线非共面的向量就可
+以代表其它的同立体向量了...。
+</blockquote>
+ 
+<p>
+<img src="http:pic/5-5.png" />
+</p>
+
+<ul>
+<li>
+使用向量空间的概念,我们可以有一个更全面的关于线性相关的几何意义的结论:
+
+<ul>
+<li>
+一个向量空间中,一个向量组线性相关的话,那么这个向量组中全部向量会属于一个子向量空间中,且子空间的维数要小于向量组元素的个数;
+
+<li>
+一个向量空间中,一个向量组线性无关的话,那么这个向量组中全部向量会属于一个子向量空间中,且子空间的维数要大于或等于向量组元素的个数;
+
+</ul>
+</ul>
+<blockquote>
+上面两句话意思就是说,一个向量组应该可以张成一个和向量组元素个数相同的子空间,一个
+向量张成一维的子空间,两个向量应张成二维的字空间...;如果一个向量组n个元素,张成一个
+小于n的子空间,那么这个向量组就线性相关;如果总是张成一个n维的子空间,那么这个向量组
+就线性无关。
+</blockquote>
+
+<ul>
+<li>
+线性相关或无关的向量组的秩就是可以张成的最大子空间的维数;
+
+<li>
+两个向量组等价,就是两个向量组张成的向量子空间相同或重合;
+
+</ul>
+
+<h2 id="toc_1.4">向量空间的几何意义</h2>
+<ul>
+<li>
+设一个向量组 {α1 , α 2 ...α n } ,这个向量组的所有的线性组合生成一个向量集合:
+
+</ul>
+<p>
+<img src="http:pic/5-6.png" />
+</p>
+
+<p>
+<img src="http:pic/5-7.png" />
+</p>
+ 
+<h3 id="toc_1.4.1">子空间的几何意义</h3>
+<p>
+<img src="http:pic/5-8.png" />
+</p>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

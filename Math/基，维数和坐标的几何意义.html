@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>基，维数和坐标的几何意义</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">基，维数和坐标的几何意义</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">基，维数和坐标的几何意义</a>
+<ul>
+<li><a href="#toc_1.1">基的几何意义</a>
+<ul>
+<li><a href="#toc_1.1.1">一维基及其坐标</a>
+<li><a href="#toc_1.1.2">二维基及其坐标</a>
+<li><a href="#toc_1.1.3">三维基及其坐标</a>
+</ul>
+<li><a href="#toc_1.2">空间坐标系</a>
+<li><a href="#toc_1.3">基变换的几何意义</a>
+<li><a href="#toc_1.4">标准正交基的几何解释</a>
+<ul>
+<li><a href="#toc_1.4.1">一维空间的标准正交基</a>
+<li><a href="#toc_1.4.2">二维空间的标准正交基</a>
+<li><a href="#toc_1.4.3">三维空间的标准正交基</a>
+</ul>
+<li><a href="#toc_1.5">施密特正交化的几何解释</a>
+<ul>
+<li><a href="#toc_1.5.1">一维向量空间的规范正交基求法的意义</a>
+<li><a href="#toc_1.5.2">二维向量空间的规范正交基求法的几何意义</a>
+<li><a href="#toc_1.5.3">三维向量空间的规范正交基求法的几何意义</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">基的几何意义</h2>
+<p>
+<img src="http:pic/6-1.png" />
+</p>
+
+<h3 id="toc_1.1.1">一维基及其坐标</h3>
+<p>
+<img src="http:pic/6-2.png" />
+</p>
+
+<h3 id="toc_1.1.2">二维基及其坐标</h3>
+<p>
+<img src="http:pic/6-3.png" />
+</p>
+
+<h3 id="toc_1.1.3">三维基及其坐标</h3>
+<p>
+<img src="http:pic/6-4.png" />
+<img src="http:pic/6-5.png" />
+</p>
+
+<h2 id="toc_1.2">空间坐标系</h2>
+<p>
+<img src="http:pic/6-6.png" />
+</p>
+
+<h2 id="toc_1.3">基变换的几何意义</h2>
+
+<p>
+<img src="http:pic/6-7.png" />
+</p>
+
+<p>
+<img src="http:pic/6-8.png" />
+</p>
+
+<p>
+<img src="http:pic/6-9.png" />
+</p>
+
+<p>
+<img src="http:pic/6-10.png" />
+</p>
+
+<ul>
+<li>
+以上得到的矩阵 P 和 P' 给出了第一个问题的答案,就是线性空间的两个基之间是可以互相转换或变换的,变换的矩阵称为过渡矩阵。
+
+</ul>
+
+<p>
+<img src="http:pic/6-11.png" />
+<img src="http:pic/6-12.png" />
+<img src="http:pic/6-13.png" />
+</p>
+
+<h2 id="toc_1.4">标准正交基的几何解释</h2>
+<h3 id="toc_1.4.1">一维空间的标准正交基</h3>
+<p>
+<img src="http:pic/6-14.png" />
+</p>
+
+<h3 id="toc_1.4.2">二维空间的标准正交基</h3>
+<p>
+<img src="http:pic/6-15.png" />
+</p>
+
+<h3 id="toc_1.4.3">三维空间的标准正交基</h3>
+<p>
+<img src="http:pic/6-16.png" />
+</p>
+
+<h2 id="toc_1.5">施密特正交化的几何解释</h2>
+<p>
+<img src="http:pic/6-17-0.png" />
+<img src="http:pic/6-17.png" />
+</p>
+
+<h3 id="toc_1.5.1">一维向量空间的规范正交基求法的意义</h3>
+<p>
+<img src="http:pic/6-18-0.png" />
+<img src="http:pic/6-18.png" />
+</p>
+
+<h3 id="toc_1.5.2">二维向量空间的规范正交基求法的几何意义</h3>
+<p>
+<img src="http:pic/6-19.png" />
+<img src="http:pic/6-20.png" />
+</p>
+
+<h3 id="toc_1.5.3">三维向量空间的规范正交基求法的几何意义</h3>
+<p>
+<img src="http:pic/6-21.png" />
+<img src="http:pic/6-22.png" />
+</p>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
