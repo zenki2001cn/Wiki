@@ -92,6 +92,11 @@
 <ul>
 <li><a href="#toc_1.14.1">__<em>dict</em>__</a>
 </ul>
+<li><a href="#toc_1.15">属性</a>
+<ul>
+<li><a href="#toc_1.15.1">只读属性@pproperty</a>
+<li><a href="#toc_1.15.2">可写属性property</a>
+</ul>
 </ul>
 </ul>
 </div>
@@ -164,22 +169,16 @@ class MP3FileInfo(FileInfo):
 
 <ul>
 <li>
-私有函数不可以从它们的模块外面被调用
+私有函数<code>可以</code>被子类重载和<code>覆盖</code>，使用<code>前后双下划线</code>，如<code>__name__</code>和<code>__my_name__</code>。
 
 <li>
-私有类方法不能够从它们的类外面被调用
+私有类方法<code>不能</code>够被子类<code>覆盖</code>，使用<code>前双下划线__</code>作为前缀，如<code>__my_name()</code>、<code>__say_hello</code>。
 
 <li>
-私有属性不能够从它们的类外面被访问
+私有成员或方法<code>不能</code>够从它们的类外面<code>被访问</code>，使用<code>单下划线_</code>作为前缀，如<code>_name</code>、<code>_hello()</code>。
 
 </ul>
 </ul>
-
-<pre class="brush:text">
-    如果一个Python函数，类方法，或属性的名字以两个下划线开始(但不是结束)，它是私有的；其它所有的都是公有的。
-Python没有类方法保护的概念(只能用于它们自已的类和子类中)。类方法或者是私有(只能在它们自已的类中使用)或者是
-公有(任何地方都可使用)。
-</pre>
 
 <h2 id="toc_1.5">类的继承</h2>
 <pre class="brush:python">
@@ -190,10 +189,10 @@ class FileInfo(UserDict):
 <h2 id="toc_1.6">类的初始化</h2>
 <ul>
 <li>
-_init_方法是可选的，但是如果定义了该方法，就必须调用基类的_init_。
+_init_方法是可选的，但是如果定义了该方法，就必须调用基类的_<em>init</em>_。
 
 <li>
-类成员方法的第一个参数必须为self，包括_init_方法。
+类成员方法的第一个参数必须为self，包括_<em>init</em>_方法。
 <pre class="brush:python">
 class FileInfo(UserDict):
     "store file metadata"
@@ -342,6 +341,41 @@ def __len__(self):
 
 <li>
 可通过遍历该变量，访问该类对象的成员和方法。
+
+</ul>
+
+<h2 id="toc_1.15">属性</h2>
+<h3 id="toc_1.15.1">只读属性@pproperty</h3>
+<ul>
+<li>
+通过修饰符设置类成员为只读，且使函数直接返回值。
+<pre class="brush:python">
+class A(object):
+    @property
+    def say_hello(self):
+        print "hello"
+</pre>
+
+</ul>
+
+<h3 id="toc_1.15.2">可写属性property</h3>
+<ul>
+<li>
+类的函数作为一种属性被访问
+<pre class="brush:python">
+class A(object):
+    def __init__(self):
+        self._msg = None
+
+    def get_msg(self):
+        return self._msg
+        
+    def set_msg(self, msg):
+        self._msg = msg
+
+    # 内置函数property
+    hello = property(set_msg, get_msg)
+</pre>
 
 </ul>
 

@@ -69,7 +69,8 @@
 <li><a href="#toc_1.12">map（列表数据的批量处理）</a>
 <li><a href="#toc_1.13">filter（列表数据过滤处理）</a>
 <li><a href="#toc_1.14">reduce（列表数据递减处理）</a>
-<li><a href="#toc_1.15">print（打印输出）</a>
+<li><a href="#toc_1.15">print（格式化打印输出）</a>
+<li><a href="#toc_1.16">zip（数据扁平处理）</a>
 </ul>
 </ul>
 </div>
@@ -399,15 +400,65 @@ enumerate为一个list对象排序，返回每个成员对应的序号。
 20
 </pre>
 
-<h2 id="toc_1.15">print（打印输出）</h2>
+<h2 id="toc_1.15">print（格式化打印输出）</h2>
 
 <pre class="brush:python">
 # 向标准输出打印
 &gt;&gt;&gt; print "%s %s" % ("hello", "world")
 hello world
+
 # 向错误输出打印
 &gt;&gt;&gt; print &gt;&gt;sys.stderr, "%s %s" % ("hello", "world")
 hello world
+
+# 格式化
+print("%+10x" % 10)     # +a
+print("%04d" % 5)       # 0005
+print("%6.3f" % 2.3)    # 2.300
+
+# 动态格式化参数，*号由4代替
+print("%.*f" % (4, 1.2))    # 1.2000
+</pre>
+
+<h2 id="toc_1.16">zip（数据扁平处理）</h2>
+<pre class="brush:python">
+# 打包和解包列表
+&gt;&gt;&gt; a = [1, 2, 3]
+&gt;&gt;&gt; b = ['a', 'b', 'c']
+&gt;&gt;&gt; z = zip(a, b)
+&gt;&gt;&gt; z
+[(1, 'a'), (2, 'b'), (3, 'c')]
+&gt;&gt;&gt; zip(*z)
+[(1, 2, 3), ('a', 'b', 'c')]
+
+# 合并相邻列表项，每2个合并一组
+&gt;&gt;&gt; a = [1, 2, 3, 4, 5, 6]
+&gt;&gt;&gt; zip(*([iter(a)] * 2))
+[(1, 2), (3, 4), (5, 6)]
+
+# 生成滑动窗口
+&gt;&gt;&gt; from itertools import islice
+&gt;&gt;&gt; def n_grams(a, n):
+...     z = (islice(a, i, None) for i in range(n))
+...     return zip(*z)
+...
+&gt;&gt;&gt; a = [1, 2, 3, 4, 5, 6]
+&gt;&gt;&gt; n_grams(a, 2)
+[(1, 2), (2, 3), (3, 4), (4, 5), (5, 6)]
+&gt;&gt;&gt; n_grams(a, 3)
+[(1, 2, 3), (2, 3, 4), (3, 4, 5), (4, 5, 6)]
+&gt;&gt;&gt; n_grams(a, 4)
+[(1, 2, 3, 4), (2, 3, 4, 5), (3, 4, 5, 6)]
+
+# 反转字典
+&gt;&gt;&gt; m = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+&gt;&gt;&gt; m.items()
+[('a', 1), ('c', 3), ('b', 2), ('d', 4)]
+&gt;&gt;&gt; zip(m.values(), m.keys())
+[(1, 'a'), (3, 'c'), (2, 'b'), (4, 'd')]
+&gt;&gt;&gt; mi = dict(zip(m.values(), m.keys()))
+&gt;&gt;&gt; mi
+{1: 'a', 2: 'b', 3: 'c', 4: 'd'}
 </pre>
 
 
