@@ -361,6 +361,21 @@ Dictionary类似于Perl中的hash，称为字典。格式为<code>{key:value...}
 &gt;&gt;&gt; m = collections.OrderedDict((str(x), x) for x in range(10, 0, -1))
 &gt;&gt;&gt; print ', '.join(m.keys())
 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+
+# regular unsorted dictionary
+&gt;&gt;&gt; d = {'banana': 3, 'apple':4, 'pear': 1, 'orange': 2}
+
+# 按key排序
+&gt;&gt;&gt; OrderedDict(sorted(d.items(), key=lambda t: t[0]))
+OrderedDict([('apple', 4), ('banana', 3), ('orange', 2), ('pear', 1)])
+
+# 按值排序
+&gt;&gt;&gt; OrderedDict(sorted(d.items(), key=lambda t: t[1]))
+OrderedDict([('pear', 1), ('orange', 2), ('banana', 3), ('apple', 4)])
+
+# 按key长度排序
+&gt;&gt;&gt; OrderedDict(sorted(d.items(), key=lambda t: len(t[0])))
+OrderedDict([('pear', 1), ('apple', 4), ('orange', 2), ('banana', 3)])
 </pre>
 
 <h3 id="toc_1.3.7">缺省字典</h3>

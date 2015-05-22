@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>gobject生成多语言绑定</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">gobject生成多语言绑定</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">gobject生成多语言绑定</a>
+<ul>
+<li><a href="#toc_1.1">1. 安装gobject introspection</a>
+<li><a href="#toc_1.2">2. C代码绑定</a>
+<li><a href="#toc_1.3">3. 编译动态链接库</a>
+<li><a href="#toc_1.4">4. 生成gir</a>
+<li><a href="#toc_1.5">5. 生成typelib</a>
+<li><a href="#toc_1.6">6. 安装gir</a>
+<li><a href="#toc_1.7">7. 测试</a>
+<li><a href="#toc_1.8">8.测试脚本</a>
+<li><a href="#toc_1.9">9.示例</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">1. 安装gobject introspection</h2>
+<pre class="brush:bash">
+$ sudo apt-get install libgirepository1.0-dev
+</pre>
+
+<h2 id="toc_1.2">2. C代码绑定</h2>
+<pre class="brush:c">
+#ifndef FOO_H  
+#define FOO_H  
+  
+void foo_hello (void);  
+
+/** 
+ * foo_hello: 
+ * 
+ * This function just for test. 
+ */  
+void  
+foo_hello (void)  
+{  
+    printf("hello foo!\n");  
+}
+#endif
+</pre>
+
+<h2 id="toc_1.3">3. 编译动态链接库</h2>
+<pre class="brush:bash">
+$ gcc -fPIC -shared foo.c -o libfoo.so.0
+</pre>
+
+<h2 id="toc_1.4">4. 生成gir</h2>
+<pre class="brush:bash">
+# 以Aravis库为例
+$ g-ir-scanner --add-include-path=. -n Aravis --pkg=glib-2.0  --nsversion=0.4 --library=libaravis-0.4.la *.[ch] -o Aravis.gir
+</pre>
+
+<h2 id="toc_1.5">5. 生成typelib</h2>
+<pre class="brush:bash">
+$ g-ir-compiler --includedir=. Aravis.gir -o Aravis.typelib
+</pre>
+
+<h2 id="toc_1.6">6. 安装gir</h2>
+<pre class="brush:bash">
+$ sudo cp Foo-1.0.gir /usr/share/gir-1.0/  
+$ sudo cp Foo-1.0.typelib /usr/lib/girepository-1.0/
+
+# 添加库路径到/etc/ld.so.conf
+$ sudo ldconfig
+</pre>
+
+<h2 id="toc_1.7">7. 测试</h2>
+<pre class="brush:python">
+from gi.repository import Foo  
+Foo.hello()
+</pre>
+
+<h2 id="toc_1.8">8.测试脚本</h2>
+<pre class="brush:bash">
+#!/usr/bin/env bash
+
+g-ir-scanner --add-include-path=. --pkg=glib-2.0 --nsversion=0.4 --library=libaravis-0.4.la *.[ch] -o ArvCamera-0.4.gir \
+             -n ArvCamera
+
+g-ir-compiler --includedir=. -o ArvCamera-0.4.typelib ArvCamera-0.4.gir
+
+if [[ $? == 0 ]]; then
+    echo "ok"
+    sudo cp ArvCamera-0.4.gir /usr/share/gir-1.0/
+    sudo cp ArvCamera-0.4.typelib /usr/lib/girepository-1.0/
+
+    sudo ldconfig
+fi
+</pre>
+
+<h2 id="toc_1.9">9.示例</h2>
+<p>
+<a href="http://garfileo.is-programmer.com/2012/2/20/gobject-introspection-introduction.32200.html">http://garfileo.is-programmer.com/2012/2/20/gobject-introspection-introduction.32200.html</a>
+</p>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Linux系统编程</title>
+    <title>单例模式和接口</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,82 +49,74 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">Linux系统编程</h1>
+<h1 id="toc_1">单例模式和接口</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Linux系统编程</a>
+<li><a href="#toc_1">单例模式和接口</a>
 <ul>
-<li><a href="#toc_1.1">工具篇</a>
-<li><a href="#toc_1.2">系统篇</a>
-<li><a href="#toc_1.3">内核篇</a>
-<li><a href="#toc_1.4">杂谈</a>
+<li><a href="#toc_1.1">单例模式</a>
+<li><a href="#toc_1.2">接口定义</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_1.1">工具篇</h2>
+<h2 id="toc_1.1">单例模式</h2>
 <ul>
 <li>
-<a href="GNU Makefile规范.html">GNU Makefile规范</a>
-
-<li>
-<a href="Shell编程.html">Shell编程</a>
-
-<li>
-<a href="../Java/使用Ant编译Java.html">Ant脚本语法</a>
+定义一个基类Singleton，需要使用单例模式的类可继承自该类。
+<pre class="brush:python">
+class Singleton(object):
+    '''
+    单例模式基类
+    '''
+    def __new__(cls, *args, **kwargs):
+        ''' Create a new instance
+        '''
+        if '_inst' not in vars(cls):
+            cls._inst = object.__new__(cls)
+        return cls._inst
+        
+class ModbusAccessControl(Singleton):
+    '''
+    实现类
+    '''
+    pass
+</pre>
 
 </ul>
 
-<hr />
-
-<h2 id="toc_1.2">系统篇</h2>
+<h2 id="toc_1.2">接口定义</h2>
 <ul>
 <li>
-<a href="ioctl操作.html">ioctl操作</a>
+先定义一个异常类<code>NotImplementedException</code>，该类继承自Exception。
 
 <li>
-<a href="mmap使用详解.html">mmap使用详解</a>
+定义一个接口类，每一个方法直接返回<code>NotImplementedException</code>。
 
 <li>
-<a href="condition同步.html">condition同步</a>
+定义一个实现类，继承自接口类<code>IPayloadBuilder</code>。
+<pre class="brush:python">
+class NotImplementedException(ModbusException):
+    def __init__(self, string=""):
+        message = "[Not Implemented] %s" % string
+        ModbusException.__init__(self, message)
 
-<li>
-<a href="信号机制.html">信号机制</a>
+class IPayloadBuilder(object):
+    '''
+    接口只定义方法，直接返回一个未实现的异常。
+    '''
+    def build(self):
+        raise NotImplementedException("build")
+        
+class PayloadBuilderImpl(IPayloadBuilder):
+    '''
+    接口只定义方法，直接返回一个未实现的异常。
+    '''
+    def build(self):
+        print 'OK'
 
-<li>
-<a href="信号机制二.html">信号机制二</a>
-
-<li>
-<a href="IO多路复用.html">IO多路复用</a>
-
-<li>
-<a href="大端和小端模式.html">大端和小端模式</a>
-
-<li>
-<a href="gobject生成多语言绑定.html">gobject生成多语言绑定</a>
-
-</ul>
-
-<hr />
-
-<h2 id="toc_1.3">内核篇</h2>
-<ul>
-<li>
-<a href="Linux IO Stack.html">Linux IO Stack</a>
-
-<li>
-<a href="../Driver/Linux驱动笔记.html">Linux内核与驱动</a>
-
-<li>
-<a href="sys文件系统.html">sys文件系统</a>
-
-</ul>
-
-<h2 id="toc_1.4">杂谈</h2>
-<ul>
-<li>
-<a href="../Android/GPL历史.html">GPL历史</a>
+</pre>
 
 </ul>
 
