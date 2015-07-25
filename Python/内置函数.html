@@ -71,7 +71,8 @@
 <li><a href="#toc_1.14">reduce（列表数据递减处理）</a>
 <li><a href="#toc_1.15">print（格式化打印输出）</a>
 <li><a href="#toc_1.16">zip（数据扁平处理）</a>
-<li><a href="#toc_1.17">repr</a>
+<li><a href="#toc_1.17">repr（返回对象的字符串表示）</a>
+<li><a href="#toc_1.18">with as（优雅的异常处理机制）</a>
 </ul>
 </ul>
 </div>
@@ -462,7 +463,7 @@ print("%.*f" % (4, 1.2))    # 1.2000
 {1: 'a', 2: 'b', 3: 'c', 4: 'd'}
 </pre>
 
-<h2 id="toc_1.17">repr</h2>
+<h2 id="toc_1.17">repr（返回对象的字符串表示）</h2>
 <ul>
 <li>
 返回对象的字符串表示。
@@ -477,6 +478,25 @@ print("%.*f" % (4, 1.2))    # 1.2000
 </pre>
 
 </ul>
+
+<h2 id="toc_1.18">with as（优雅的异常处理机制）</h2>
+<pre class="brush:python">
+class Sample:
+    # 定义_enter_方法用于初始化
+    def __enter__(self):
+        print "In __enter__()"
+        return "Foo"
+ 
+    # 定义_exit_方法用于释放资源
+    def __exit__(self, type, value, trace):
+        print "In __exit__()"
+ 
+def get_sample():
+    return Sample()
+ 
+with get_sample() as sample:
+    print "sample:", sample
+</pre>
 
 
 <footer>
