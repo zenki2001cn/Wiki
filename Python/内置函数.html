@@ -73,6 +73,7 @@
 <li><a href="#toc_1.16">zip（数据扁平处理）</a>
 <li><a href="#toc_1.17">repr（返回对象的字符串表示）</a>
 <li><a href="#toc_1.18">with as（优雅的异常处理机制）</a>
+<li><a href="#toc_1.19">property（将函数变成可访问的属性）</a>
 </ul>
 </ul>
 </div>
@@ -497,6 +498,42 @@ def get_sample():
 with get_sample() as sample:
     print "sample:", sample
 </pre>
+
+<h2 id="toc_1.19">property（将函数变成可访问的属性）</h2>
+<ul>
+<li>
+birth是可读写属性，而age就是一个只读属性，因为age可以根据birth和当前时间计算出来。
+<pre class="brush:python">
+# 实现方式一
+class Student(object):
+    @property
+    def birth(self):
+        return self._birth
+
+    @birth.setter
+    def birth(self, value):
+        self._birth = value
+
+    @property
+    def age(self):
+        return 2014 - self._birth
+        
+# 实现方式二
+class Student(object):
+    @property
+    def birth(self):
+        return self._birth
+
+    def set_birth(self, value):
+        self._birth = value
+        
+    def get_birth(self):
+        return self._birth
+
+    self._birth = property(get_birth, set_birth)
+</pre>
+
+</ul>
 
 
 <footer>
