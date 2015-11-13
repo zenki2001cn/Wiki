@@ -62,40 +62,47 @@
 <li><a href="#toc_1.5">类的继承</a>
 <li><a href="#toc_1.6">类的初始化</a>
 <li><a href="#toc_1.7">类的实例化</a>
-<li><a href="#toc_1.8">获取和设置成员数据</a>
+<li><a href="#toc_1.8">静态方法、类方法和抽象方法</a>
 <ul>
-<li><a href="#toc_1.8.1">__<em>getitem</em>__</a>
-<li><a href="#toc_1.8.2">__<em>setitem</em>__</a>
-<li><a href="#toc_1.8.3">__<em>delitem</em>__</a>
+<li><a href="#toc_1.8.1">静态方法</a>
+<li><a href="#toc_1.8.2">类方法</a>
+<li><a href="#toc_1.8.3">抽象方法</a>
 </ul>
-<li><a href="#toc_1.9">反向引用</a>
+<li><a href="#toc_1.9">获取和设置成员数据</a>
 <ul>
-<li><a href="#toc_1.9.1">__<em>repr</em>__</a>
+<li><a href="#toc_1.9.1">__<em>getitem</em>__</a>
+<li><a href="#toc_1.9.2">__<em>setitem</em>__</a>
+<li><a href="#toc_1.9.3">__<em>delitem</em>__</a>
 </ul>
-<li><a href="#toc_1.10">返回字符串</a>
+<li><a href="#toc_1.10">反向引用</a>
 <ul>
-<li><a href="#toc_1.10.1">__<em>str</em>__</a>
+<li><a href="#toc_1.10.1">__<em>repr</em>__</a>
 </ul>
-<li><a href="#toc_1.11">对象比较</a>
+<li><a href="#toc_1.11">返回字符串</a>
 <ul>
-<li><a href="#toc_1.11.1">__<em>cmp</em>__</a>
+<li><a href="#toc_1.11.1">__<em>str</em>__</a>
 </ul>
-<li><a href="#toc_1.12">返回对象长度</a>
+<li><a href="#toc_1.12">对象比较</a>
 <ul>
-<li><a href="#toc_1.12.1">__<em>len</em>__</a>
+<li><a href="#toc_1.12.1">__<em>cmp</em>__</a>
 </ul>
-<li><a href="#toc_1.13">模块名称</a>
+<li><a href="#toc_1.13">返回对象长度</a>
 <ul>
-<li><a href="#toc_1.13.1">__<em>module</em>__</a>
+<li><a href="#toc_1.13.1">__<em>len</em>__</a>
 </ul>
-<li><a href="#toc_1.14">对象属性</a>
+<li><a href="#toc_1.14">模块名称</a>
 <ul>
-<li><a href="#toc_1.14.1">__<em>dict</em>__</a>
+<li><a href="#toc_1.14.1">__<em>module</em>__</a>
 </ul>
-<li><a href="#toc_1.15">属性</a>
+<li><a href="#toc_1.15">对象属性</a>
 <ul>
-<li><a href="#toc_1.15.1">只读属性@pproperty</a>
-<li><a href="#toc_1.15.2">可写属性property</a>
+<li><a href="#toc_1.15.1">__<em>dict</em>__</a>
+</ul>
+<li><a href="#toc_1.16">属性</a>
+<ul>
+<li><a href="#toc_1.16.1">只读属性@pproperty</a>
+<li><a href="#toc_1.16.2">可写属性property</a>
+<li><a href="#toc_1.16.3">导出单个文件的对象</a>
 </ul>
 </ul>
 </ul>
@@ -175,7 +182,7 @@ class MP3FileInfo(FileInfo):
 私有类方法<code>不能</code>够被子类<code>覆盖</code>，使用<code>前双下划线__</code>作为前缀，如<code>__my_name()</code>、<code>__say_hello</code>。
 
 <li>
-私有成员或方法<code>不能</code>够从它们的类外面<code>被访问</code>，使用<code>单下划线_</code>作为前缀，如<code>_name</code>、<code>_hello()</code>。
+私有成员或方法<code>不能</code>够从它们的类外面<code>被访问</code>，使用<code>单下划线_</code>作为前缀，如<code>_name</code>、<code>_hello()</code>。注意，该方法不是Python语法强制规定，而是约定俗成。
 
 </ul>
 </ul>
@@ -219,8 +226,61 @@ class FileInfo(UserDict):
 {'name': '/music/_singles/kairo.mp3'}
 </pre>
 
-<h2 id="toc_1.8">获取和设置成员数据</h2>
-<h3 id="toc_1.8.1">__<em>getitem</em>__</h3>
+<h2 id="toc_1.8">静态方法、类方法和抽象方法</h2>
+<h3 id="toc_1.8.1">静态方法</h3>
+<ul>
+<li>
+静态方法不依赖对象本身的状态，同时也可以被实例对象调用。
+
+<li>
+可以在子类中被覆盖。
+<pre class="brush:python">
+class Pizza(object):
+    @staticmethod
+    def mix_ingredients(x, y):
+        return x + y
+
+    def cook(self):
+        return self.mix_ingredients(self.cheese, self.vegetables)
+</pre>
+
+</ul>
+
+<h3 id="toc_1.8.2">类方法</h3>
+<ul>
+<li>
+类方法被绑定到类上，与实例对象无关。
+<pre class="brush:python">
+class Pizza(object):
+    radius = 42
+
+    @classmethod
+    def get_radius(cls):
+        return cls.radius
+</pre>
+
+</ul>
+
+<h3 id="toc_1.8.3">抽象方法</h3>
+<pre class="brush:python">
+# 方式一：
+class Pizza(object):
+    def get_radius(self):
+        raise NotImplementedError
+
+# 方式二：
+import abc
+
+class Pizza(object):
+    __metaclass__ = abc.ABCMeta
+    
+    @abc.abstractmethod
+    def get_radius(self):
+    """do something"""
+</pre>
+
+<h2 id="toc_1.9">获取和设置成员数据</h2>
+<h3 id="toc_1.9.1">__<em>getitem</em>__</h3>
 <pre class="brush:python">
 """
 def __getitem__(self, key): return self.data[key]
@@ -236,7 +296,7 @@ def __getitem__(self, key): return self.data[key]
 '/music/_singles/kairo.mp3'
 </pre>
 
-<h3 id="toc_1.8.2">__<em>setitem</em>__</h3>
+<h3 id="toc_1.9.2">__<em>setitem</em>__</h3>
 <pre class="brush:python">
 """
 def __setitem__(self, key, item): self.data[key] = item
@@ -252,7 +312,7 @@ def __setitem__(self, key, item): self.data[key] = item
 {'name':'/music/_singles/kairo.mp3', 'genre':32}
 </pre>
 
-<h3 id="toc_1.8.3">__<em>delitem</em>__</h3>
+<h3 id="toc_1.9.3">__<em>delitem</em>__</h3>
 <ul>
 <li>
 当你在类实例中使用del时，Python替你调用_<em>delitem</em>_专用方法。
@@ -263,8 +323,8 @@ def __delitem__(self, key):
 
 </ul>
 
-<h2 id="toc_1.9">反向引用</h2>
-<h3 id="toc_1.9.1">__<em>repr</em>__</h3>
+<h2 id="toc_1.10">反向引用</h2>
+<h3 id="toc_1.10.1">__<em>repr</em>__</h3>
 <ul>
 <li>
 _<em>repr</em>_ 是一个专用的方法，在当调用repr(instance)时被调用。repr函数是一个内置函数，它返回一个对象的字符串表示。它可以用在任何对象上，不仅仅是类的实例。
@@ -275,8 +335,8 @@ def __repr__(self):
 
 </ul>
 
-<h2 id="toc_1.10">返回字符串</h2>
-<h3 id="toc_1.10.1">__<em>str</em>__</h3>
+<h2 id="toc_1.11">返回字符串</h2>
+<h3 id="toc_1.11.1">__<em>str</em>__</h3>
 <ul>
 <li>
 当str方法调用时，以一个字符串形式表示该对象。
@@ -287,8 +347,8 @@ def __str__(self):
 
 </ul>
 
-<h2 id="toc_1.11">对象比较</h2>
-<h3 id="toc_1.11.1">__<em>cmp</em>__</h3>
+<h2 id="toc_1.12">对象比较</h2>
+<h3 id="toc_1.12.1">__<em>cmp</em>__</h3>
 <ul>
 <li>
 _<em>cmp</em>_ 在比较类实例时被调用。通常，你可以通过使用“==”比较任意两个Python对象，不只是类实例。
@@ -300,8 +360,8 @@ def __cmp__(self, dict):
 
 </ul>
 
-<h2 id="toc_1.12">返回对象长度</h2>
-<h3 id="toc_1.12.1">__<em>len</em>__</h3>
+<h2 id="toc_1.13">返回对象长度</h2>
+<h3 id="toc_1.13.1">__<em>len</em>__</h3>
 <ul>
 <li>
 _<em>len</em>_ 在调用len(instance)时被调用。len是一个内置函数，可以返回一个对象的长度。它可以用于任何被认为理应有长度的对象。对于类实例，定义_<em>len</em>_ 方法，接着自已编写长度的计算，然后调用len(instance)，Python将替你调用你的_<em>len</em>_专用方法。
@@ -312,8 +372,8 @@ def __len__(self):
 
 </ul>
 
-<h2 id="toc_1.13">模块名称</h2>
-<h3 id="toc_1.13.1">__<em>module</em>__</h3>
+<h2 id="toc_1.14">模块名称</h2>
+<h3 id="toc_1.14.1">__<em>module</em>__</h3>
 <ul>
 <li>
 每个Python类都拥有一个内置的类属性_<em>module</em>_，它定义了这个类的模块的名字。
@@ -333,8 +393,8 @@ def __len__(self):
 
 </ul>
 
-<h2 id="toc_1.14">对象属性</h2>
-<h3 id="toc_1.14.1">__<em>dict</em>__</h3>
+<h2 id="toc_1.15">对象属性</h2>
+<h3 id="toc_1.15.1">__<em>dict</em>__</h3>
 <ul>
 <li>
 每个类对象包含一个字典成员_<em>dict</em>_，它返回一组<code>成员名称：值</code>。
@@ -344,8 +404,8 @@ def __len__(self):
 
 </ul>
 
-<h2 id="toc_1.15">属性</h2>
-<h3 id="toc_1.15.1">只读属性@pproperty</h3>
+<h2 id="toc_1.16">属性</h2>
+<h3 id="toc_1.16.1">只读属性@pproperty</h3>
 <ul>
 <li>
 通过修饰符设置类成员为只读，且使函数直接返回值。
@@ -358,7 +418,7 @@ class A(object):
 
 </ul>
 
-<h3 id="toc_1.15.2">可写属性property</h3>
+<h3 id="toc_1.16.2">可写属性property</h3>
 <ul>
 <li>
 类的函数作为一种属性被访问
@@ -375,6 +435,27 @@ class A(object):
 
     # 内置函数property
     hello = property(set_msg, get_msg)
+</pre>
+
+</ul>
+
+<h3 id="toc_1.16.3">导出单个文件的对象</h3>
+<ul>
+<li>
+<code>__all__</code>变量导出单个文件中的对象或属性。
+<pre class="brush:python">
+class IModbusDecoder(object):
+    pass
+    
+class IModbusFramer(object):
+    pass
+    
+class IModbusFramer(object):
+    pass
+
+__all__ = [
+    'IModbusDecoder', 'IModbusFramer', 'IModbusSlaveContext',
+]
 </pre>
 
 </ul>
