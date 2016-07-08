@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>迭代工具</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">迭代工具</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">迭代工具</a>
+<ul>
+<li><a href="#toc_1.1">无限循环迭代</a>
+<ul>
+<li><a href="#toc_1.1.1">无限迭代器 - count</a>
+<li><a href="#toc_1.1.2">切片 - islice</a>
+<li><a href="#toc_1.1.3">循环迭代 - cycle</a>
+<li><a href="#toc_1.1.4">重复迭代 - repeat</a>
+</ul>
+<li><a href="#toc_1.2">有限循环迭代</a>
+<ul>
+<li><a href="#toc_1.2.1">累加迭代 - accumulate</a>
+<li><a href="#toc_1.2.2">链接 - chain</a>
+<li><a href="#toc_1.2.3">过滤 - compress</a>
+<li><a href="#toc_1.2.4">断言取余 - dropwhile</a>
+<li><a href="#toc_1.2.5">断言取余 - filterfalse</a>
+<li><a href="#toc_1.2.6">断言取值 - takewhile</a>
+<li><a href="#toc_1.2.7">分组 - groupby</a>
+<li><a href="#toc_1.2.8">函数映射 - starmap</a>
+<li><a href="#toc_1.2.9">拆解分流 - tee</a>
+<li><a href="#toc_1.2.10">配对 - zip_longest</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">无限循环迭代</h2>
+<h3 id="toc_1.1.1">无限迭代器 - count</h3>
+<ul>
+<li>
+count([n])
+
+</ul>
+
+<pre class="brush:python">
+def count(n=0):
+    # count(10) --&gt; 10 11 12 13 14 ...
+    while True:
+        yield n
+        n += 1
+</pre>
+
+<h3 id="toc_1.1.2">切片 - islice</h3>
+<ul>
+<li>
+islice(iterable[, start], stop[, step])
+
+</ul>
+
+<pre class="brush:python">
+for i in islice(count(10), 5):
+    print(i)
+</pre>
+
+<h3 id="toc_1.1.3">循环迭代 - cycle</h3>
+<ul>
+<li>
+cycle(iterable)
+
+</ul>
+
+<pre class="brush:python">
+for item in cycle('XYZ'):
+    print(item)
+</pre>
+
+<h3 id="toc_1.1.4">重复迭代 - repeat</h3>
+<ul>
+<li>
+repeat(object[, times])
+
+</ul>
+
+<pre class="brush:python">
+repeat(5, 5)
+</pre>
+
+<h2 id="toc_1.2">有限循环迭代</h2>
+<h3 id="toc_1.2.1">累加迭代 - accumulate</h3>
+<ul>
+<li>
+accumulate(iterable[, func])
+
+</ul>
+
+<pre class="brush:python">
+list(accumulate(range(10)))
+list(accumulate(range(1, 5), operator.mul))
+</pre>
+
+<h3 id="toc_1.2.2">链接 - chain</h3>
+<ul>
+<li>
+chain(*iterable)
+
+<li>
+chain.from_iterable(*iterable)
+
+</ul>
+
+<pre class="brush:python">
+target = list(chain([1, 2], [3, 4], [5, 6]))
+target = list(chain.from_iterable([[1, 2], [3, 4], [5, 6]]))
+</pre>
+
+<h3 id="toc_1.2.3">过滤 - compress</h3>
+<ul>
+<li>
+compress(iterable, bools)
+
+</ul>
+
+<pre class="brush:python">
+# 用bools选择器选择迭代对象的值。
+letters = 'ABCDEFG'
+bools = [True, False, True, True, False]
+list(compress(letters, bools))
+</pre>
+
+<h3 id="toc_1.2.4">断言取余 - dropwhile</h3>
+<ul>
+<li>
+dropwhile(func, iterable)
+
+</ul>
+
+<pre class="brush:python">
+# 直到断言为True，返回剩余的数据
+list(dropwhile(lambda x: x&lt;5, [1,4,6,4,1]))
+</pre>
+
+<h3 id="toc_1.2.5">断言取余 - filterfalse</h3>
+<ul>
+<li>
+filterfalse(func, iterable)
+
+</ul>
+
+<pre class="brush:python">
+# 直到断言为False，返回剩余的数据
+list(filterfalse(lambda x: x&lt;5, [1,4,6,4,1]))
+</pre>
+
+<h3 id="toc_1.2.6">断言取值 - takewhile</h3>
+<ul>
+<li>
+takewhile(func, iterable)
+
+</ul>
+
+<pre class="brush:python">
+# 返回断言为True的当前数据
+list(takewhile(lambda x: x&lt;5, [1,4,6,4,1]))
+</pre>
+
+<h3 id="toc_1.2.7">分组 - groupby</h3>
+<ul>
+<li>
+groupby(iterable[, key])
+
+</ul>
+
+<pre class="brush:python">
+vehicles = [('Ford', 'Taurus'), ('Dodge', 'Durango'), 
+            ('Chevrolet', 'Cobalt'), ('Ford', 'F150'),
+            ('Dodge', 'Charger'), ('Ford', 'GT')]
+ 
+sorted_vehicles = sorted(vehicles)
+ 
+for key, group in groupby(sorted_vehicles, lambda make: make[0]):
+    for make, model in group:
+        print('{model} is made by {make}'.format(model=model, make=make))
+</pre>
+
+<h3 id="toc_1.2.8">函数映射 - starmap</h3>
+<ul>
+<li>
+starmap(func, iterable)
+
+</ul>
+
+<pre class="brush:python">
+for item in starmap(operator.add, [(2,3), (4,5)]):
+</pre>
+
+<h3 id="toc_1.2.9">拆解分流 - tee</h3>
+<ul>
+<li>
+tee(iterable, count)
+
+</ul>
+
+<pre class="brush:python">
+data = 'ABCDE'
+
+# 将一个可迭代对象，分解成多个迭代器
+iter1, iter2 = tee(data)
+
+for item in iter1:
+    print(item)
+for item in iter2:
+    print(item)
+</pre>
+
+<h3 id="toc_1.2.10">配对 - zip_longest</h3>
+<ul>
+<li>
+zip_longest(*iterable, fill)
+
+</ul>
+
+<pre class="brush:python">
+# 长度不够的以fillvalue参数值补充
+for item in zip_longest('ABCD', 'xy', fillvalue='BLANK'):
+    print (item)
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
