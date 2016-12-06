@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Debian优化指南</title>
+    <title>更改用户名和主目录</title>
     <!--格式化代码的特效脚本-->
     <script type="text/javascript" src="scripts/shCore.js"></script>
     <script type="text/javascript" src="scripts/shBrushBash.js"></script>
@@ -49,61 +49,40 @@
 
 <!-- wrap the vimwiki html -->
 
-<h1 id="toc_1">Debian优化指南</h1>
+<h1 id="toc_1">更改用户名和主目录</h1>
 
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Debian优化指南</a>
+<li><a href="#toc_1">更改用户名和主目录</a>
+<ul>
+<li><a href="#toc_1.1">修改用户名</a>
+<li><a href="#toc_1.2">修改组名</a>
+<li><a href="#toc_1.3">修改用户全称</a>
+</ul>
 </ul>
 </div>
 
+
+<h2 id="toc_1.1">修改用户名</h2>
 <ul>
 <li>
-<a href="装机优化一.html">装机优化一</a>
-
-<li>
-<a href="装机优化二.html">装机优化二</a>
-
-<li>
-<a href="Firefox内存占用高的优化方法.html">Firefox内存占用高的优化方法</a>
-
-<li>
-<a href="apt,dpkg,apt-spy详解.html">apt,dpkg,apt-spy详解</a>
-
-<li>
-<a href="无线网卡配置.html">无线网卡配置</a>
-
-<li>
-<a href="ATI显卡安装.html">ATI显卡安装</a> -------------------------- 更新内核后可能出现黑屏的解决办法
-
-<li>
-<a href="修复Grub.html">修复Grub</a>
-
-<li>
-<a href="自定义系统备份.html">自定义系统备份</a>
-
-<li>
-<a href="iso镜像文件制作.html">iso镜像文件制作</a>
-
-<li>
-<a href="架设ftp服务器.html">架设ftp服务器</a>
-
-<li>
-<a href="管理和更新多个软件版本.html">管理和更新多个软件版本</a> ------ update-alternatives
-
-<li>
-<a href="架设git服务器.html">架设git服务器</a>
-
-<li>
-<a href="安装fcitx输入法.html">安装fcitx输入法</a>
-
-<li>
-<a href="修改Linux下默认打开程序.html">修改Linux下默认打开程序</a>
-
-<li>
-<a href="更改用户名和主目录.html">更改用户名和主目录</a>
+修改前需要进入recovery模式下。
 
 </ul>
+
+<pre class="brush:bash">
+$ usermod -l new_name -d /home/new_name -m old_name
+</pre>
+
+<h2 id="toc_1.2">修改组名</h2>
+<pre class="brush:bash">
+$ groupmod -n new_name old_name
+</pre>
+
+<h2 id="toc_1.3">修改用户全称</h2>
+<pre class="brush:bash">
+chfn -f full_name new_name
+</pre>
 
 
 <footer>
