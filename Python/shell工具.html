@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>shell工具</title>
+    <!--格式化代码的特效脚本-->
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreZenki.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeZenki.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <link rel="Stylesheet" type="text/css" href="../css_style/style_zenki.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+<header>
+
+<div id="logo">
+</div>
+
+<nav>
+    <ul>
+        <!--<li class="first"><a href="diary/diary.html">日记</a></li>-->
+     </ul>
+</nav>
+</header>
+
+<article>
+
+<!-- wrap the vimwiki html -->
+
+<h1 id="toc_1">shell工具 - sh</h1>
+
+<div class="toc">
+<ul>
+<li><a href="#toc_1">shell工具 - sh</a>
+<ul>
+<li><a href="#toc_1.1">系统命令</a>
+<li><a href="#toc_1.2">自定义程序</a>
+<li><a href="#toc_1.3">命令行参数</a>
+<li><a href="#toc_1.4">文件列表</a>
+<li><a href="#toc_1.5">管道处理</a>
+<li><a href="#toc_1.6">管道处理</a>
+<li><a href="#toc_1.7">后台处理</a>
+<li><a href="#toc_1.8">重定向</a>
+<li><a href="#toc_1.9">标准输入</a>
+<li><a href="#toc_1.10">程序返回值</a>
+<li><a href="#toc_1.11">with环境中运行</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_1.1">系统命令</h2>
+<pre class="brush:python">
+import sh
+
+sh.ls('/home/zenki')
+# 命令行中有-的，需要用_代替
+sh.google_chrome('http://www.baidu.com')
+</pre>
+
+<h2 id="toc_1.2">自定义程序</h2>
+<pre class="brush:python">
+import 
+
+sh.Command('/path/to/my/app')
+</pre>
+
+<h2 id="toc_1.3">命令行参数</h2>
+<pre class="brush:python">
+import sh
+
+ls = sh.ls.bake('-l')
+ls('/home/zenki')
+
+# 多个命令行参数需用,号隔开
+sh.ls.('-l', '-m')
+
+# 关键字参数
+sh.ls.('-l', sort='time')
+</pre>
+
+<h2 id="toc_1.4">文件列表</h2>
+<pre class="brush:python">
+import sh
+
+sh.glob('/home/zenki')
+</pre>
+
+<h2 id="toc_1.5">管道处理</h2>
+<pre class="brush:python">
+import sh
+
+sh.sort(sh.du(sh.glob('/home/zenki/*')), '-rn')
+</pre>
+
+<h2 id="toc_1.6">管道处理</h2>
+<pre class="brush:python">
+import sh
+
+# 加入参数：_piped=True
+sh.sort(sh.du(sh.glob('/home/zenki/*'), _piped=True), '-rn')
+</pre>
+
+<h2 id="toc_1.7">后台处理</h2>
+<pre class="brush:python">
+import sh
+
+sh.sleep(3, _bg=True)
+</pre>
+
+<h2 id="toc_1.8">重定向</h2>
+<pre class="brush:python">
+import sh
+
+sh.ls('/home/zenki/', _out='list.txt')
+</pre>
+
+<h2 id="toc_1.9">标准输入</h2>
+<pre class="brush:python">
+import sh
+
+sh.cat(_in='test.txt')
+</pre>
+
+<h2 id="toc_1.10">程序返回值</h2>
+<pre class="brush:python">
+import sh
+
+sh.app(_ok_code=[0, 3, 5])
+</pre>
+
+<h2 id="toc_1.11">with环境中运行</h2>
+<pre class="brush:python">
+import sh
+
+with sh.sudo:
+    sh.ls('/home/zenki')
+</pre>
+
+
+<footer>
+    <a href="http://zenki2001cn.github.com/Wiki" id="back-home">首页</a>
+    <a href="index.html" id="back-about">关于</a>
+    <a href="zenki2001cn@163.com" id="back-email">Email</a>
+</footer>
+
+</article>
+</div>
+
+</body>
+</html>
